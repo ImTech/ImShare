@@ -9,8 +9,32 @@
     tools:context=".MainActivity" >
 
     <TextView
+        android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/hello_world" />
+        android:text="Share" />
+
+    <EditText
+        android:id="@+id/editMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView1"
+        android:layout_below="@+id/textView1"
+        android:lines="5"
+        android:layout_marginTop="16dp"
+        android:gravity="left|top"
+        android:ems="10" >
+
+        <requestFocus />
+    </EditText>
+    
+    <Button android:id="@+id/btnPost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Share"
+        android:layout_below="@id/editMessage"
+        android:layout_marginTop="10dp"
+        android:layout_alignParentRight="true"
+        />
 
 </RelativeLayout>
