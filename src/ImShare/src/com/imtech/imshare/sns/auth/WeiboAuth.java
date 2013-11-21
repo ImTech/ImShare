@@ -3,14 +3,14 @@
  * Date: Nov 21, 2013
  * 深圳快播科技
  */
-package com.imtech.imshare.sns;
+package com.imtech.imshare.sns.auth;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.imtech.imshare.sns.AuthRet.AuthRetState;
+import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.auth.WeiboAuthListener;
@@ -22,13 +22,13 @@ import com.sina.weibo.sdk.exception.WeiboException;
  * @author Xiaoyuan
  *
  */
-public class WeiboAuth implements I3rdAuth{
+public class WeiboAuth implements IAuth{
 
 	final static String TAG = "3rdAuth_WeiboAuth";
 	
 	private SsoHandler mSsoHandler;
 	private com.sina.weibo.sdk.auth.WeiboAuth mWeibo;
-	private String mAppKey = "1899382930";
+	private String mAppKey = "2135767580";
 	private String mRedirectUrl = "https://api.weibo.com/oauth2/default.html";
 	 /**
      * Scope 是 OAuth2.0 授权机制中 authorize 接口的一个参数。通过 Scope，平台将开放更多的微博
@@ -48,7 +48,7 @@ public class WeiboAuth implements I3rdAuth{
             + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
             + "follow_app_official_microblog," + "invitation_write";
     
-    private I3rdAuthListener mListener;
+    private IAuthListener mListener;
     private Oauth2AccessToken mAccessToken;
 	
 	private void init(Context appCtx, Activity activity) {
@@ -79,7 +79,7 @@ public class WeiboAuth implements I3rdAuth{
 	}
 
 	@Override
-	public void setListener(I3rdAuthListener l) {
+	public void setListener(IAuthListener l) {
 		mListener = l;
 	}
 

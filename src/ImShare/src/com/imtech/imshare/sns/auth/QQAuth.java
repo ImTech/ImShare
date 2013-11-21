@@ -3,7 +3,7 @@
  * Date: Nov 20, 2013
  * 深圳快播科技
  */
-package com.imtech.imshare.sns;
+package com.imtech.imshare.sns.auth;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,7 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.imtech.imshare.sns.AuthRet.AuthRetState;
+import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
@@ -23,13 +23,13 @@ import com.tencent.tauth.UiError;
  * @author Xiaoyuan
  *
  */
-public class QQAuth implements I3rdAuth{
+public class QQAuth implements IAuth{
 
 	private final static String TAG = "3rdAuth_QQAuth";
-	private final static String APP_ID = "100560544";
+	private final static String APP_ID = "100557004";
 	
 	private Tencent mTencent;
-	private I3rdAuthListener mListener;
+	private IAuthListener mListener;
 	
 	private void init(Context context) {
 		if (mTencent != null) return;
@@ -65,7 +65,7 @@ public class QQAuth implements I3rdAuth{
 	}
 
 	@Override
-	public void setListener(I3rdAuthListener l) {
+	public void setListener(IAuthListener l) {
 		mListener = l;
 	}
 

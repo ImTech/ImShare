@@ -3,7 +3,7 @@
  * Date: Nov 20, 2013
  * 深圳快播科技
  */
-package com.imtech.imshare.sns;
+package com.imtech.imshare.sns.auth;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,7 +14,7 @@ import android.content.Intent;
  * @author douzifly
  *
  */
-public interface I3rdAuth {
+public interface IAuth {
 
 	/*
 	 * 开始授权
@@ -27,7 +27,7 @@ public interface I3rdAuth {
 	 * 设置监听
 	 * @param l
 	 */
-	void setListener(I3rdAuthListener l);
+	void setListener(IAuthListener l);
 	
 	/**
 	 * 调用放onActivityResult时调用该函数 

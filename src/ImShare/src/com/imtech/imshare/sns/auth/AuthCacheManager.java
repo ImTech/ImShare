@@ -3,7 +3,7 @@
  * Date: Nov 20, 2013
  * 深圳快播科技
  */
-package com.imtech.imshare.sns;
+package com.imtech.imshare.sns.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
