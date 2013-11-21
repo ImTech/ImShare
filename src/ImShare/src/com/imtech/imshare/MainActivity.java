@@ -11,6 +11,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.imtech.imshare.Share.ShareListener;
+import com.imtech.imshare.utils.Util;
 
 public class MainActivity extends Activity {
     final static String TAG = "Share#MainActivity";

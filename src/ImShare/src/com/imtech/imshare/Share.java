@@ -83,75 +83,75 @@ public class Share {
     }
     
     public void post(Activity act, String msg) {
-        if (mTencent.ready(act)) {
-            Bundle params = new Bundle();
-            params = new Bundle();
-            params.putString("richtype", "2");// 发布心情时引用的信息的类型。1表示图片；
-                                              // 2表示网页； 3表示视频。
-            params.putString("richval",
-                    ("http://www.qq.com" + "#" + System.currentTimeMillis()));// 发布心情时引用的信息的值。有richtype时必须有richval
-            params.putString("con", msg);// 发布的心情的内容。
-            params.putString("lbs_nm", "广东省深圳市南山区高新科技园腾讯大厦");// 地址文
-            params.putString("lbs_x", "0-360");// 经度。请使用原始数据（纯经纬度，0-360）。
-            params.putString("lbs_y", "0-360");// 纬度。请使用原始数据（纯经纬度，0-360）。
-            params.putString("lbs_id", "360");// 地点ID。lbs_id与lbs_idnm通常一起使用，来明确标识一个地址。
-            params.putString("lbs_idnm", "腾讯");// 地点名称。lbs_id与lbs_idnm通常一起使用，来明确标识一个地址。
-
-           mTencent.requestAsync(Constants.GRAPH_ADD_SHARE, params,
-                    Constants.HTTP_POST, new IRequestListener() {
-                        
-                        @Override
-                        public void onUnknowException(Exception arg0, Object arg1) {
-                            Log.d(TAG,"onUnExp");
-                        }
-                        
-                        @Override
-                        public void onSocketTimeoutException(SocketTimeoutException arg0,
-                                Object arg1) {
-                            Log.d(TAG, "socket timeout");
-                        }
-                        
-                        @Override
-                        public void onNetworkUnavailableException(NetworkUnavailableException arg0,
-                                Object arg1) {
-                            Log.d(TAG, "nue");
-                        }
-                        
-                        @Override
-                        public void onMalformedURLException(MalformedURLException arg0, Object arg1) {
-                            Log.d(TAG, "onMalf");
-                        }
-                        
-                        @Override
-                        public void onJSONException(JSONException arg0, Object arg1) {
-                            Log.d(TAG, "onJsone");
-                        }
-                        
-                        @Override
-                        public void onIOException(IOException arg0, Object arg1) {
-                            Log.d(TAG, "onIoe");
-                        }
-                        
-                        @Override
-                        public void onHttpStatusException(HttpStatusException arg0, Object arg1) {
-                            Log.d(TAG, "onHttpse");
-                        }
-                        
-                        @Override
-                        public void onConnectTimeoutException(ConnectTimeoutException arg0,
-                                Object arg1) {
-                            Log.d(TAG, "onCTE");
-                        }
-                        
-                        @Override
-                        public void onComplete(JSONObject arg0, Object arg1) {
-                            Log.d(TAG, "onComplete");
-                            if (mListener != null) {
-                                mListener.onShare(true);
-                            }
-                        }
-                    }, null);
-        }
+//        if (mTencent.ready(act)) {
+//            Bundle params = new Bundle();
+//            params = new Bundle();
+//            params.putString("richtype", "2");// 发布心情时引用的信息的类型。1表示图片；
+//                                              // 2表示网页； 3表示视频。
+//            params.putString("richval",
+//                    ("http://www.qq.com" + "#" + System.currentTimeMillis()));// 发布心情时引用的信息的值。有richtype时必须有richval
+//            params.putString("con", msg);// 发布的心情的内容。
+//            params.putString("lbs_nm", "广东省深圳市南山区高新科技园腾讯大厦");// 地址文
+//            params.putString("lbs_x", "0-360");// 经度。请使用原始数据（纯经纬度，0-360）。
+//            params.putString("lbs_y", "0-360");// 纬度。请使用原始数据（纯经纬度，0-360）。
+//            params.putString("lbs_id", "360");// 地点ID。lbs_id与lbs_idnm通常一起使用，来明确标识一个地址。
+//            params.putString("lbs_idnm", "腾讯");// 地点名称。lbs_id与lbs_idnm通常一起使用，来明确标识一个地址。
+//
+//           mTencent.requestAsync(Constants.GRAPH_ADD_SHARE, params,
+//                    Constants.HTTP_POST, new IRequestListener() {
+//                        
+//                        @Override
+//                        public void onUnknowException(Exception arg0, Object arg1) {
+//                            Log.d(TAG,"onUnExp");
+//                        }
+//                        
+//                        @Override
+//                        public void onSocketTimeoutException(SocketTimeoutException arg0,
+//                                Object arg1) {
+//                            Log.d(TAG, "socket timeout");
+//                        }
+//                        
+//                        @Override
+//                        public void onNetworkUnavailableException(NetworkUnavailableException arg0,
+//                                Object arg1) {
+//                            Log.d(TAG, "nue");
+//                        }
+//                        
+//                        @Override
+//                        public void onMalformedURLException(MalformedURLException arg0, Object arg1) {
+//                            Log.d(TAG, "onMalf");
+//                        }
+//                        
+//                        @Override
+//                        public void onJSONException(JSONException arg0, Object arg1) {
+//                            Log.d(TAG, "onJsone");
+//                        }
+//                        
+//                        @Override
+//                        public void onIOException(IOException arg0, Object arg1) {
+//                            Log.d(TAG, "onIoe");
+//                        }
+//                        
+//                        @Override
+//                        public void onHttpStatusException(HttpStatusException arg0, Object arg1) {
+//                            Log.d(TAG, "onHttpse");
+//                        }
+//                        
+//                        @Override
+//                        public void onConnectTimeoutException(ConnectTimeoutException arg0,
+//                                Object arg1) {
+//                            Log.d(TAG, "onCTE");
+//                        }
+//                        
+//                        @Override
+//                        public void onComplete(JSONObject arg0, Object arg1) {
+//                            Log.d(TAG, "onComplete");
+//                            if (mListener != null) {
+//                                mListener.onShare(true);
+//                            }
+//                        }
+//                    }, null);
+//        }
     }
     
     public static interface ShareListener {

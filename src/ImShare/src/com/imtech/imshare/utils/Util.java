@@ -1,4 +1,4 @@
-package com.imtech.imshare;
+package com.imtech.imshare.utils;
 
 import android.app.Activity;
 import android.app.AlertDialog;
