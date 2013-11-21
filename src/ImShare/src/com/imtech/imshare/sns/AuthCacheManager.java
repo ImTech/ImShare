@@ -5,12 +5,16 @@
  */
 package com.imtech.imshare.sns;
 
-import com.imtech.imshare.utils.StringUtils;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.qvod.player.core.proxy.Log;
+import com.qvod.player.utils.StringUtils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.util.Log;
 
 /**
  * 认证缓存管理
@@ -123,7 +127,9 @@ public class AuthCacheManager {
 		public void remove(Context context, int type) {
 			Log.d(TAG, "DefaultStaoreImpl remove:" + type);
 			SharedPreferences sp = getSp(context, type);
-			sp.edit().clear();
+			Editor ed = sp.edit();
+			ed.clear();
+			ed.commit();
 		}
 	}
 }
