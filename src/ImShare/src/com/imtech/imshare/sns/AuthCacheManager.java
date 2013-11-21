@@ -5,16 +5,12 @@
  */
 package com.imtech.imshare.sns;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Set;
-
-import com.qvod.player.core.proxy.Log;
-import com.qvod.player.utils.StringUtils;
-
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+
+import com.imtech.imshare.utils.Log;
+import com.imtech.imshare.utils.StringUtils;
 
 /**
  * 认证缓存管理
