@@ -16,6 +16,7 @@ public class ShareRet {
         CANCELED
     }
     
+    public int id;
     public ShareRetState state;
     public String errorCode;
     public String errorMessage;

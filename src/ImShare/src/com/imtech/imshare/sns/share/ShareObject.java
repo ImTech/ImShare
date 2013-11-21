@@ -16,6 +16,7 @@ public class ShareObject {
 
     public String text;
     public List<Image> images;
+    public int id;
     
     public static class Image {
         public String name;
