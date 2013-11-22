@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.imtech.imshare.sns.SNSSetting;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -28,7 +29,6 @@ public class WeiboAuth implements IAuth{
 	
 	private SsoHandler mSsoHandler;
 	private com.sina.weibo.sdk.auth.WeiboAuth mWeibo;
-	private String mAppKey = "2135767580";
 	private String mRedirectUrl = "https://api.weibo.com/oauth2/default.html";
 	 /**
      * Scope 是 OAuth2.0 授权机制中 authorize 接口的一个参数。通过 Scope，平台将开放更多的微博
@@ -55,7 +55,7 @@ public class WeiboAuth implements IAuth{
 		Log.d(TAG, "init");
 		if (mWeibo == null) {
 			mWeibo = new com.sina.weibo.sdk.auth.WeiboAuth(activity,
-					mAppKey, mRedirectUrl, SCOPE);
+					SNSSetting.WEIBO_APPKEY, mRedirectUrl, SCOPE);
 			
 		}
 		if (mSsoHandler == null) {

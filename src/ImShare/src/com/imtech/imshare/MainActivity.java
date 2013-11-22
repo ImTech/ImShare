@@ -1,6 +1,7 @@
 package com.imtech.imshare;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.WeiboAuth;
 import com.imtech.imshare.sns.share.IShareListener;
+import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.WeiboShare;
 
@@ -51,6 +53,7 @@ public class MainActivity extends Activity implements OnClickListener{
 
         @Override
         public void onShareFinished(ShareRet ret) {
+        	Toast.makeText(MainActivity.this, "share ret:" + ret.state, Toast.LENGTH_SHORT).show();
         }
         
     }
@@ -60,7 +63,15 @@ public class MainActivity extends Activity implements OnClickListener{
         if (v.getId() == R.id.btnWeibo) {
             mAuth.auth(getApplicationContext(), MainActivity.this);
         } else if (v.getId() == R.id.btnPost) {
-            mShare.share(null);
+        	ShareObject obj = new ShareObject();
+        	obj.text = mEdMessage.getText().toString();
+        	mShare.share(getApplicationContext(), this, obj);
         }
+    }
+    
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    	super.onActivityResult(requestCode, resultCode, data);
+    	mShare.checkActivityResult(requestCode, resultCode, data);
     }
 }

@@ -5,6 +5,10 @@
  */
 package com.imtech.imshare.sns.share;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+
 /**
  * Share interface
  * @author douzifly
@@ -13,6 +17,6 @@ package com.imtech.imshare.sns.share;
 public interface IShare {
     
     void setListener(IShareListener listener);
-    void share(ShareObject obj);
-    
+    void share(Context appCtx, Activity activity, ShareObject obj);
+    void checkActivityResult(int requestCode , int responseCode, Intent data);
 }

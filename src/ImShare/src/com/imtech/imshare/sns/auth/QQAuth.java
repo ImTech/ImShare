@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
+import com.imtech.imshare.sns.SNSSetting;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -26,14 +27,12 @@ import com.tencent.tauth.UiError;
 public class QQAuth implements IAuth{
 
 	private final static String TAG = "3rdAuth_QQAuth";
-	private final static String APP_ID = "100557004";
-	
 	private Tencent mTencent;
 	private IAuthListener mListener;
 	
 	private void init(Context context) {
 		if (mTencent != null) return;
-		mTencent = Tencent.createInstance(APP_ID, context);
+		mTencent = Tencent.createInstance(SNSSetting.QQ_APPKEY, context);
 	}
 	
 	@Override
