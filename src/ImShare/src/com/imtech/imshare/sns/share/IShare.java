@@ -5,6 +5,8 @@
  */
 package com.imtech.imshare.sns.share;
 
+import com.imtech.imshare.sns.auth.AccessToken;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -17,6 +19,6 @@ import android.content.Intent;
 public interface IShare {
     
     void setListener(IShareListener listener);
-    void share(Context appCtx, Activity activity, ShareObject obj);
+    void share(Context appCtx, Activity activity, AccessToken token, ShareObject obj);
     void checkActivityResult(int requestCode , int responseCode, Intent data);
 }

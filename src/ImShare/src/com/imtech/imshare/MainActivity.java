@@ -65,13 +65,13 @@ public class MainActivity extends Activity implements OnClickListener{
         } else if (v.getId() == R.id.btnPost) {
         	ShareObject obj = new ShareObject();
         	obj.text = mEdMessage.getText().toString();
-        	mShare.share(getApplicationContext(), this, obj);
+        	mShare.share(getApplicationContext(), this, mAuth.getAccessToken(), obj);
         }
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-    	mShare.checkActivityResult(requestCode, resultCode, data);
+    	mAuth.checkActivityResult(requestCode, resultCode, data);
     }
 }

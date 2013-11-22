@@ -25,7 +25,7 @@ import com.sina.weibo.sdk.exception.WeiboException;
  */
 public class WeiboAuth implements IAuth{
 
-	final static String TAG = "3rdAuth_WeiboAuth";
+	final static String TAG = "SNS_WeiboAuth";
 	
 	private SsoHandler mSsoHandler;
 	private com.sina.weibo.sdk.auth.WeiboAuth mWeibo;
@@ -49,7 +49,7 @@ public class WeiboAuth implements IAuth{
             + "follow_app_official_microblog," + "invitation_write";
     
     private IAuthListener mListener;
-    private Oauth2AccessToken mAccessToken;
+    private AccessToken mToken;
 	
 	private void init(Context appCtx, Activity activity) {
 		Log.d(TAG, "init");
@@ -85,6 +85,7 @@ public class WeiboAuth implements IAuth{
 
 	@Override
 	public void checkActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "checkActivityResult");
 		if (mSsoHandler != null) {
 			mSsoHandler.authorizeCallBack(requestCode, resultCode, data);
 		}
@@ -96,16 +97,20 @@ public class WeiboAuth implements IAuth{
         public void onComplete(Bundle values) {
 			Log.d(TAG, "onComplete");
             // 从 Bundle 中解析 Token
-            mAccessToken = Oauth2AccessToken.parseAccessToken(values);
+			Oauth2AccessToken oat = Oauth2AccessToken.parseAccessToken(values);
             AuthRet ret;
-            if (mAccessToken.isSessionValid()) {
+            if (oat.isSessionValid()) {
+            	Log.d(TAG, "session valid");
             	ret = new AuthRet(AuthRetState.SUCESS);
-				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, mAccessToken.getToken());
-				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, mAccessToken.getExpiresTime() + System.currentTimeMillis());
-				ret.getBundle().putString(AuthRet.KEY_UID, mAccessToken.getUid());
+            	ret.token = new AccessToken(oat.getToken(), oat.getExpiresTime());
+            	mToken = ret.token;
+				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, oat.getToken());
+				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, ret.token.expires_when);
+				ret.getBundle().putString(AuthRet.KEY_UID, oat.getUid());
             } else {
                 // 当您注册的应用程序签名不正确时，就会收到 Code，请确保签名正确
                 String code = values.getString("code");
+                Log.d(TAG, "session invalid code:" + code);
                 ret = new AuthRet(AuthRetState.FAILED);
                 ret.getBundle().putString(AuthRet.KEY_ERROR_CODE, code);
             }
@@ -128,5 +133,10 @@ public class WeiboAuth implements IAuth{
 			mListener.onAuthFinished(ret);
         }
 		
+	}
+
+	@Override
+	public AccessToken getAccessToken() {
+		return mToken;
 	}
 }

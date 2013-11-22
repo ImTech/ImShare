@@ -26,9 +26,10 @@ import com.tencent.tauth.UiError;
  */
 public class QQAuth implements IAuth{
 
-	private final static String TAG = "3rdAuth_QQAuth";
+	private final static String TAG = "SNS_QQAuth";
 	private Tencent mTencent;
 	private IAuthListener mListener;
+	private AccessToken mToken;
 	
 	private void init(Context context) {
 		if (mTencent != null) return;
@@ -121,9 +122,12 @@ public class QQAuth implements IAuth{
 				ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, "parse json failed");
 			} else {
 				ret = new AuthRet(AuthRetState.SUCESS);
+				ret.token = new AccessToken(accessToken, expires_in);
+				mToken = ret.token;
 				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, accessToken);
-				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, expires_in + System.currentTimeMillis());
+				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, ret.token.expires_when);
 				ret.getBundle().putString(AuthRet.KEY_UID, openId);
+				
 			}
 			mListener.onAuthFinished(ret);
 		}
@@ -139,5 +143,10 @@ public class QQAuth implements IAuth{
 			mListener.onAuthFinished(ret);
 		}
 		
+	}
+
+	@Override
+	public AccessToken getAccessToken() {
+		return mToken;
 	}
 }

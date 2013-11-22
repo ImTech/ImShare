@@ -19,7 +19,7 @@ import com.imtech.imshare.utils.StringUtils;
  */
 public class AuthCacheManager {
 
-	final static String TAG = "3rdAuth_AuthCacheManager";
+	final static String TAG = "SNS_AuthCacheManager";
 	
 	private DefaultStaoreImpl store = new DefaultStaoreImpl();
 	
@@ -31,9 +31,9 @@ public class AuthCacheManager {
 	 * @param accessToken
 	 * @param expired
 	 */
-	public void put(Context context, int type, String uid, String accessToken, long expireWhen) {
+	public void put(Context context, int type, String uid, String accessToken, long expireWhen, long expireIn) {
 		Log.d(TAG, "put type:" + type + " uid:" + uid + " accessToken:" + accessToken + " expired:" + expireWhen);
-		store.put(context, type, uid, accessToken, expireWhen);
+		store.put(context, type, uid, accessToken, expireWhen, expireIn);
 	}
 	
 	/**
@@ -69,6 +69,7 @@ public class AuthCacheManager {
 		public String accessToken;
 		public String uid;
 		public long expireWhen;
+		public long expireIn;
 		
 		@Override
 		public String toString() {
@@ -84,6 +85,7 @@ public class AuthCacheManager {
 		final static String KEY_UID = "uid";
 		final static String KEY_ACCESS_TOKEN = "access_token";
 		final static String KEY_EXPIRE_WHEN = "expire_when";
+		final static String KEY_EXPIRE_IN = "expire_in";
 		
 		private SharedPreferences getSp(Context context, int type) {
 			String spName = SP_NAME + type;
@@ -92,13 +94,14 @@ public class AuthCacheManager {
 			return sp;
 		}
 		
-		public void put(Context context, int type, String uid, String accessToken, long expireWhen) {
+		public void put(Context context, int type, String uid, String accessToken, long expireWhen, long expireIn) {
 			Log.d(TAG, "DefaultStaoreImpl put type:" + type + " uid:" + uid + " accessToken:" + accessToken + " expired:" + expireWhen);
 			SharedPreferences sp = getSp(context, type);
 			Editor editor = sp.edit();
 			editor.putString(KEY_UID, uid);
 			editor.putString(KEY_ACCESS_TOKEN, accessToken);
 			editor.putLong(KEY_EXPIRE_WHEN, expireWhen);
+			editor.putLong(KEY_EXPIRE_IN, expireIn);
 			editor.commit();
 		}
 		
@@ -108,6 +111,7 @@ public class AuthCacheManager {
 			String uid = sp.getString(KEY_UID, null);
 			String token = sp.getString(KEY_ACCESS_TOKEN, null);
 			long expireWhen = sp.getLong(KEY_EXPIRE_WHEN, -1);
+			long expireIn = sp.getLong(KEY_EXPIRE_IN, -1);
 			if (StringUtils.isEmpty(uid) || StringUtils.isEmpty(token) || expireWhen == -1) {
 				Log.e(TAG, "cant find cache");
 				return null;
@@ -117,6 +121,7 @@ public class AuthCacheManager {
 			cache.uid = uid;
 			cache.accessToken = token;
 			cache.expireWhen = expireWhen;
+			cache.expireIn = expireIn;
 			return cache;
 		}
 		

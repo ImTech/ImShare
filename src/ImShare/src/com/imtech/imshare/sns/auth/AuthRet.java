@@ -32,12 +32,9 @@ public class AuthRet{
 	/**
 	 * 什么时候过期, 非时间间隔
 	 */
-	public final static String KEY_EXPIRES_WHEN = "expires_in";
+	public final static String KEY_EXPIRES_WHEN = "expires_when";
+	public final static String KEY_EXPIRES_IN = "expires_in";
 	// -------------------------------------------------------
-	
-	// -------------------- ERROR codes ---------------------
-	
-	// ------------------------------------------------------
 	
 	/**
 	 * 授权状态
@@ -45,6 +42,8 @@ public class AuthRet{
 	public AuthRetState state;
 
 	private Bundle mData = new Bundle();
+	
+	public AccessToken token;
 	
 	public AuthRet(AuthRetState state) {
 		this.state = state;
