@@ -16,6 +16,10 @@ public class ShareRet {
         CANCELED
     }
     
+    public ShareRet(ShareRetState state) {
+    	this.state = state;
+    }
+    
     public int id;
     public ShareRetState state;
     public String errorCode;

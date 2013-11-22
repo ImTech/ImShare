@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.imtech.imshare.sns.auth.AccessToken;
+import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.utils.Log;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
@@ -50,21 +51,37 @@ public class WeiboShare extends ShareBase implements RequestListener{
 	@Override
 	public void onComplete(String response) {
 		Log.d(TAG, "onComplete:" + response);
+		if (mListener != null) {
+			ShareRet ret = new ShareRet(ShareRetState.SUCESS);
+			mListener.onShareFinished(ret);
+		}
 	}
 
 	@Override
 	public void onComplete4binary(ByteArrayOutputStream responseOS) {
 		Log.d(TAG, "onComplete4binary");
+		if (mListener != null) {
+			ShareRet ret = new ShareRet(ShareRetState.SUCESS);
+			mListener.onShareFinished(ret);
+		}
 	}
 
 	@Override
 	public void onIOException(IOException e) {
 		Log.e(TAG, "onIOException:" + e.getMessage());
+		if (mListener != null) {
+			ShareRet ret = new ShareRet(ShareRetState.FAILED);
+			mListener.onShareFinished(ret);
+		}
 	}
 
 	@Override
 	public void onError(WeiboException e) {
 		Log.e(TAG, "onError:" + e.getMessage());
+		if (mListener != null) {
+			ShareRet ret = new ShareRet(ShareRetState.FAILED);
+			mListener.onShareFinished(ret);
+		}
 	}
 
 }

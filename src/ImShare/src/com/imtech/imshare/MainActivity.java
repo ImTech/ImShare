@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -57,12 +59,25 @@ public class MainActivity extends Activity implements OnClickListener{
         }
         
     }
+    
+    private void shakeView(View v) {
+    	TranslateAnimation a = new TranslateAnimation(0, 30, 0, 30);
+    	a.setRepeatCount(3);
+    	a.setRepeatMode(Animation.REVERSE);
+    	a.setDuration(100);
+    	v.startAnimation(a);
+    }
 
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnWeibo) {
             mAuth.auth(getApplicationContext(), MainActivity.this);
         } else if (v.getId() == R.id.btnPost) {
+        	if (mAuth.getAccessToken() == null) {
+        		Toast.makeText(this, "auth first", Toast.LENGTH_SHORT).show();
+        		shakeView(mBtnWeibo);
+        		return;
+        	}
         	ShareObject obj = new ShareObject();
         	obj.text = mEdMessage.getText().toString();
         	mShare.share(getApplicationContext(), this, mAuth.getAccessToken(), obj);
