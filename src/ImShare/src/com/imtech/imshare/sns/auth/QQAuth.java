@@ -14,6 +14,7 @@ import android.content.Intent;
 import android.util.Log;
 
 import com.imtech.imshare.sns.SNSSetting;
+import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
@@ -30,6 +31,11 @@ public class QQAuth implements IAuth{
 	private Tencent mTencent;
 	private IAuthListener mListener;
 	private AccessToken mToken;
+	
+	@Override
+	public SnsType getSnsType() {
+		return SnsType.QQ;
+	}
 	
 	private void init(Context context) {
 		if (mTencent != null) return;

@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.imtech.imshare.sns.SNSSetting;
+import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
@@ -50,6 +51,11 @@ public class WeiboAuth implements IAuth{
     
     private IAuthListener mListener;
     private AccessToken mToken;
+    
+    @Override
+    public SnsType getSnsType() {
+    	return SnsType.WEIBO;
+    }
 	
 	private void init(Context appCtx, Activity activity) {
 		Log.d(TAG, "init");

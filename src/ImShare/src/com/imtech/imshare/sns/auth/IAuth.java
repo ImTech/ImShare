@@ -5,6 +5,8 @@
  */
 package com.imtech.imshare.sns.auth;
 
+import com.imtech.imshare.sns.SnsType;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,6 +17,8 @@ import android.content.Intent;
  *
  */
 public interface IAuth {
+	
+	SnsType getSnsType();
 
 	/*
 	 * 开始授权
