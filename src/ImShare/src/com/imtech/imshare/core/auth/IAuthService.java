@@ -7,6 +7,7 @@ package com.imtech.imshare.core.auth;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
@@ -26,6 +27,8 @@ public interface IAuthService {
     
     /**
      * Auth for specific SnsType
+     * @throws IllegalStateException when authing
+     * @throws UnsupportedOperationException when not support specific snsType
      */
     void auth(SnsType snsType, Context appCtx, Activity activity);
     
@@ -38,4 +41,6 @@ public interface IAuthService {
      * remove auth listener which was added before
      */
     void removeAuthListener(IAuthListener l);
+    
+    void checkActivityResult(int requestCode, int resultCode, Intent data);
 }

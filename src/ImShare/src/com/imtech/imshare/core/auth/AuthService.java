@@ -5,8 +5,10 @@ import java.util.LinkedList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
+import com.imtech.imshare.core.auth.AuthCacheManager.AuthCache;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
@@ -24,6 +26,8 @@ import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 public class AuthService implements IAuthService{
     
     final static String TAG = "SNS_AuthService";
+    
+    static AuthService sInstance;
 	
 	Hashtable<SnsType, AccessToken> mTokens
 		 = new Hashtable<SnsType, AccessToken>();
@@ -32,6 +36,16 @@ public class AuthService implements IAuthService{
 	    = new LinkedList<IAuthListener>();
 	
 	AuthCacheManager mCacheManager = new AuthCacheManager();
+	
+	IAuth mCurrentAuth;
+	
+	private AuthService() {}
+	public synchronized static AuthService getInstance() {
+	    if (sInstance == null) {
+	        sInstance = new AuthService();
+	    }
+	    return sInstance;
+	}
 
     @Override
     public AccessToken getAccessToken(SnsType type) {
@@ -50,6 +64,23 @@ public class AuthService implements IAuthService{
     @Override
     public void auth(SnsType snsType, Context appCtx, Activity activity) {
         Log.d(TAG, "auth type:" + snsType);
+        AuthCache cache = mCacheManager.get(appCtx, snsType);
+        if (cache != null && cache.token != null) {
+            Log.d(TAG, "AccessToken cached!");
+            AuthRet ret = new AuthRet(AuthRetState.SUCESS);
+            ret.token = cache.token;
+            notifyAuthFinished(snsType, ret);
+            return;
+        }
+        if (mCurrentAuth != null) {
+            throw new IllegalStateException("authing for SnsType:" + snsType);
+        }
+        IAuth auth = getAuth(snsType);
+        if (auth == null) {
+            throw new UnsupportedOperationException("unknow SnsType:" + snsType);
+        }
+        mCurrentAuth = auth;
+        auth.auth(appCtx, activity);
     }
 
     @Override
@@ -60,6 +91,18 @@ public class AuthService implements IAuthService{
     @Override
     public void removeAuthListener(IAuthListener l) {
         mAuthListeners.remove(l);
+    }
+    
+    private void notifyAuthFinished(SnsType snsType, AuthRet ret) {
+        for (IAuthListener l : mAuthListeners) {
+            l.onAuthFinished(snsType, ret);
+        }
+    }
+    
+    @Override
+    public void checkActivityResult(int requestCode, int resultCode, Intent data) {
+        mCurrentAuth.checkActivityResult(requestCode, resultCode, data);
+        mCurrentAuth = null;
     }
 
     class AuthListener implements IAuthListener {
@@ -73,11 +116,8 @@ public class AuthService implements IAuthService{
                 mTokens.put(snsType, ret.token);
             }
             
-            for (IAuthListener l : mAuthListeners) {
-                l.onAuthFinished(snsType, ret);
-            }
-            
+            notifyAuthFinished(snsType, ret);
         }
-        
     }
+    
 }
