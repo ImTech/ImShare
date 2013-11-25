@@ -19,7 +19,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class Util {
+public class WeiboUtil {
 
 	private static final String TAG = "SDK_Sample.Util";
 
