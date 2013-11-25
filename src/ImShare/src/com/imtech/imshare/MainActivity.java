@@ -11,10 +11,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.imtech.imshare.core.auth.AuthService;
+import com.imtech.imshare.core.auth.IAuthService;
 import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
-import com.imtech.imshare.sns.auth.WeiboAuth;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
@@ -25,7 +27,7 @@ public class MainActivity extends Activity implements OnClickListener{
     EditText mEdMessage;
     Button mBtnPost;
     Button mBtnWeibo;
-    WeiboAuth mAuth = new WeiboAuth();
+    IAuthService mAuthService;
     WeiboShare mShare = new WeiboShare();
     
     @Override
@@ -39,7 +41,8 @@ public class MainActivity extends Activity implements OnClickListener{
         mBtnPost.setOnClickListener(this);
         mBtnWeibo.setOnClickListener(this);
         
-        mAuth.setListener(new AuthListener());
+        mAuthService = AuthService.getInstance();
+        mAuthService.addAuthListener(new AuthListener());
         mShare.setListener(new ShareListener());
     }
     
@@ -72,22 +75,23 @@ public class MainActivity extends Activity implements OnClickListener{
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.btnWeibo) {
-            mAuth.auth(getApplicationContext(), MainActivity.this);
+            mAuthService.auth(SnsType.WEIBO, getApplicationContext(), MainActivity.this);
         } else if (v.getId() == R.id.btnPost) {
-        	if (mAuth.getAccessToken() == null) {
+            AccessToken token = mAuthService.getAccessToken(SnsType.WEIBO);
+        	if (token == null) {
         		Toast.makeText(this, "auth first", Toast.LENGTH_SHORT).show();
         		shakeView(mBtnWeibo);
         		return;
         	}
         	ShareObject obj = new ShareObject();
         	obj.text = mEdMessage.getText().toString();
-        	mShare.share(getApplicationContext(), this, mAuth.getAccessToken(), obj);
+        	mShare.share(getApplicationContext(), this, token, obj);
         }
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-    	mAuth.checkActivityResult(requestCode, resultCode, data);
+    	mAuthService.checkActivityResult(requestCode, resultCode, data);
     }
 }

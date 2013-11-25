@@ -82,6 +82,7 @@ public class AuthService implements IAuthService{
         if (auth == null) {
             throw new UnsupportedOperationException("unknow SnsType:" + snsType);
         }
+        auth.setListener(new AuthListener());
         mCurrentAuth = auth;
         auth.auth(appCtx, activity);
     }
@@ -106,7 +107,6 @@ public class AuthService implements IAuthService{
     @Override
     public void checkActivityResult(int requestCode, int resultCode, Intent data) {
         mCurrentAuth.checkActivityResult(requestCode, resultCode, data);
-        mCurrentAuth = null;
     }
 
     class AuthListener implements IAuthListener {
@@ -123,6 +123,10 @@ public class AuthService implements IAuthService{
             }
             
             notifyAuthFinished(snsType, ret);
+            
+            // clear object
+            mCurrentAuth.setListener(null);
+            mCurrentAuth = null;
         }
     }
     
