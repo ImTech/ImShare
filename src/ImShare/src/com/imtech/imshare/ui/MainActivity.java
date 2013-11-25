@@ -1,50 +1,44 @@
-package com.imtech.imshare;
+package com.imtech.imshare.ui;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.Toast;
 
+import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.auth.IAuthService;
 import com.imtech.imshare.sns.SnsType;
-import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
-import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.WeiboShare;
+import com.imtech.imshare.utils.Log;
 
 public class MainActivity extends Activity implements OnClickListener{
     final static String TAG = "Share#MainActivity";
-    EditText mEdMessage;
-    Button mBtnPost;
-    Button mBtnWeibo;
-    IAuthService mAuthService;
+    private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
+//    IAuthService mAuthService;
     WeiboShare mShare = new WeiboShare();
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mEdMessage = (EditText) findViewById(R.id.editMessage);
-        mBtnPost = (Button) findViewById(R.id.btnPost);
-        mBtnWeibo = (Button) findViewById(R.id.btnWeibo);
+        Button btn = (Button)findViewById(R.id.share);
+        btn.setOnClickListener(this);
         
-        mBtnPost.setOnClickListener(this);
-        mBtnWeibo.setOnClickListener(this);
-        
-        mAuthService = AuthService.getInstance();
-        mAuthService.loadCachedTokens(this);
-        mAuthService.addAuthListener(new AuthListener());
-        mShare.setListener(new ShareListener());
+//        mAuthService = AuthService.getInstance();
+//        mAuthService.loadCachedTokens(this);
+//        mAuthService.addAuthListener(new AuthListener());
+//        mShare.setListener(new ShareListener());
     }
     
     class AuthListener implements IAuthListener {
@@ -75,24 +69,24 @@ public class MainActivity extends Activity implements OnClickListener{
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.btnWeibo) {
-            mAuthService.auth(SnsType.WEIBO, getApplicationContext(), MainActivity.this);
-        } else if (v.getId() == R.id.btnPost) {
-            AccessToken token = mAuthService.getAccessToken(SnsType.WEIBO);
-        	if (token == null) {
-        		Toast.makeText(this, "auth first", Toast.LENGTH_SHORT).show();
-        		shakeView(mBtnWeibo);
-        		return;
-        	}
-        	ShareObject obj = new ShareObject();
-        	obj.text = mEdMessage.getText().toString();
-        	mShare.share(getApplicationContext(), this, token, obj);
-        }
+    	switch(v.getId()){
+    	case R.id.share:
+    		gotoSelectPic();
+    		break;
+    	}
+    }
+    
+    private void gotoSelectPic(){
+    	Intent intent = new Intent(Intent.ACTION_PICK, null);
+        intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,"image/*");
+        startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-    	mAuthService.checkActivityResult(requestCode, resultCode, data);
+//    	mAuthService.checkActivityResult(requestCode, resultCode, data);
+    	String path = data != null ? data.getDataString() : null;
+    	Log.d(TAG, "onActivityResult path: " + path);
     }
 }
