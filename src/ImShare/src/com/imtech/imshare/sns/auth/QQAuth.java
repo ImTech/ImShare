@@ -25,11 +25,10 @@ import com.tencent.tauth.UiError;
  * @author Xiaoyuan
  *
  */
-public class QQAuth implements IAuth{
+public class QQAuth extends AuthBase{
 
 	private final static String TAG = "SNS_QQAuth";
 	private Tencent mTencent;
-	private IAuthListener mListener;
 	private AccessToken mToken;
 	
 	@Override
@@ -68,11 +67,6 @@ public class QQAuth implements IAuth{
 		Log.d(TAG, "logout");
 		init(appCtx);
 		mTencent.logout(activity);
-	}
-
-	@Override
-	public void setListener(IAuthListener l) {
-		mListener = l;
 	}
 
 	@Override

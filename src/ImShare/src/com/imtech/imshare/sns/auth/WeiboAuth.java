@@ -24,7 +24,7 @@ import com.sina.weibo.sdk.exception.WeiboException;
  * @author Xiaoyuan
  *
  */
-public class WeiboAuth implements IAuth{
+public class WeiboAuth extends AuthBase{
 
 	final static String TAG = "SNS_WeiboAuth";
 	
@@ -49,7 +49,6 @@ public class WeiboAuth implements IAuth{
             + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
             + "follow_app_official_microblog," + "invitation_write";
     
-    private IAuthListener mListener;
     private AccessToken mToken;
     
     @Override
@@ -82,11 +81,6 @@ public class WeiboAuth implements IAuth{
 	@Override
 	public void logout(Context appCtx, Activity activity) {
 		Log.d(TAG, "logout");
-	}
-
-	@Override
-	public void setListener(IAuthListener l) {
-		mListener = l;
 	}
 
 	@Override
