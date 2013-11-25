@@ -42,6 +42,7 @@ public class MainActivity extends Activity implements OnClickListener{
         mBtnWeibo.setOnClickListener(this);
         
         mAuthService = AuthService.getInstance();
+        mAuthService.loadCachedTokens(this);
         mAuthService.addAuthListener(new AuthListener());
         mShare.setListener(new ShareListener());
     }

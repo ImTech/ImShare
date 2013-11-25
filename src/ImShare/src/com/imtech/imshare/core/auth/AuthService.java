@@ -47,6 +47,26 @@ public class AuthService implements IAuthService{
 	    }
 	    return sInstance;
 	}
+	
+	@Override
+	public void loadCachedTokens(Context context) {
+	    Log.d(TAG, "loadCachedTokens");
+	    SnsType[] snsTypes = {SnsType.FACEBOOK, 
+	                          SnsType.GOOGLE_PLUS,
+	                          SnsType.LOFTER,
+	                          SnsType.QQ,
+	                          SnsType.QQ_WEIBO,
+	                          SnsType.RENREN,
+	                          SnsType.TWITTER,
+	                          SnsType.WEIBO};
+	    for (SnsType type : snsTypes) {
+	        AuthCache cache = mCacheManager.get(context, type);
+	        Log.d(TAG, "loadCache for:" + type + " cache:" + cache);
+	        if (cache != null && cache.token != null) {
+	            mTokens.put(type, cache.token);
+	        }
+	    }
+	}
 
     @Override
     public AccessToken getAccessToken(SnsType type) {

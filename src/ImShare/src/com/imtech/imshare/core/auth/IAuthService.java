@@ -18,14 +18,21 @@ import com.imtech.imshare.sns.auth.IAuthListener;
  *
  */
 public interface IAuthService {
+    
+    /**
+     * 加载缓存的token
+     */
+    void loadCachedTokens(Context context);
 
     /**
+     * 获取Token，如果有缓存，返回缓存 <br />
      * Get Accesstoken for specific SnsType, <br />
      * if AsscessToken was cached, return cached token
      */
     AccessToken getAccessToken(SnsType type);
     
     /**
+     * 认证指定的 SnsType <br />
      * Auth for specific SnsType
      * @throws IllegalStateException when authing
      * @throws UnsupportedOperationException when not support specific snsType
@@ -42,5 +49,8 @@ public interface IAuthService {
      */
     void removeAuthListener(IAuthListener l);
     
+    /**
+     * this method must be called, for get auth result
+     */
     void checkActivityResult(int requestCode, int resultCode, Intent data);
 }
