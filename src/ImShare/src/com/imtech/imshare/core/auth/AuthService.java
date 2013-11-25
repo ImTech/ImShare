@@ -36,8 +36,9 @@ public class AuthService implements IAuthService{
 	    = new LinkedList<IAuthListener>();
 	
 	AuthCacheManager mCacheManager = new AuthCacheManager();
-	
 	IAuth mCurrentAuth;
+	
+	Context mAppCtx;
 	
 	private AuthService() {}
 	public synchronized static AuthService getInstance() {
@@ -64,11 +65,13 @@ public class AuthService implements IAuthService{
     @Override
     public void auth(SnsType snsType, Context appCtx, Activity activity) {
         Log.d(TAG, "auth type:" + snsType);
+        mAppCtx = appCtx;
         AuthCache cache = mCacheManager.get(appCtx, snsType);
         if (cache != null && cache.token != null) {
             Log.d(TAG, "AccessToken cached!");
             AuthRet ret = new AuthRet(AuthRetState.SUCESS);
             ret.token = cache.token;
+            mTokens.put(snsType, ret.token);
             notifyAuthFinished(snsType, ret);
             return;
         }
@@ -94,6 +97,7 @@ public class AuthService implements IAuthService{
     }
     
     private void notifyAuthFinished(SnsType snsType, AuthRet ret) {
+        Log.d(TAG, "notifyAuthFinished snsType:" + snsType + " ret:" + ret);
         for (IAuthListener l : mAuthListeners) {
             l.onAuthFinished(snsType, ret);
         }
@@ -114,6 +118,8 @@ public class AuthService implements IAuthService{
             
             if (ret.state == AuthRetState.SUCESS) {
                 mTokens.put(snsType, ret.token);
+                mCacheManager.put(mAppCtx, snsType, ret.token.uid, ret.token.accessToken, 
+                        ret.token.expires_when, ret.token.expires_in);
             }
             
             notifyAuthFinished(snsType, ret);
