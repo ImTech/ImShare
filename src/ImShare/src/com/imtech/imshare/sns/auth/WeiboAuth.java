@@ -102,7 +102,7 @@ public class WeiboAuth extends AuthBase{
             if (oat.isSessionValid()) {
             	Log.d(TAG, "session valid");
             	ret = new AuthRet(AuthRetState.SUCESS);
-            	ret.token = new AccessToken(oat.getToken(), oat.getExpiresTime());
+            	ret.token = new AccessToken(getSnsType(), oat.getUid(), oat.getToken(), oat.getExpiresTime(), -1);
             	mToken = ret.token;
 				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, oat.getToken());
 				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, ret.token.expires_when);

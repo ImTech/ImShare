@@ -3,12 +3,14 @@
  * Date: Nov 20, 2013
  * 深圳快播科技
  */
-package com.imtech.imshare.sns.auth;
+package com.imtech.imshare.core.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 
+import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.utils.Log;
 import com.imtech.imshare.utils.StringUtils;
 
@@ -31,7 +33,7 @@ public class AuthCacheManager {
 	 * @param accessToken
 	 * @param expired
 	 */
-	public void put(Context context, int type, String uid, String accessToken, long expireWhen, long expireIn) {
+	public void put(Context context, SnsType type, String uid, String accessToken, long expireWhen, long expireIn) {
 		Log.d(TAG, "put type:" + type + " uid:" + uid + " accessToken:" + accessToken + " expired:" + expireWhen);
 		store.put(context, type, uid, accessToken, expireWhen, expireIn);
 	}
@@ -42,11 +44,14 @@ public class AuthCacheManager {
 	 * @param type
 	 * @return
 	 */
-	public AuthCache get(Context context, int type) {
+	public AuthCache get(Context context, SnsType type) {
 		Log.d(TAG, "get type:" + type);
 		AuthCache cache = store.get(context, type);
-		if (cache == null) return null;
-		if (System.currentTimeMillis() > cache.expireWhen) {
+		if (cache == null || cache.token == null) {
+		    Log.i(TAG, "no cache");
+		    return null;
+		}
+		if (System.currentTimeMillis() > cache.token.expires_when) {
 			Log.e(TAG, "expired");
 			store.remove(context, type);
 			return null;
@@ -54,7 +59,7 @@ public class AuthCacheManager {
 		return cache;
 	}
 	
-	public void remove(Context context, int type) {
+	public void remove(Context context, SnsType type) {
 		Log.d(TAG, "remove type:" + type);
 		store.remove(context, type);
 	}
@@ -65,16 +70,14 @@ public class AuthCacheManager {
 	 *
 	 */
 	public static class AuthCache {
-		public int type;
-		public String accessToken;
-		public String uid;
-		public long expireWhen;
-		public long expireIn;
+		public AccessToken token;
 		
 		@Override
 		public String toString() {
-			return "type:" + type + " accessToken:" + accessToken + " uid:" + uid
-					+ " expiredWhen:" + expireWhen;
+		    if (token == null) {
+		        return "[AuthCache null]";
+		    }
+		    return "[AuthCache token:" + token + "]";
 		}
 	}
 	
@@ -87,14 +90,14 @@ public class AuthCacheManager {
 		final static String KEY_EXPIRE_WHEN = "expire_when";
 		final static String KEY_EXPIRE_IN = "expire_in";
 		
-		private SharedPreferences getSp(Context context, int type) {
+		private SharedPreferences getSp(Context context, SnsType type) {
 			String spName = SP_NAME + type;
 			Log.d(TAG, "spName:" + spName);
 			SharedPreferences sp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
 			return sp;
 		}
 		
-		public void put(Context context, int type, String uid, String accessToken, long expireWhen, long expireIn) {
+		public void put(Context context, SnsType type, String uid, String accessToken, long expireWhen, long expireIn) {
 			Log.d(TAG, "DefaultStaoreImpl put type:" + type + " uid:" + uid + " accessToken:" + accessToken + " expired:" + expireWhen);
 			SharedPreferences sp = getSp(context, type);
 			Editor editor = sp.edit();
@@ -105,7 +108,7 @@ public class AuthCacheManager {
 			editor.commit();
 		}
 		
-		public AuthCache get(Context context, int type) {
+		public AuthCache get(Context context, SnsType type) {
 			Log.d(TAG, "DefaultStaoreImpl get type:" + type);
 			SharedPreferences sp = getSp(context, type);
 			String uid = sp.getString(KEY_UID, null);
@@ -117,15 +120,11 @@ public class AuthCacheManager {
 				return null;
 			}
 			AuthCache cache = new AuthCache();
-			cache.type = type;
-			cache.uid = uid;
-			cache.accessToken = token;
-			cache.expireWhen = expireWhen;
-			cache.expireIn = expireIn;
+			cache.token = new AccessToken(type, uid, token, expireIn, expireWhen);
 			return cache;
 		}
 		
-		public void remove(Context context, int type) {
+		public void remove(Context context, SnsType type) {
 			Log.d(TAG, "DefaultStaoreImpl remove:" + type);
 			SharedPreferences sp = getSp(context, type);
 			Editor ed = sp.edit();

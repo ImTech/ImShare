@@ -52,4 +52,9 @@ public class AuthRet{
 	public Bundle getBundle() {
 		return mData;
 	}
+	
+	@Override
+	public String toString() {
+	    return "[AuthRet state:" + state + " token:" + token + "]"; 
+	}
 }

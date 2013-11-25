@@ -121,7 +121,7 @@ public class QQAuth extends AuthBase{
 				ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, "parse json failed");
 			} else {
 				ret = new AuthRet(AuthRetState.SUCESS);
-				ret.token = new AccessToken(accessToken, expires_in);
+				ret.token = new AccessToken(getSnsType(), openId, accessToken, expires_in, -1);
 				mToken = ret.token;
 				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, accessToken);
 				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, ret.token.expires_when);
