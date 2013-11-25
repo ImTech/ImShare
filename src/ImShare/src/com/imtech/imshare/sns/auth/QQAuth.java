@@ -29,7 +29,6 @@ public class QQAuth extends AuthBase{
 
 	private final static String TAG = "SNS_QQAuth";
 	private Tencent mTencent;
-	private AccessToken mToken;
 	
 	@Override
 	public SnsType getSnsType() {

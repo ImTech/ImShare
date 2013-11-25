@@ -49,7 +49,7 @@ public class WeiboAuth extends AuthBase{
             + "friendships_groups_read,friendships_groups_write,statuses_to_me_read,"
             + "follow_app_official_microblog," + "invitation_write";
     
-    private AccessToken mToken;
+    
     
     @Override
     public SnsType getSnsType() {

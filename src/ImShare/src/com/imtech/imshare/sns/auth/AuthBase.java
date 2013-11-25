@@ -12,10 +12,15 @@ package com.imtech.imshare.sns.auth;
 public abstract class AuthBase implements IAuth{
 
 	protected IAuthListener mListener;
+	protected AccessToken mToken;
 	
 	@Override
 	public void setListener(IAuthListener l) {
 		mListener = l;
 	};
 	
+	@Override
+	public AccessToken getAccessToken() {
+		return mToken;
+	}
 }
