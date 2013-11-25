@@ -3,7 +3,7 @@
  * github.com/douzifly
  * douzifly@gmail.com
  */
-package com.imtech.imshare.core.auth;
+package com.imtech.imshare.core.share;
 
 /**
  * @author douzifly
