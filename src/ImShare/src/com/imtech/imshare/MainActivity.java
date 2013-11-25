@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.WeiboAuth;
@@ -45,7 +46,7 @@ public class MainActivity extends Activity implements OnClickListener{
     class AuthListener implements IAuthListener {
 
         @Override
-        public void onAuthFinished(AuthRet ret) {
+        public void onAuthFinished(SnsType snsType, AuthRet ret) {
             Toast.makeText(MainActivity.this, "finished:" + ret.state, Toast.LENGTH_SHORT).show();
         }
         

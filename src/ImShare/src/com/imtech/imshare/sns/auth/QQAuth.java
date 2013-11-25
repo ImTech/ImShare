@@ -54,7 +54,7 @@ public class QQAuth extends AuthBase{
 			ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, mTencent.getAccessToken());
 			ret.getBundle().putString(AuthRet.KEY_UID, mTencent.getOpenId());
 			ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, mTencent.getExpiresIn() + System.currentTimeMillis());
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
 			return;
 		}
 		String scope = "all"; // 需要获取的权限，由 ',' 分割
@@ -82,7 +82,7 @@ public class QQAuth extends AuthBase{
 		public void onCancel() {
 			Log.d(TAG, "onCancel");
 			AuthRet ret = new AuthRet(AuthRetState.CANCELED);
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
 		}
 
 		@Override
@@ -128,7 +128,7 @@ public class QQAuth extends AuthBase{
 				ret.getBundle().putString(AuthRet.KEY_UID, openId);
 				
 			}
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
 		}
 
 		@Override
@@ -139,7 +139,7 @@ public class QQAuth extends AuthBase{
 			ret.getBundle().putInt(AuthRet.KEY_ERROR_CODE, err.errorCode);
 			ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, err.errorMessage);
 			ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_DETAIL, err.errorDetail);
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
 		}
 		
 	}

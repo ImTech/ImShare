@@ -114,14 +114,14 @@ public class WeiboAuth extends AuthBase{
                 ret = new AuthRet(AuthRetState.FAILED);
                 ret.getBundle().putString(AuthRet.KEY_ERROR_CODE, code);
             }
-            mListener.onAuthFinished(ret);
+            mListener.onAuthFinished(getSnsType(), ret);
         }
 
         @Override
         public void onCancel() {
         	Log.d(TAG, "onCancel");
 			AuthRet ret = new AuthRet(AuthRetState.CANCELED);
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
         }
 
         @Override
@@ -130,7 +130,7 @@ public class WeiboAuth extends AuthBase{
         	Log.d(TAG, "onWeiboException, errorCode:" + errorMsg);
 			AuthRet ret = new AuthRet(AuthRetState.FAILED);
 			ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, errorMsg);
-			mListener.onAuthFinished(ret);
+			mListener.onAuthFinished(getSnsType(), ret);
         }
 		
 	}
