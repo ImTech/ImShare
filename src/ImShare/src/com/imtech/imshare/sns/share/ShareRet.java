@@ -15,7 +15,8 @@ public class ShareRet {
     public enum ShareRetState {
         SUCESS, 
         FAILED,
-        CANCELED
+        CANCELED,
+        TOKEN_EXPIRED
     }
     
     public ShareRet(ShareRetState state, ShareObject obj, SnsType type) {
