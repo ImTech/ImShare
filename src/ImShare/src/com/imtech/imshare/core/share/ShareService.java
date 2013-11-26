@@ -14,14 +14,12 @@ import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.share.IShareQueue.IShareQueueListener;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
-import com.imtech.imshare.sns.auth.QQAuth;
-import com.imtech.imshare.sns.auth.WeiboAuth;
 import com.imtech.imshare.sns.share.IShare;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
-import com.imtech.imshare.sns.share.WeiboShare;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
+import com.imtech.imshare.sns.share.WeiboShare;
 import com.imtech.imshare.utils.Log;
 
 /**
@@ -94,6 +92,7 @@ public class ShareService implements IShareService{
 				Log.e(TAG, "unknown share type:" + type);
 				ShareRet ret = new ShareRet(ShareRetState.FAILED, obj, type);
 				notifyShareFinishend(ret);
+				mShareQueue.checkNext();
 				return;
 			}
 			AccessToken token = getToken(type);
@@ -101,6 +100,7 @@ public class ShareService implements IShareService{
 				Log.e(TAG, "no token:" + type);
 				ShareRet ret = new ShareRet(ShareRetState.TOKEN_EXPIRED, obj, type);
 				notifyShareFinishend(ret);
+				mShareQueue.checkNext();
 				return;
 			}
 			share.setListener(new ShareListener());
@@ -120,6 +120,7 @@ public class ShareService implements IShareService{
 		@Override
 		public void onShareFinished(ShareRet ret) {
 			notifyShareFinishend(ret);
+			mShareQueue.checkNext();
 		}
 		
 	}
