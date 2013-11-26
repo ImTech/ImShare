@@ -15,6 +15,7 @@ import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuth;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.QQAuth;
+import com.imtech.imshare.sns.auth.TencentWeiboAuth;
 import com.imtech.imshare.sns.auth.WeiboAuth;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 
@@ -78,6 +79,8 @@ public class AuthService implements IAuthService{
             return new WeiboAuth();
         } else if (type == SnsType.QQ) {
             return new QQAuth();
+        } else if (type == SnsType.TENCENT_WEIBO) {
+        	return new TencentWeiboAuth();
         }
         return null;
     }
