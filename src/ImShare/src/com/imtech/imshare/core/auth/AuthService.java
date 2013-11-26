@@ -55,7 +55,7 @@ public class AuthService implements IAuthService{
 	                          SnsType.GOOGLE_PLUS,
 	                          SnsType.LOFTER,
 	                          SnsType.QQ,
-	                          SnsType.QQ_WEIBO,
+	                          SnsType.TENCENT_WEIBO,
 	                          SnsType.RENREN,
 	                          SnsType.TWITTER,
 	                          SnsType.WEIBO};

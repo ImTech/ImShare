@@ -16,7 +16,7 @@ import com.imtech.imshare.sns.SnsType;
  * @author Xiaoyuan
  *
  */
-public class TencentWeibo extends AuthBase{
+public class TencentWeiboAuth extends AuthBase{
 	
 	@Override
 	public SnsType getSnsType() {

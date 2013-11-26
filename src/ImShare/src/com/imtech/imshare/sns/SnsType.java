@@ -5,7 +5,7 @@ public enum SnsType {
 	QQ,
 	WEIBO,
 	RENREN,
-	QQ_WEIBO,
+	TENCENT_WEIBO,
 	TWITTER,
 	FACEBOOK,
 	GOOGLE_PLUS,
