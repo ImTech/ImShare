@@ -11,6 +11,7 @@ import android.content.Intent;
 import android.widget.Toast;
 
 import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
 import com.tencent.weibo.sdk.android.api.util.Util;
 import com.tencent.weibo.sdk.android.component.Authorize;
@@ -46,25 +47,28 @@ public class TencentWeiboAuth extends AuthBase{
 			//如果当前设备没有安装腾讯微博客户端，走这里
 			@Override
 			public void onWeiBoNotInstalled() {
-				Toast.makeText(activity, "onWeiBoNotInstalled", 1000)
-						.show();
+//				Toast.makeText(activity, "onWeiBoNotInstalled", 1000)
+//						.show();
 				Intent i = new Intent(activity, Authorize.class);
-				activity.startActivity(i);
+				activity.startActivityForResult(i, 0);
 			}
 
 			//如果当前设备没安装指定版本的微博客户端，走这里
 			@Override
 			public void onWeiboVersionMisMatch() {
-				Toast.makeText(activity, "onWeiboVersionMisMatch",
-						1000).show();
+//				Toast.makeText(activity, "onWeiboVersionMisMatch",
+//						1000).show();
 				Intent i = new Intent(activity,Authorize.class);
-				activity.startActivity(i);
+				activity.startActivityForResult(i, 0);
 			}
 
 			//如果授权失败，走这里
 			@Override
 			public void onAuthFail(int result, String err) {
-				Toast.makeText(activity, "result : " + result, 1000)
+				AuthRet ret = new AuthRet(AuthRetState.FAILED);
+				ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, err);
+				mListener.onAuthFinished(getSnsType(), ret);
+				Toast.makeText(activity, "failed result : " + result, 1000)
 						.show();
 			}
 
@@ -75,26 +79,30 @@ public class TencentWeiboAuth extends AuthBase{
 			public void onAuthPassed(String name, WeiboToken token) {
 				Toast.makeText(activity, "passed", 1000).show();
 				//
-				Util.saveSharePersistent(activity, "ACCESS_TOKEN", token.accessToken);
-				Util.saveSharePersistent(activity, "EXPIRES_IN", String.valueOf(token.expiresIn));
-				Util.saveSharePersistent(activity, "OPEN_ID", token.openID);
-//				Util.saveSharePersistent(activity, "OPEN_KEY", token.omasKey);
-				Util.saveSharePersistent(activity, "REFRESH_TOKEN", "");
-//				Util.saveSharePersistent(activity, "NAME", name);
-//				Util.saveSharePersistent(activity, "NICK", name);
-				Util.saveSharePersistent(activity, "CLIENT_ID", Util.getConfig().getProperty("APP_KEY"));
-				Util.saveSharePersistent(activity, "AUTHORIZETIME",
-						String.valueOf(System.currentTimeMillis() / 1000l));
+//				Util.saveSharePersistent(activity, "ACCESS_TOKEN", token.accessToken);
+//				Util.saveSharePersistent(activity, "EXPIRES_IN", String.valueOf(token.expiresIn));
+//				Util.saveSharePersistent(activity, "OPEN_ID", token.openID);
+////				Util.saveSharePersistent(activity, "OPEN_KEY", token.omasKey);
+//				Util.saveSharePersistent(activity, "REFRESH_TOKEN", "");
+////				Util.saveSharePersistent(activity, "NAME", name);
+////				Util.saveSharePersistent(activity, "NICK", name);
+//				Util.saveSharePersistent(activity, "CLIENT_ID", Util.getConfig().getProperty("APP_KEY"));
+//				Util.saveSharePersistent(activity, "AUTHORIZETIME",
+//						String.valueOf(System.currentTimeMillis() / 1000l));
+				
+				AuthRet ret = new AuthRet(AuthRetState.SUCESS);
+				ret.token = new AccessToken(getSnsType(), token.openID, token.accessToken, token.expiresIn, -1);
+				mToken = ret.token;
+				mListener.onAuthFinished(getSnsType(), ret);
 			}
 		});
 		
 		AuthHelper.auth(activity, "");
-		
 	}
 
 	@Override
 	public AccessToken getAccessToken() {
-		return null;
+		return mToken;
 	}
 
 	@Override
@@ -103,6 +111,12 @@ public class TencentWeiboAuth extends AuthBase{
 
 	@Override
 	public void checkActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.d(TAG, "checkActivityResult");
+		if (mToken == null) {
+			// canceled here
+			AuthRet ret = new AuthRet(AuthRetState.CANCELED);
+			mListener.onAuthFinished(getSnsType(), ret);
+		}
 	}
 
 }

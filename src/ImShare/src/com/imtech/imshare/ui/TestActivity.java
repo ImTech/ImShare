@@ -76,15 +76,18 @@ public class TestActivity extends Activity implements OnClickListener{
     	}
     }
     
+    IAuthService mAuthService = AuthService.getInstance();
+    {
+    	mAuthService.addAuthListener(new AuthListener());
+    }
     private void gotoSelectPic(){
-    	IAuthService authService = AuthService.getInstance();
-    	authService.auth(SnsType.TENCENT_WEIBO, getApplicationContext(), this);
+    	mAuthService.auth(SnsType.TENCENT_WEIBO, getApplicationContext(), this);
     }
     
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
     	super.onActivityResult(requestCode, resultCode, data);
-//    	mAuthService.checkActivityResult(requestCode, resultCode, data);
+    	mAuthService.checkActivityResult(requestCode, resultCode, data);
     	String path = data != null ? data.getDataString() : null;
     	Log.d(TAG, "onActivityResult path: " + path);
     }
