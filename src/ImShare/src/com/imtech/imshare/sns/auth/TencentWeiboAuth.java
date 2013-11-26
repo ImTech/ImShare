@@ -10,9 +10,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.imtech.imshare.sns.SNSSetting;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
+import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.tencent.weibo.sdk.android.api.util.Util;
 import com.tencent.weibo.sdk.android.component.Authorize;
 import com.tencent.weibo.sdk.android.component.sso.AuthHelper;
@@ -27,6 +29,7 @@ import com.tencent.weibo.sdk.android.component.sso.WeiboToken;
 public class TencentWeiboAuth extends AuthBase{
 	
 	final static String TAG = "SNS_TencentWeiboAuth";
+	 
 	
 	@Override
 	public SnsType getSnsType() {
@@ -36,12 +39,8 @@ public class TencentWeiboAuth extends AuthBase{
 	@Override
 	public void auth(Context appCtx, final Activity activity) {
 		Log.d(TAG, "auth");
-		/**
-		 * 跳转到授权组件
-		 */
 		long appid = Long.valueOf(Util.getConfig().getProperty("APP_KEY"));
 		String app_secket = Util.getConfig().getProperty("APP_KEY_SEC");
-		
 		AuthHelper.register(activity, appid, app_secket, new OnAuthListener() {
 
 			//如果当前设备没有安装腾讯微博客户端，走这里

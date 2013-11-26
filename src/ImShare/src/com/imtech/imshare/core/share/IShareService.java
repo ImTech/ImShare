@@ -29,4 +29,8 @@ public interface IShareService {
 	void addListener(IShareListener listener);
 	void removeListener(IShareListener l);
 	void cancel(int shareId);
+	/**
+	 * 清除任务
+	 */
+	void clear();
 }

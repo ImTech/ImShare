@@ -13,7 +13,7 @@ import com.imtech.imshare.sns.share.ShareObject;
  *
  */
 public interface IShareQueue {
-
+    
 	/**
 	 * 
 	 * @param obj
@@ -22,6 +22,11 @@ public interface IShareQueue {
 	 */
 	int add(ShareObject obj, SnsType type);
 	void remove(int id);
+	void clear();
+	/**
+	 * 检查下一个任务
+	 */
+	void checkNext();
 	
 	void setListener(IShareQueueListener l);
 	

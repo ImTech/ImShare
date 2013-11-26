@@ -68,6 +68,11 @@ public class ShareService implements IShareService{
 	public void cancel(int shareId) {
 		mShareQueue.remove(shareId);
 	}
+	
+	@Override
+	public void clear() {
+	    mShareQueue.clear();
+	}
 
 	@Override
 	public void addListener(IShareListener listener) {
