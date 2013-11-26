@@ -5,6 +5,8 @@
  */
 package com.imtech.imshare.sns.share;
 
+import com.imtech.imshare.sns.SnsType;
+
 /**
  * @author douzifly
  *
@@ -16,11 +18,14 @@ public class ShareRet {
         CANCELED
     }
     
-    public ShareRet(ShareRetState state) {
+    public ShareRet(ShareRetState state, ShareObject obj, SnsType type) {
     	this.state = state;
+    	this.obj = obj;
+    	this.snsType = type;
     }
     
-    public int id;
+    public ShareObject obj;
+    public SnsType snsType;
     public ShareRetState state;
     public String errorCode;
     public String errorMessage;
