@@ -37,6 +37,15 @@ public class ShareService implements IShareService{
 	private Context mAppContext;
 	private Activity mActivity;
 	
+	private static ShareService sSharedInstance;
+	
+	public synchronized static ShareService sharedInstance() {
+	    if (sSharedInstance == null) {
+	        sSharedInstance = new ShareService();
+	    }
+	    return sSharedInstance;
+	}
+	
 	public ShareService() {
 		mShareQueue = new ShareQueue();
 		mShareQueue.setListener(new QueueListener());

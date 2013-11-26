@@ -47,7 +47,13 @@ public class WeiboShare extends ShareBase {
     public void share(Context appCtx, Activity activity, AccessToken token, ShareObject obj) {
     	Log.d(TAG, "share:" + obj);
         init(token);
-        mApi.update(obj.text, obj.lat, obj.lng, new ShareListener(obj));
+        String picPath = obj.images.size() > 0 ? obj.images.get(0).filePath : null;
+        Log.d(TAG, "pic:" + picPath);
+        if (picPath == null) {
+            mApi.update(obj.text, obj.lat, obj.lng, new ShareListener(obj));
+        } else {
+            mApi.uploadPic(obj.text, picPath, new ShareListener(obj));
+        }
     }
 
 	@Override

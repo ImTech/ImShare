@@ -56,8 +56,8 @@ public class ShareQueue implements IShareQueue{
 	        mRunningTask = mPendingTasks.remove(0);
 	        Log.d(TAG, "have pending task, set running:" + mRunningTask 
 	                + " left count:" + mPendingTasks.size());
+	        notifyTaskAvaiable(mRunningTask);
 	    }
-	    notifyTaskAvaiable(mRunningTask);
 	}
 
 	@Override

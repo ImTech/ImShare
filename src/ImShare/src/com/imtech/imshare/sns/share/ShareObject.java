@@ -28,6 +28,10 @@ public class ShareObject {
     public String lng = "0.0";
     
     public static class Image {
+        public Image(String name, String path) {
+            this.name = name;
+            this.filePath = path;
+        }
         public String name;
         public String filePath;
     }
