@@ -52,7 +52,7 @@ public class AuthCacheManager {
 		    return null;
 		}
 		if (System.currentTimeMillis() > cache.token.expires_when) {
-			Log.e(TAG, "expired");
+			Log.e(TAG, "expired , current:" + System.currentTimeMillis() + " when:" + cache.token.expires_when);
 			store.remove(context, type);
 			return null;
 		}

@@ -15,7 +15,7 @@ import com.imtech.imshare.sns.SnsType;
  */
 public class AccessToken {
     
-    final static String TAG = "AccessToken";
+    final static String TAG = "SNS_AccessToken";
     
     public String uid;
 	public String accessToken;
@@ -34,6 +34,8 @@ public class AccessToken {
 		this.snsType = type;
 		if (expires_when < 0) {
 		    this.expires_when = System.currentTimeMillis() + expires_in;
+		} else {
+		    this.expires_when = expires_when;
 		}
 	}
 	

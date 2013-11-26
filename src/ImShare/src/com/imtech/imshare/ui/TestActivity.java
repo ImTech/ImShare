@@ -114,6 +114,7 @@ public class TestActivity extends Activity implements OnClickListener {
 //            String path = data != null ? data.getDataString() : null;
             // 11-26 23:42:18.192: D/SNS_WeiboShare(4295):
             // pic:content://media/external/images/media/9678
+            if (data == null) return;
             Uri selectedImage = data.getData();
             String[] filePathColumn = { MediaStore.Images.Media.DATA };
             Cursor cursor = getContentResolver().query(selectedImage,
