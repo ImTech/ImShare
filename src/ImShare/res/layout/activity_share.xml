@@ -196,7 +196,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_margin="12dp"
         android:layout_weight="0"
-        android:background="@drawable/btn_long_blue"
+        android:background="@drawable/btn_blue_long"
         android:gravity="center"
         android:text="分享出去"
         android:textColor="#ffffff"
