@@ -16,6 +16,7 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.share.IShare;
 import com.imtech.imshare.sns.share.IShareListener;
+import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
@@ -124,6 +125,12 @@ public class ShareService implements IShareService{
 		}
 	}
 	
+	private void notifyImageUploadChange(ImageUploadInfo info) {
+        for (IShareListener l : mListeners) {
+            l.onShareImageUpload(info);
+        }
+    }
+	
 	class ShareListener implements IShareListener {
 
 		@Override
@@ -132,6 +139,10 @@ public class ShareService implements IShareService{
 			mShareQueue.checkNext();
 		}
 		
+		@Override
+		public void onShareImageUpload(ImageUploadInfo info) {
+		    notifyImageUploadChange(info);
+		}
 	}
 
 }
