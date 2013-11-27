@@ -52,7 +52,8 @@ public class WeiboShare extends ShareBase {
         if (picPath == null) {
             mApi.update(obj.text, obj.lat, obj.lng, new ShareListener(obj));
         } else {
-            mApi.uploadPic(obj.text, picPath, new ShareListener(obj));
+//            mApi.uploadPic(obj.text, picPath, new ShareListener(obj));
+            mApi.upload(obj.text, picPath, obj.lat, obj.lng, new ShareListener(obj));
         }
     }
 

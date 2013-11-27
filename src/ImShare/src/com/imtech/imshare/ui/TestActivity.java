@@ -17,6 +17,7 @@ import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.auth.IAuthService;
 import com.imtech.imshare.core.share.IShareService;
+import com.imtech.imshare.core.share.ShareIDGen;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
@@ -131,7 +132,7 @@ public class TestActivity extends Activity implements OnClickListener {
             Log.d(TAG, "path:" + path);
             ShareObject obj = new ShareObject();
             obj.text = "分享测试";
-//            obj.images.add(new Image("", path));
+            obj.images.add(new Image(ShareIDGen.nextImageId(), "", path));
             mShareSeivce.share(getApplicationContext(), TestActivity.this, obj,
                     SnsType.WEIBO);
             return;
