@@ -11,5 +11,6 @@ package com.imtech.imshare.sns.share;
  */
 public interface IShareListener {
     
-    public void onShareFinished(ShareRet ret);
+    void onShareFinished(ShareRet ret);
+    void onShareImageUpload(ImageUploadInfo info);
 }

@@ -22,6 +22,7 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
+import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareObject.Image;
 import com.imtech.imshare.sns.share.ShareRet;
@@ -72,6 +73,10 @@ public class TestActivity extends Activity implements OnClickListener {
                 }
             });
 
+        }
+
+        @Override
+        public void onShareImageUpload(ImageUploadInfo info) {
         }
 
     }

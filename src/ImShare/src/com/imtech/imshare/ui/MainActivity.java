@@ -18,6 +18,7 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
+import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.WeiboShare;
 import com.imtech.imshare.utils.Log;
@@ -55,6 +56,10 @@ public class MainActivity extends Activity implements OnClickListener{
         @Override
         public void onShareFinished(ShareRet ret) {
         	Toast.makeText(MainActivity.this, "share ret:" + ret.state, Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onShareImageUpload(ImageUploadInfo info) {
         }
         
     }

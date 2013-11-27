@@ -32,6 +32,7 @@ public class ShareObject {
             this.name = name;
             this.filePath = path;
         }
+        public int id;
         public String name;
         public String filePath;
     }
