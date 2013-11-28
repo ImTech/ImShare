@@ -12,8 +12,6 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.imtech.imshare.R;
-import com.imtech.imshare.core.auth.AuthService;
-import com.imtech.imshare.core.auth.IAuthService;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.IAuthListener;

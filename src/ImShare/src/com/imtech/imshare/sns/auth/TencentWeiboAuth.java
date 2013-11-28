@@ -10,11 +10,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
-import com.imtech.imshare.sns.SNSSetting;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.utils.Log;
-import com.sina.weibo.sdk.api.share.WeiboShareSDK;
 import com.tencent.weibo.sdk.android.api.util.Util;
 import com.tencent.weibo.sdk.android.component.Authorize;
 import com.tencent.weibo.sdk.android.component.sso.AuthHelper;

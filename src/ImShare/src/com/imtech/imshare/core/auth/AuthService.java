@@ -12,12 +12,12 @@ import com.imtech.imshare.core.auth.AuthCacheManager.AuthCache;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
+import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.sns.auth.IAuth;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.QQAuth;
 import com.imtech.imshare.sns.auth.TencentWeiboAuth;
 import com.imtech.imshare.sns.auth.WeiboAuth;
-import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 
 /**
  * 提供各平台的认证服务和授权管理

@@ -5,12 +5,12 @@
  */
 package com.imtech.imshare.sns.share;
 
-import com.imtech.imshare.sns.SnsType;
-import com.imtech.imshare.sns.auth.AccessToken;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AccessToken;
 
 /**
  * Share interface

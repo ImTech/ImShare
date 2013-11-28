@@ -5,11 +5,11 @@
  */
 package com.imtech.imshare.sns.auth;
 
-import com.imtech.imshare.sns.SnsType;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+
+import com.imtech.imshare.sns.SnsType;
 
 /**
  * 第三方验证接口

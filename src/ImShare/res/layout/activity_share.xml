@@ -45,22 +45,63 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/images_container"
+    <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:layout_weight="0"
         android:background="#ffffff"
-        android:orientation="horizontal"
-        android:padding="8dp" >
+        android:scrollbars="none" >
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
+        <LinearLayout
+            android:id="@+id/images_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:background="@null"
-            android:src="@drawable/ic_add" />
-    </LinearLayout>
+            android:orientation="horizontal"
+            android:padding="8dp" >
+
+            <ImageView
+                android:id="@+id/image1"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_launcher"
+                android:visibility="gone" 
+                android:scaleType="centerCrop"
+                android:layout_marginRight="8dp"/>
+
+            <ImageView
+                android:id="@+id/image2"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_launcher"
+                android:visibility="gone"
+                android:scaleType="centerCrop"
+                android:layout_marginRight="8dp"/>
+
+            <ImageView
+                android:id="@+id/image3"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_launcher"
+                android:visibility="gone" 
+                android:scaleType="centerCrop"
+                android:layout_marginRight="8dp"/>
+
+            <ImageView
+                android:id="@+id/add_image"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_add" />
+        </LinearLayout>
+    </HorizontalScrollView>
 
     <View
         android:layout_width="match_parent"
@@ -75,15 +116,16 @@
         android:layout_weight="0"
         android:background="#cbcbcb" />
 
-    <TextView
+    <EditText
         android:id="@+id/share_text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:background="#ffffff"
         android:cursorVisible="true"
+        android:gravity="top|left"
+        android:hint="这一刻的想法。。。"
         android:padding="10dp"
-        android:text="这一刻的想法。。。"
         android:textColor="#a2a2a2"
         android:textSize="18sp" />
 
@@ -164,23 +206,55 @@
         android:layout_weight="0"
         android:background="#ffffff"
         android:orientation="horizontal"
-        android:padding="20dp" >
+        android:padding="8dp" >
 
-        <ImageView
+        <LinearLayout
+            android:id="@+id/weibo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
             android:background="@null"
-            android:src="@drawable/ic_qzone" />
+            android:orientation="vertical" >
 
-        <ImageView
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@null"
+                android:src="@drawable/ic_weibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="新浪微博"
+                android:textColor="#a2a2a2"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/tx_weibo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_margin="10dp"
             android:background="@null"
-            android:src="@drawable/ic_weibo" />
+            android:orientation="vertical" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="10dp"
+                android:background="@null"
+                android:src="@drawable/ic_tx_weibo" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|center_horizontal"
+                android:text="腾讯微博"
+                android:textColor="#a2a2a2"
+                android:textSize="14sp" />
+        </LinearLayout>
     </LinearLayout>
 
     <View
