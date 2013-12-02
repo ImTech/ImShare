@@ -31,12 +31,12 @@ public class QQAuth extends AuthBase{
 	
 	@Override
 	public SnsType getSnsType() {
-		return SnsType.QQ;
+		return SnsType.TENCENT_WEIBO;
 	}
 	
 	private void init(Context context) {
 		if (mTencent != null) return;
-		mTencent = Tencent.createInstance(SNSSetting.QQ_APPKEY, context);
+		mTencent = Tencent.createInstance(SNSSetting.QQ_APP_ID, context);
 	}
 	
 	@Override
@@ -70,9 +70,6 @@ public class QQAuth extends AuthBase{
 	@Override
 	public void checkActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(TAG, "checkActivityResult");
-		if (mTencent != null) {
-			mTencent.onActivityResult(requestCode, resultCode, data);
-		}
 	}
 
 	class QQAuthListener implements IUiListener {

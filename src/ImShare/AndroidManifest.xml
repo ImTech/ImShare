@@ -12,6 +12,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/> 
 
     <application
         android:allowBackup="true"
@@ -26,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+     	   <!--  辅助Activity  加上方向 防止横竖屏切换listener 丢失-->
+   		<activity android:name="com.tencent.connect.common.AssistActivity"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             android:screenOrientation="portrait" />
+        
         <activity
             android:name="com.tencent.tauth.AuthActivity"
             android:launchMode="singleTask"
@@ -36,7 +42,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
-                <data android:scheme="100557004" />
+                <data android:scheme="tencent100568940" /><!-- 100380359 100381104 222222 -->
             </intent-filter>
         </activity>
         <activity android:name="com.tencent.weibo.sdk.android.component.Authorize" >

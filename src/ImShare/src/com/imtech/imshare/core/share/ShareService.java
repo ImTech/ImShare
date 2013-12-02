@@ -17,6 +17,7 @@ import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.share.IShare;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
+import com.imtech.imshare.sns.share.QQShare;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
@@ -55,7 +56,8 @@ public class ShareService implements IShareService{
 	private IShare getShare(SnsType type) {
 		 if (type == SnsType.WEIBO) {
 			 return new WeiboShare();
-		 } else if (type == SnsType.QQ) {
+		 } else if (type == SnsType.TENCENT_WEIBO) {
+			 return new QQShare();
 		 }
 		 return null;
 	}

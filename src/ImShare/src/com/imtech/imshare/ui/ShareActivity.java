@@ -9,6 +9,8 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -31,6 +33,7 @@ import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareObject.Image;
 import com.imtech.imshare.sns.share.ShareRet;
+import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
 public class ShareActivity extends Activity implements OnClickListener,
@@ -62,8 +65,10 @@ public class ShareActivity extends Activity implements OnClickListener,
 		Button shareBtn = (Button) findViewById(R.id.share_out);
 		View weiboItem = findViewById(R.id.weibo);
 		View txWeiboItem = findViewById(R.id.tx_weibo);
+//		View qzoneItem = findViewById(R.id.qzone);
 		View addImageItem = findViewById(R.id.add_image);
 
+//		qzoneItem.setOnClickListener(this);
 		shareBtn.setOnClickListener(this);
 		weiboItem.setOnClickListener(this);
 		txWeiboItem.setOnClickListener(this);
@@ -105,12 +110,15 @@ public class ShareActivity extends Activity implements OnClickListener,
 		String path = getImagePath(uri, cr);
 		Log.d(TAG, "path: " + path);
 		mShareImagePath = path;
+		Bitmap bitmap;
 		try {
-			Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-			mImageView1.setVisibility(View.VISIBLE);
-			mImageView1.setImageBitmap(bitmap);
+			bitmap = BitmapUtil.decodeStream(cr.openInputStream(uri));
+			if(bitmap != null){
+				mImageView1.setVisibility(View.VISIBLE);
+				mImageView1.setImageBitmap(bitmap);
+			}
 		} catch (FileNotFoundException e) {
-			Log.e("Exception", e.getMessage());
+			e.printStackTrace();
 		}
 	}
 	
@@ -132,11 +140,14 @@ public class ShareActivity extends Activity implements OnClickListener,
 			share();
 			break;
 		case R.id.weibo:
-			authWeibo();
+			auth(SnsType.WEIBO);
 			break;
 		case R.id.tx_weibo:
-			authTxWeibo();
+			auth(SnsType.TENCENT_WEIBO);
 			break;
+//		case R.id.qzone:
+//			auth(SnsType.QQ);
+//			break;
 		case R.id.add_image:
 			addImage();
 			break;
@@ -157,16 +168,13 @@ public class ShareActivity extends Activity implements OnClickListener,
 			obj.images = new ArrayList<ShareObject.Image>();
 			obj.images.add(new Image(123, "pic", mShareImagePath));
 		}
-		mShareService.share(this, this, obj, SnsType.WEIBO);
+//		mShareService.share(this, this, obj, SnsType.WEIBO);
+		mShareService.share(this, this, obj, SnsType.TENCENT_WEIBO);
 		// mShareService.share(this, this, obj, SnsType.TENCENT_WEIBO);
 	}
 
-	private void authWeibo() {
-		mAuthService.auth(SnsType.WEIBO, this, this);
-	}
-
-	private void authTxWeibo() {
-		mAuthService.auth(SnsType.TENCENT_WEIBO, this, this);
+	private void auth(SnsType type) {
+		mAuthService.auth(type, this, this);
 	}
 
 	@Override
