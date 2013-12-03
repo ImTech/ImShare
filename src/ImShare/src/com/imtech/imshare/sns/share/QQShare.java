@@ -50,8 +50,10 @@ public class QQShare extends ShareBase {
 		if (obj == null) {
 			return;
 		}
+		Log.d(TAG, "share token: " + token.accessToken);
 		
 		init(appCtx);
+		mTencent.setAccessToken(token.accessToken, SNSSetting.QQ_APP_ID);
 		if (mTencent.ready(activity)) {
 			Bundle bundle = new Bundle();
 			bundle.putString("format", "json");
@@ -66,6 +68,11 @@ public class QQShare extends ShareBase {
 			mTencent.requestAsync(Constants.GRAPH_ADD_PIC_T, bundle,
 					Constants.HTTP_POST, new ShareListener(obj), null);
 		}else{
+			if (mListener != null) {
+				ShareRet ret = new ShareRet(ShareRetState.FAILED, obj,
+						getSnsType());
+				mListener.onShareFinished(ret);
+			}
 			Log.d(TAG, "mTencent not ready ");
 		}
 	}

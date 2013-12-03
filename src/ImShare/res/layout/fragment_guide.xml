@@ -28,7 +28,7 @@
         android:layout_marginRight="60dp"
         android:background="@null"
         android:gravity="center_horizontal"
-        android:text="美好的事情，\n每天都在发生！"
+        android:text="美好的事情，每天都在发生！"
         android:textColor="#ffffff"
         android:textSize="32sp" />
 
