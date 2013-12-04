@@ -5,6 +5,7 @@
     android:background="@null" >
 
     <LinearLayout
+        android:id="@+id/content_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#efeff4"
@@ -67,6 +68,17 @@
                 android:padding="8dp" >
 
                 <ImageView
+                    android:id="@+id/image0"
+                    android:layout_width="90dp"
+                    android:layout_height="90dp"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginRight="8dp"
+                    android:background="@null"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_launcher"
+                    android:visibility="gone" />
+
+                <ImageView
                     android:id="@+id/image1"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
@@ -79,17 +91,6 @@
 
                 <ImageView
                     android:id="@+id/image2"
-                    android:layout_width="90dp"
-                    android:layout_height="90dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginRight="8dp"
-                    android:background="@null"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_launcher"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/image3"
                     android:layout_width="90dp"
                     android:layout_height="90dp"
                     android:layout_gravity="center_vertical"
@@ -317,6 +318,7 @@
     <FrameLayout
         android:id="@+id/dynamic_panel"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent" 
+        android:visibility="gone"/>
 
 </FrameLayout>

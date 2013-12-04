@@ -1,5 +1,6 @@
 package com.imtech.imshare.core.auth;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
 
@@ -35,12 +36,18 @@ public class AuthService implements IAuthService{
 	LinkedList<IAuthListener> mAuthListeners 
 	    = new LinkedList<IAuthListener>();
 	
+	HashMap<SnsType, IAuth> mAuths 
+		= new HashMap<SnsType, IAuth>();
+	
 	AuthCacheManager mCacheManager = new AuthCacheManager();
 	IAuth mCurrentAuth;
 	
 	Context mAppCtx;
 	
-	private AuthService() {}
+	private AuthService() {
+		initAuths();
+	}
+	
 	public synchronized static AuthService getInstance() {
 	    if (sInstance == null) {
 	        sInstance = new AuthService();
@@ -64,6 +71,7 @@ public class AuthService implements IAuthService{
 	        Log.d(TAG, "loadCache for:" + type + " cache:" + cache);
 	        if (cache != null && cache.token != null) {
 	            mTokens.put(type, cache.token);
+	            mAuths.get(type).setCacheToken(context, cache.token);
 	        }
 	    }
 	}
@@ -73,13 +81,9 @@ public class AuthService implements IAuthService{
         return mTokens.get(type);
     }
     
-    private IAuth getAuth(SnsType type) {
-        if (type == SnsType.WEIBO) {
-            return new WeiboAuth();
-        } else if (type == SnsType.TENCENT_WEIBO) {
-        	return new QQAuth();
-        }
-        return null;
+    private void initAuths() {
+    	mAuths.put(SnsType.WEIBO, new WeiboAuth());
+    	mAuths.put(SnsType.TENCENT_WEIBO, new QQAuth());
     }
 
     @Override
@@ -98,7 +102,7 @@ public class AuthService implements IAuthService{
         if (mCurrentAuth != null) {
             throw new IllegalStateException("authing for SnsType:" + snsType);
         }
-        IAuth auth = getAuth(snsType);
+        IAuth auth = mAuths.get(snsType);
         if (auth == null) {
             throw new UnsupportedOperationException("unknow SnsType:" + snsType);
         }

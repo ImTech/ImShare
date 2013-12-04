@@ -59,7 +59,8 @@ public class QQShare extends ShareBase {
 			bundle.putString("format", "json");
 			bundle.putString("content", obj.text);
 			String path = null;
-			Image image = obj.images != null ? obj.images.get(0) : null;
+			Image image = obj.images != null && obj.images.size() > 0 
+					? obj.images.get(0) : null;
 			if (image != null) {
 				path = image.filePath;
 			}
