@@ -269,8 +269,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 			obj.images.add(new Image(0, null, mShareImagePath));
 		}
 		mShareService.clear();
-		mShareService.addShare(this, this, obj, SnsType.WEIBO);
-		mShareService.addShare(this, this, obj, SnsType.TENCENT_WEIBO);
+		mShareService.addShare(getApplicationContext(), this, obj, SnsType.WEIBO);
+		mShareService.addShare(getApplicationContext(), this, obj, SnsType.TENCENT_WEIBO);
 	}
 	
 	private void auth(SnsType type) {
