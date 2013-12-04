@@ -3,14 +3,10 @@ package com.imtech.imshare.ui;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,18 +25,19 @@ import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.auth.IAuthService;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.share.IShareService;
+import com.imtech.imshare.core.share.ShareIDGen;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
-import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
+import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
-import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
-import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.sns.share.ShareObject.Image;
 import com.imtech.imshare.sns.share.ShareRet;
+import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
+import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
@@ -203,7 +200,12 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		Intent intent = new Intent(Intent.ACTION_PICK, null);
 		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
 				"image/*");
-		startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+		try {
+		    startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+		} catch(Exception e) {
+		    e.printStackTrace();
+		    Toast.makeText(this, "无法选择照片,没有图库应用?", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void share() {
@@ -211,14 +213,17 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		obj.text = mContentText.getText().toString();
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>();
-			obj.images.add(new Image(123, "pic", mShareImagePath));
+			obj.images.add(new Image(ShareIDGen.nextId(), "pic", mShareImagePath));
 		}
-//		mShareService.share(this, this, obj, SnsType.WEIBO);
-		mShareService.share(this, this, obj, SnsType.TENCENT_WEIBO);
+
+		// 清除之前分享的队列
+		mShareService.clear();
+		// 添加分享任务，如果同时分享到多个平台，这里需要add多次
+		mShareService.addShare(getApplicationContext(), this, obj, SnsType.TENCENT_WEIBO);
 	}
 
 	private void auth(SnsType type) {
-		mAuthService.auth(type, this, this);
+		mAuthService.auth(type, getApplicationContext(), this);
 	}
 
 	@Override

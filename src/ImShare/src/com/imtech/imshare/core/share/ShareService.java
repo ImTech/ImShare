@@ -67,7 +67,7 @@ public class ShareService implements IShareService{
 	}
 
 	@Override
-	public int share(Context appCtx, Activity activity, ShareObject obj, SnsType snsType) {
+	public int addShare(Context appCtx, Activity activity, ShareObject obj, SnsType snsType) {
 		Log.d(TAG, "share obj:" + obj + " type:" + snsType);
 		mAppContext = appCtx;
 		mActivity = activity;

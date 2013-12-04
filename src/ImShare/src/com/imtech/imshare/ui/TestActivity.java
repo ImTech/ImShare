@@ -133,7 +133,7 @@ public class TestActivity extends Activity implements OnClickListener {
             ShareObject obj = new ShareObject();
             obj.text = "分享测试";
             obj.images.add(new Image(ShareIDGen.nextImageId(), "", path));
-            mShareSeivce.share(getApplicationContext(), TestActivity.this, obj,
+            mShareSeivce.addShare(getApplicationContext(), TestActivity.this, obj,
                     SnsType.WEIBO);
             return;
         }
