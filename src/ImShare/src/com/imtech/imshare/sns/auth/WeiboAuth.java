@@ -138,4 +138,9 @@ public class WeiboAuth extends AuthBase{
 	public AccessToken getAccessToken() {
 		return mToken;
 	}
+
+	@Override
+	public void setCacheToken(Context ctx, AccessToken token) {
+		mToken = token;
+	}
 }

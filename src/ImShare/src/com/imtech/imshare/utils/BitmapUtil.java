@@ -8,10 +8,14 @@ package com.imtech.imshare.utils;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 
+import android.content.ContentResolver;
+import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Rect;
 import android.graphics.BitmapFactory.Options;
+import android.net.Uri;
+import android.provider.MediaStore;
 
 /**
  *
@@ -39,4 +43,21 @@ public class BitmapUtil {
 		return BitmapFactory.decodeStream(is, null, opt);
 	}
 	
+	public static Bitmap decodeFile(String path, int sample){
+		Options opt = new Options();
+		opt.inSampleSize = sample;
+		return BitmapFactory.decodeFile(path);
+	}
+	
+	public static String getImagePathByUri(Context ctx, Uri uri){
+		ContentResolver cr = ctx.getContentResolver();
+		Cursor cursor = cr.query(uri, null, null, null, null);
+		String path = null;
+		if (cursor.moveToFirst()) {
+			int column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
+			path = cursor.getString(column);
+		}
+		cursor.close();
+		return path;
+	}
 }

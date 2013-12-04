@@ -24,6 +24,8 @@ public interface IAuth {
 	 */
 	void auth(Context appCtx, Activity activity);
 	
+	void setCacheToken(Context ctx, AccessToken token);
+	
 	AccessToken getAccessToken();
 	
 	void logout(Context appCtx, Activity activity);

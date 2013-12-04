@@ -1,22 +1,17 @@
 package com.imtech.imshare.ui;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -31,16 +26,17 @@ import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.share.IShareService;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
-import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
+import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
-import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
-import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.sns.share.ShareObject.Image;
 import com.imtech.imshare.sns.share.ShareRet;
+import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
+import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
@@ -49,7 +45,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		IAuthListener, IShareListener, OnGuideFinishListener {
 	private static final String TAG = "ShareActivity";
 	private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
-	private ImageView mImageView1;
+	private View mContentPanel;
+	private ImageView mImageView0;
 	private ImageView mAddImage;
 	private ImageView mWeibo, mTxWeibo;
 	private EditText mContentText;
@@ -57,21 +54,41 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 	private IShareService mShareService;
 	private String mShareImagePath;
 	private GuideFragment mGuideFragment;
+	private PreviewFragment mPreviewFragment;
 	private View mDynamicPanel;
+	private Bitmap mBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_share);
 		findView();
-		mAuthService = AuthService.getInstance();
-		mAuthService.addAuthListener(this);
-		mAuthService.loadCachedTokens(this);
+		initAuthInfo();
 
 		mShareService = ShareService.sharedInstance();
 		mShareService.addListener(this);
 
 		showGuideView();
+	}
+
+	private void initAuthInfo() {
+		mAuthService = AuthService.getInstance();
+		mAuthService.addAuthListener(this);
+		mAuthService.loadCachedTokens(this);
+
+		AccessToken token = mAuthService.getAccessToken(SnsType.TENCENT_WEIBO);
+		if (token != null) {
+			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_normal);
+		} else {
+			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_unable);
+		}
+
+		token = mAuthService.getAccessToken(SnsType.WEIBO);
+		if (token != null) {
+			mWeibo.setImageResource(R.drawable.ic_weibo_normal);
+		} else {
+			mWeibo.setImageResource(R.drawable.ic_weibo_unable);
+		}
 	}
 
 	private void showGuideView() {
@@ -86,8 +103,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 			trans.commit();
 			CommonPreference.setBoolean(this,
 					CommonPreference.TYPE_APP_FIRST_LAUNCH, false);
-		} else {
-			mDynamicPanel.setVisibility(View.GONE);
+			mDynamicPanel.setVisibility(View.VISIBLE);
+			mContentPanel.setVisibility(View.GONE);
 		}
 	}
 
@@ -96,12 +113,14 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		FragmentTransaction transaction = fragmentManager.beginTransaction();
 		transaction.remove(mGuideFragment);
 		mDynamicPanel.setVisibility(View.GONE);
+		mContentPanel.setVisibility(View.VISIBLE);
 	}
 
 	private void findView() {
+		mContentPanel = findViewById(R.id.content_panel);
 		mDynamicPanel = findViewById(R.id.dynamic_panel);
 		mContentText = (EditText) findViewById(R.id.share_text);
-		mImageView1 = (ImageView) findViewById(R.id.image1);
+		mImageView0 = (ImageView) findViewById(R.id.image0);
 		mAddImage = (ImageView) findViewById(R.id.add_image);
 		mWeibo = (ImageView) findViewById(R.id.icon_weibo);
 		mTxWeibo = (ImageView) findViewById(R.id.icon_tx_weibo);
@@ -117,6 +136,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		weiboItem.setOnClickListener(this);
 		txWeiboItem.setOnClickListener(this);
 		mAddImage.setOnClickListener(this);
+		mImageView0.setOnClickListener(this);
+
 	}
 
 	@Override
@@ -150,31 +171,17 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		}
 		Uri uri = data.getData();
 		Log.d(TAG, "uri: " + uri.toString());
-		ContentResolver cr = getContentResolver();
-		String path = getImagePath(uri, cr);
+		String path = BitmapUtil.getImagePathByUri(this, uri);
 		Log.d(TAG, "path: " + path);
-		mShareImagePath = path;
 		Bitmap bitmap;
-		try {
-			bitmap = BitmapUtil.decodeStream(cr.openInputStream(uri));
-			if (bitmap != null) {
-				mImageView1.setVisibility(View.VISIBLE);
-				mImageView1.setImageBitmap(bitmap);
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		bitmap = BitmapUtil.decodeFile(path, 16);
+		if (bitmap != null) {
+			mImageView0.setVisibility(View.VISIBLE);
+			mImageView0.setImageBitmap(bitmap);
+			mBitmap = bitmap;
+			mShareImagePath = path;
+			mAddImage.setVisibility(View.GONE);
 		}
-	}
-
-	private String getImagePath(Uri uri, ContentResolver cr) {
-		Cursor cursor = cr.query(uri, null, null, null, null);
-		String path = null;
-		if (cursor.moveToFirst()) {
-			int column = cursor.getColumnIndex(MediaStore.Images.Media.DATA);
-			path = cursor.getString(column);
-		}
-		cursor.close();
-		return path;
 	}
 
 	@Override
@@ -196,7 +203,49 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		case R.id.add_image:
 			addImage();
 			break;
+		case R.id.image0:
+			showImagePreview();
+			break;
 		}
+	}
+
+	private void showImagePreview() {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction trans = fm.beginTransaction();
+		mPreviewFragment = new PreviewFragment();
+		mPreviewFragment
+				.setOnDeleteListener(new PreviewFragment.OnDeleteListener() {
+
+					@Override
+					public void onDelete() {
+						showNormal();
+						delSelectImage();
+					}
+				});
+		trans.add(R.id.dynamic_panel, mPreviewFragment);
+		trans.commit();
+		mDynamicPanel.setVisibility(View.VISIBLE);
+		mContentPanel.setVisibility(View.GONE);
+		mPreviewFragment.setImagePath(mShareImagePath);
+	}
+	
+	private void delSelectImage(){
+		mImageView0.setImageBitmap(null);
+		mImageView0.setVisibility(View.GONE);
+		mBitmap.recycle();
+		mBitmap = null;
+		mShareImagePath = null;
+		mAddImage.setVisibility(View.VISIBLE);
+	}
+
+	private void showNormal() {
+		FragmentManager fm = getSupportFragmentManager();
+		FragmentTransaction trans = fm.beginTransaction();
+		trans.remove(mPreviewFragment);
+		mPreviewFragment = null;
+		trans.commit();
+		mDynamicPanel.setVisibility(View.GONE);
+		mContentPanel.setVisibility(View.VISIBLE);
 	}
 
 	private void addImage() {
@@ -209,16 +258,27 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 	private void share() {
 		ShareObject obj = new ShareObject();
 		obj.text = mContentText.getText().toString();
-		if (mShareImagePath != null) {
-			obj.images = new ArrayList<ShareObject.Image>();
-			obj.images.add(new Image(123, "pic", mShareImagePath));
+		if(mShareImagePath != null){
+			obj.images = new ArrayList<ShareObject.Image>(1);
+			obj.images.add(new Image(0, null, mShareImagePath));
 		}
-//		mShareService.share(this, this, obj, SnsType.WEIBO);
+		mShareService.share(this, this, obj, SnsType.WEIBO);
 		mShareService.share(this, this, obj, SnsType.TENCENT_WEIBO);
 	}
-
+	
 	private void auth(SnsType type) {
 		mAuthService.auth(type, this, this);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			if (mPreviewFragment != null && mPreviewFragment.isVisible()) {
+				showNormal();
+				return true;
+			}
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 	@Override
@@ -262,17 +322,18 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		Log.d(TAG, "onShareFinished ShareRet msg: " + ret.errorMessage
 				+ " state: " + ret.state);
 		runOnUiThread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				String msg = null;
 				String snsName = SnsHelper.getSnsName(ret.snsType);
-				if(ret.state == ShareRetState.SUCESS){
+				if (ret.state == ShareRetState.SUCESS) {
 					msg = snsName + "分享成功";
-				}else{
+				} else {
 					msg = snsName + ret.errorMessage;
 				}
-				Toast.makeText(ShareActivity.this, msg, Toast.LENGTH_SHORT).show();
+				Toast.makeText(ShareActivity.this, msg, Toast.LENGTH_SHORT)
+						.show();
 			}
 		});
 	}

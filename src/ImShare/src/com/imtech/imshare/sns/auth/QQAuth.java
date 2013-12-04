@@ -117,7 +117,7 @@ public class QQAuth extends AuthBase{
 				ret.getBundle().putString(AuthRet.KEY_ERROR_ERROR_MESSAGE, "parse json failed");
 			} else {
 				ret = new AuthRet(AuthRetState.SUCESS);
-				ret.token = new AccessToken(getSnsType(), openId, accessToken, expires_in, -1);
+				ret.token = new AccessToken(getSnsType(), openId, accessToken, expires_in * 1000, -1);
 				mToken = ret.token;
 				ret.getBundle().putString(AuthRet.KEY_ACCESS_TOKEN, accessToken);
 				ret.getBundle().putLong(AuthRet.KEY_EXPIRES_WHEN, ret.token.expires_when);
@@ -143,5 +143,13 @@ public class QQAuth extends AuthBase{
 	@Override
 	public AccessToken getAccessToken() {
 		return mToken;
+	}
+
+	@Override
+	public void setCacheToken(Context ctx, AccessToken token) {
+		init(ctx);
+		mTencent.setOpenId(token.uid);
+		long exp = (token.expires_when - System.currentTimeMillis()) / 1000;
+		mTencent.setAccessToken(token.accessToken, String.valueOf(exp));
 	}
 }
