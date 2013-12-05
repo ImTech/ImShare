@@ -42,8 +42,8 @@ import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
-public class ShareActivity extends FragmentActivity implements OnClickListener,
-		IAuthListener, IShareListener, OnGuideFinishListener {
+public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
+		IShareListener, OnGuideFinishListener {
 	private static final String TAG = "ShareActivity";
 	private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
 	private View mContentPanel;
@@ -93,8 +93,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 	}
 
 	private void showGuideView() {
-		boolean firstLaunch = CommonPreference.getBoolean(this,
-				CommonPreference.TYPE_APP_FIRST_LAUNCH, true);
+		boolean firstLaunch = CommonPreference.getBoolean(this, CommonPreference.TYPE_APP_FIRST_LAUNCH, true);
 		if (firstLaunch) {
 			mGuideFragment = new GuideFragment();
 			mGuideFragment.setOnGuideFinishListenr(this);
@@ -102,8 +101,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 			FragmentTransaction trans = m.beginTransaction();
 			trans.add(R.id.dynamic_panel, mGuideFragment);
 			trans.commit();
-			CommonPreference.setBoolean(this,
-					CommonPreference.TYPE_APP_FIRST_LAUNCH, false);
+			CommonPreference.setBoolean(this, CommonPreference.TYPE_APP_FIRST_LAUNCH, false);
 			mDynamicPanel.setVisibility(View.VISIBLE);
 			mContentPanel.setVisibility(View.GONE);
 		}
@@ -155,8 +153,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		Log.d(TAG, "onActivityResult requestCode: " + requestCode
-				+ " resultCode: " + resultCode);
+		Log.d(TAG, "onActivityResult requestCode: " + requestCode + " resultCode: " + resultCode);
 		if (requestCode == PHOTO_REQUEST_GALLERY) {
 			addImageFinish(data);
 		} else {
@@ -215,23 +212,22 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction trans = fm.beginTransaction();
 		mPreviewFragment = new PreviewFragment();
-		mPreviewFragment
-				.setOnDeleteListener(new PreviewFragment.OnDeleteListener() {
+		mPreviewFragment.setOnDeleteListener(new PreviewFragment.OnDeleteListener() {
 
-					@Override
-					public void onDelete() {
-						showNormal();
-						delSelectImage();
-					}
-				});
+			@Override
+			public void onDelete() {
+				showNormal();
+				delSelectImage();
+			}
+		});
 		trans.add(R.id.dynamic_panel, mPreviewFragment);
 		trans.commit();
 		mDynamicPanel.setVisibility(View.VISIBLE);
 		mContentPanel.setVisibility(View.GONE);
 		mPreviewFragment.setImagePath(mShareImagePath);
 	}
-	
-	private void delSelectImage(){
+
+	private void delSelectImage() {
 		mImageView0.setImageBitmap(null);
 		mImageView0.setVisibility(View.GONE);
 		mBitmap.recycle();
@@ -252,20 +248,19 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 
 	private void addImage() {
 		Intent intent = new Intent(Intent.ACTION_PICK, null);
-		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI,
-				"image/*");
+		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
 		try {
-		    startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
-		} catch(Exception e) {
-		    e.printStackTrace();
-		    Toast.makeText(this, "无法选择照片,没有图库应用?", Toast.LENGTH_SHORT).show();
+			startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
+		} catch (Exception e) {
+			e.printStackTrace();
+			Toast.makeText(this, "无法选择照片,没有图库应用?", Toast.LENGTH_SHORT).show();
 		}
 	}
 
 	private void share() {
 		ShareObject obj = new ShareObject();
 		obj.text = mContentText.getText().toString();
-		if(mShareImagePath != null){
+		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
 			obj.images.add(new Image(0, null, mShareImagePath));
 		}
@@ -273,7 +268,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		mShareService.addShare(getApplicationContext(), this, obj, SnsType.WEIBO);
 		mShareService.addShare(getApplicationContext(), this, obj, SnsType.TENCENT_WEIBO);
 	}
-	
+
 	private void auth(SnsType type) {
 		mAuthService.auth(type, getApplicationContext(), this);
 	}
@@ -291,8 +286,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 
 	@Override
 	public void onAuthFinished(SnsType snsType, AuthRet ret) {
-		Log.d(TAG, "onAuthFinished snsType: " + snsType + " AuthRet: "
-				+ ret.state);
+		Log.d(TAG, "onAuthFinished snsType: " + snsType + " AuthRet: " + ret.state);
 		String snsName = SnsHelper.getSnsName(snsType);
 		String msg = null;
 
@@ -315,20 +309,17 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 	public void setIconState(SnsType type, boolean enable) {
 		switch (type) {
 		case TENCENT_WEIBO:
-			mTxWeibo.setImageResource(enable ? R.drawable.ic_tx_weibo_normal
-					: R.drawable.ic_tx_weibo_unable);
+			mTxWeibo.setImageResource(enable ? R.drawable.ic_tx_weibo_normal : R.drawable.ic_tx_weibo_unable);
 			break;
 		case WEIBO:
-			mWeibo.setImageResource(enable ? R.drawable.ic_weibo_normal
-					: R.drawable.ic_weibo_unable);
+			mWeibo.setImageResource(enable ? R.drawable.ic_weibo_normal : R.drawable.ic_weibo_unable);
 			break;
 		}
 	}
 
 	@Override
 	public void onShareFinished(final ShareRet ret) {
-		Log.d(TAG, "onShareFinished ShareRet msg: " + ret.errorMessage
-				+ " state: " + ret.state);
+		Log.d(TAG, "onShareFinished ShareRet msg: " + ret.errorMessage + " state: " + ret.state);
 		runOnUiThread(new Runnable() {
 
 			@Override
@@ -337,11 +328,16 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 				String snsName = SnsHelper.getSnsName(ret.snsType);
 				if (ret.state == ShareRetState.SUCESS) {
 					msg = snsName + "分享成功";
-				} else {
-					msg = snsName + ret.errorMessage;
+				} else if (ret.state == ShareRetState.TOKEN_EXPIRED) {
+					msg = snsName + "未授权或授权已过期，请先授权";
+				} else if (ret.state == ShareRetState.CANCELED) {
+					msg = snsName + "取消分享";
+				} else if (ret.state == ShareRetState.FAILED) {
+					msg = snsName + "分享失败";
 				}
-				Toast.makeText(ShareActivity.this, msg, Toast.LENGTH_SHORT)
-						.show();
+				if (msg != null) {
+					Toast.makeText(ShareActivity.this, msg, Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
