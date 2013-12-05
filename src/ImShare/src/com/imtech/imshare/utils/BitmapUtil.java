@@ -12,6 +12,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
@@ -37,16 +38,22 @@ public class BitmapUtil {
 		return null;
 	}
 	
-	public static Bitmap decodeStream(InputStream is){
+	public static Bitmap decodeFile(String path, int width){
+		Log.d(TAG, "width: " + width);
 		Options opt = new Options();
-		opt.inSampleSize = 16;
-		return BitmapFactory.decodeStream(is, null, opt);
-	}
-	
-	public static Bitmap decodeFile(String path, int sample){
-		Options opt = new Options();
-		opt.inSampleSize = sample;
-		return BitmapFactory.decodeFile(path);
+		opt.inJustDecodeBounds = true;
+		BitmapFactory.decodeFile(path, opt);
+		Log.d(TAG, "bmp width: " + opt.outWidth + " bmp height: " + opt.outHeight);
+		int sample = 1;
+		if(width > 0){
+			sample = (int)((float)opt.outWidth / (float)width);
+			Log.d(TAG, "sample: " + sample);
+		}
+		opt.inJustDecodeBounds = false;
+		opt.inSampleSize = sample > 0 ? sample : 1;
+		opt.inPreferredConfig = Config.RGB_565;
+		opt.inPurgeable = true;
+		return BitmapFactory.decodeFile(path, opt);
 	}
 	
 	public static String getImagePathByUri(Context ctx, Uri uri){

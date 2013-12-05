@@ -48,7 +48,8 @@ public class PreviewFragment extends Fragment implements OnClickListener {
 	}
 
 	private void showImage(){
-		Bitmap bmp = BitmapUtil.decodeFile(mImagePath, 8);
+		int size = getResources().getDisplayMetrics().widthPixels;
+		Bitmap bmp = BitmapUtil.decodeFile(mImagePath, size);
 		if (bmp != null) {
 			mImageView.setImageBitmap(bmp);
 			mImageBitmap = bmp;

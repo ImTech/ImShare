@@ -53,7 +53,6 @@ public class QQShare extends ShareBase {
 		Log.d(TAG, "share token: " + token.accessToken);
 		
 		init(appCtx);
-		mTencent.setAccessToken(token.accessToken, SNSSetting.QQ_APP_ID);
 		if (mTencent.ready(activity)) {
 			Bundle bundle = new Bundle();
 			bundle.putString("format", "json");

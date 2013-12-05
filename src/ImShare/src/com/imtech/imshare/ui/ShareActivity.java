@@ -175,7 +175,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener,
 		String path = BitmapUtil.getImagePathByUri(this, uri);
 		Log.d(TAG, "path: " + path);
 		Bitmap bitmap;
-		bitmap = BitmapUtil.decodeFile(path, 16);
+		int size = getResources().getDimensionPixelSize(R.dimen.image_size);
+		bitmap = BitmapUtil.decodeFile(path, size);
 		if (bitmap != null) {
 			mImageView0.setVisibility(View.VISIBLE);
 			mImageView0.setImageBitmap(bitmap);
