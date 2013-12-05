@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -17,11 +18,15 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.auth.IAuthService;
+import com.imtech.imshare.core.locate.LocateHelper;
+import com.imtech.imshare.core.locate.Location;
+import com.imtech.imshare.core.locate.LocationListener;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.share.IShareService;
 import com.imtech.imshare.core.share.ShareIDGen;
@@ -43,7 +48,7 @@ import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
 public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
-		IShareListener, OnGuideFinishListener {
+		IShareListener, OnGuideFinishListener, LocationListener {
 	private static final String TAG = "ShareActivity";
 	private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
 	private View mContentPanel;
@@ -58,6 +63,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private PreviewFragment mPreviewFragment;
 	private View mDynamicPanel;
 	private Bitmap mBitmap;
+	private TextView mLocateView;
+	private Location mLocation;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +77,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mShareService.addListener(this);
 
 		showGuideView();
+		LocateHelper.getInstance(getApplicationContext()).locate(this);
 	}
 
 	private void initAuthInfo() {
@@ -123,6 +131,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mAddImage = (ImageView) findViewById(R.id.add_image);
 		mWeibo = (ImageView) findViewById(R.id.icon_weibo);
 		mTxWeibo = (ImageView) findViewById(R.id.icon_tx_weibo);
+		mLocateView = (TextView) findViewById(R.id.locate);
 		Button shareBtn = (Button) findViewById(R.id.share_out);
 		Button sshareBtn = (Button) findViewById(R.id.share);
 		View weiboItem = findViewById(R.id.weibo);
@@ -136,7 +145,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		txWeiboItem.setOnClickListener(this);
 		mAddImage.setOnClickListener(this);
 		mImageView0.setOnClickListener(this);
+		mLocateView.setOnClickListener(this);
 
+		setLocateIcon(CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true));
 	}
 
 	@Override
@@ -159,6 +170,11 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		} else {
 			mAuthService.checkActivityResult(requestCode, resultCode, data);
 		}
+	}
+
+	private void setLocateIcon(boolean needLocate) {
+		int resId = needLocate ? R.drawable.ic_location : R.drawable.ic_location_unable;
+		mLocateView.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0);
 	}
 
 	private void addImageFinish(Intent data) {
@@ -187,6 +203,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.share:
+			// LocateHelper.getInstance(getApplicationContext()).locate();
+			// break;
 		case R.id.share_out:
 			share();
 			break;
@@ -205,7 +223,16 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		case R.id.image0:
 			showImagePreview();
 			break;
+		case R.id.locate:
+			clickLocate();
+			break;
 		}
+	}
+	
+	private void clickLocate(){
+		boolean newValue = !CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true);
+		CommonPreference.setBoolean(this, CommonPreference.TYPE_LOCATE, newValue);
+		setLocateIcon(newValue);
 	}
 
 	private void showImagePreview() {
@@ -263,6 +290,12 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
 			obj.images.add(new Image(0, null, mShareImagePath));
+		}
+		
+		if(CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true)
+				&& mLocation != null){
+			obj.lat = String.valueOf(mLocation.latitude);
+			obj.lng = String.valueOf(mLocation.longitude);
 		}
 		mShareService.clear();
 		mShareService.addShare(getApplicationContext(), this, obj, SnsType.WEIBO);
@@ -350,6 +383,23 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	@Override
 	public void onGuideFinish() {
 		removeGuideView();
+	}
+
+	@Override
+	public void onReceiveLocation(final Location location) {
+		if(location == null){
+			return; 
+		}
+		Log.d(TAG, "onReceiveLocation latitude: " + location.latitude + " longitude：" + location.longitude
+				+ " detail: " + location.detail);
+		mLocation = location;
+		runOnUiThread(new Runnable() {
+
+			@Override
+			public void run() {
+				mLocateView.setText(location.detail);
+			}
+		});
 	}
 
 }

@@ -45,32 +45,31 @@ public class QQShare extends ShareBase {
 	}
 
 	@Override
-	public void share(Context appCtx, Activity activity, AccessToken token,
-			ShareObject obj) {
+	public void share(Context appCtx, Activity activity, AccessToken token, ShareObject obj) {
 		if (obj == null) {
 			return;
 		}
 		Log.d(TAG, "share token: " + token.accessToken);
-		
+
 		init(appCtx);
 		if (mTencent.ready(activity)) {
 			Bundle bundle = new Bundle();
 			bundle.putString("format", "json");
 			bundle.putString("content", obj.text);
+			bundle.putString("longitude", obj.lng);
+			bundle.putString("latitude", obj.lat);
 			String path = null;
-			Image image = obj.images != null && obj.images.size() > 0 
-					? obj.images.get(0) : null;
+			Image image = obj.images != null && obj.images.size() > 0 ? obj.images.get(0) : null;
 			if (image != null) {
 				path = image.filePath;
 			}
 			Log.d(TAG, "imag path: " + path);
 			bundle.putByteArray("pic", BitmapUtil.decodeBitmapToByte(path));
-			mTencent.requestAsync(Constants.GRAPH_ADD_PIC_T, bundle,
-					Constants.HTTP_POST, new ShareListener(obj), null);
-		}else{
+			mTencent.requestAsync(Constants.GRAPH_ADD_PIC_T, bundle, Constants.HTTP_POST, new ShareListener(
+					obj), null);
+		} else {
 			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, obj,
-						getSnsType());
+				ShareRet ret = new ShareRet(ShareRetState.FAILED, obj, getSnsType());
 				mListener.onShareFinished(ret);
 			}
 			Log.d(TAG, "mTencent not ready ");
@@ -78,13 +77,19 @@ public class QQShare extends ShareBase {
 	}
 
 	@Override
-	public void checkActivityResult(int requestCode, int responseCode,
-			Intent data) {
+	public void checkActivityResult(int requestCode, int responseCode, Intent data) {
 	}
 
 	@Override
 	public SnsType getSnsType() {
 		return SnsType.TENCENT_WEIBO;
+	}
+
+	private void notifyResult(ShareRetState state, ShareObject shareObj) {
+		if (mListener != null) {
+			ShareRet ret = new ShareRet(state, shareObj, getSnsType());
+			mListener.onShareFinished(ret);
+		}
 	}
 
 	class ShareListener implements IRequestListener {
@@ -98,94 +103,65 @@ public class QQShare extends ShareBase {
 		@Override
 		public void onComplete(JSONObject response, Object state) {
 			Log.d(TAG, "onComplete response:" + response + " state:" + state);
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.SUCESS, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
+			int ret = -1;
+			try {
+				ret = response.getInt("ret");
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			if (ret == 0) {
+				notifyResult(ShareRetState.SUCESS, shareObj);
+			} else {
+				notifyResult(ShareRetState.FAILED, shareObj);
 			}
 		}
 
 		@Override
-		public void onConnectTimeoutException(ConnectTimeoutException e,
-				Object arg1) {
+		public void onConnectTimeoutException(ConnectTimeoutException e, Object arg1) {
 			Log.e(TAG, "onConnectTimeoutException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
 		public void onHttpStatusException(HttpStatusException e, Object arg1) {
 			Log.e(TAG, "onHttpStatusException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
 		public void onIOException(IOException e, Object arg1) {
 			Log.e(TAG, "onIOException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
 		public void onJSONException(JSONException e, Object arg1) {
 			Log.e(TAG, "onJSONException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
 		public void onMalformedURLException(MalformedURLException e, Object arg1) {
 			Log.e(TAG, "onMalformedURLException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
-		public void onNetworkUnavailableException(
-				NetworkUnavailableException e, Object arg1) {
+		public void onNetworkUnavailableException(NetworkUnavailableException e, Object arg1) {
 			Log.e(TAG, "onNetworkUnavailableException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
-		public void onSocketTimeoutException(SocketTimeoutException e,
-				Object arg1) {
+		public void onSocketTimeoutException(SocketTimeoutException e, Object arg1) {
 			Log.e(TAG, "onSocketTimeoutException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 		@Override
 		public void onUnknowException(Exception e, Object arg1) {
 			Log.e(TAG, "onUnknowException:" + e.getMessage());
-			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj,
-						getSnsType());
-				mListener.onShareFinished(ret);
-			}
+			notifyResult(ShareRetState.FAILED, shareObj);
 		}
 
 	}

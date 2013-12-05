@@ -23,9 +23,14 @@ public class CommonPreference {
 	 * 程序是否是第一次运行 boolean
 	 */
 	public static final int TYPE_APP_FIRST_LAUNCH = 0x0001;
+	/**
+	 * 是否显示位置信息
+	 */
+	public static final int TYPE_LOCATE = 0x0002;
 
 	private static final String KEY_PREFERENCE = "CommonPreference";
 	private static final String KEY_APP_FIRST_LAUNCH = "app_first_launch";
+	private static final String KEY_LOCATE = "locate";
 
 	private static SharedPreferences preferences;
 
@@ -171,6 +176,8 @@ public class CommonPreference {
 		switch (type) {
 		case TYPE_APP_FIRST_LAUNCH:
 			return KEY_APP_FIRST_LAUNCH;
+		case TYPE_LOCATE:
+			return KEY_LOCATE;
 		}
 		return null;
 	}
