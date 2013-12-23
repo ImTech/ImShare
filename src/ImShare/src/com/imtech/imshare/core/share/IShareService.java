@@ -24,7 +24,7 @@ public interface IShareService {
 	 * @param snsType
 	 * @return id for this share call
 	 */
-	int addShare(Context appContext, Activity acticity, ShareObject obj, SnsType snsType);
+	int addShare(Activity acticity, ShareObject obj, SnsType snsType);
 	void addListener(IShareListener listener);
 	void removeListener(IShareListener l);
 	void cancel(int shareId);

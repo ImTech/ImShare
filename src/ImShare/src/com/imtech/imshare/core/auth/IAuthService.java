@@ -37,7 +37,7 @@ public interface IAuthService {
      * @throws IllegalStateException when authing
      * @throws UnsupportedOperationException when not support specific snsType
      */
-    void auth(SnsType snsType, Context appCtx, Activity activity);
+    void auth(SnsType snsType, Activity activity);
     
     /**
      * add one auth listener
@@ -53,4 +53,6 @@ public interface IAuthService {
      * this method must be called, for get auth result
      */
     void checkActivityResult(int requestCode, int resultCode, Intent data);
+    
+    boolean isAuthed(SnsType type);
 }

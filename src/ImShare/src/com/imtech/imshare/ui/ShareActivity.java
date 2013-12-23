@@ -1,13 +1,13 @@
 package com.imtech.imshare.ui;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Process;
 import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -15,6 +15,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,7 +31,6 @@ import com.imtech.imshare.core.locate.Location;
 import com.imtech.imshare.core.locate.LocationListener;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.share.IShareService;
-import com.imtech.imshare.core.share.ShareIDGen;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
@@ -65,6 +66,10 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private Bitmap mBitmap;
 	private TextView mLocateView;
 	private Location mLocation;
+	private boolean mIsWbAuthed;
+	private boolean mIsQQAuthed;
+	private SnsType[] mSnsTypes = new SnsType[] {SnsType.WEIBO, SnsType.TENCENT_WEIBO};
+	private HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -77,7 +82,12 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mShareService.addListener(this);
 
 		showGuideView();
-		LocateHelper.getInstance(getApplicationContext()).locate(this);
+		locateBegtin();
+	}
+	
+	private void locateBegtin() {
+	    LocateHelper.getInstance(this).locate(this);
+	    mLocateView.setText("正在获取位置信息...");
 	}
 
 	private void initAuthInfo() {
@@ -88,6 +98,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		AccessToken token = mAuthService.getAccessToken(SnsType.TENCENT_WEIBO);
 		if (token != null) {
 			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_normal);
+			setChecked(SnsType.TENCENT_WEIBO, true);
 		} else {
 			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_unable);
 		}
@@ -95,9 +106,18 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		token = mAuthService.getAccessToken(SnsType.WEIBO);
 		if (token != null) {
 			mWeibo.setImageResource(R.drawable.ic_weibo_normal);
+			setChecked(SnsType.WEIBO, true);
 		} else {
 			mWeibo.setImageResource(R.drawable.ic_weibo_unable);
 		}
+	}
+	
+	private boolean isChecked(SnsType type) {
+	    return mChecked.get(type) != null && mChecked.get(type).booleanValue();
+	}
+	
+	private void setChecked(SnsType type, boolean value) {
+	    mChecked.put(type, value);
 	}
 
 	private void showGuideView() {
@@ -155,6 +175,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		super.onDestroy();
 		mAuthService.removeAuthListener(this);
 		mShareService.removeListener(this);
+		LocateHelper.release();
+		Process.killProcess(Process.myPid());
 	}
 
 	@Override
@@ -209,15 +231,46 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			share();
 			break;
 		case R.id.weibo:
-			auth(SnsType.WEIBO);
+		    AnimUtil.scaleBig(v, new AnimationListener() {
+                
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+                
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+                
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    auth(SnsType.WEIBO);
+                }
+            });
+			
 			break;
 		case R.id.tx_weibo:
-			auth(SnsType.TENCENT_WEIBO);
+		    AnimUtil.scaleBig(v, new AnimationListener() {
+                
+                @Override
+                public void onAnimationStart(Animation animation) {
+                }
+                
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+                }
+                
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    auth(SnsType.TENCENT_WEIBO);
+                }
+            });
+			
 			break;
 		// case R.id.qzone:
 		// auth(SnsType.QQ);
 		// break;
 		case R.id.add_image:
+		    AnimUtil.fadeOut(v);
 			addImage();
 			break;
 		case R.id.image0:
@@ -297,13 +350,30 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			obj.lat = String.valueOf(mLocation.latitude);
 			obj.lng = String.valueOf(mLocation.longitude);
 		}
+		
 		mShareService.clear();
-		mShareService.addShare(getApplicationContext(), this, obj, SnsType.WEIBO);
-		mShareService.addShare(getApplicationContext(), this, obj, SnsType.TENCENT_WEIBO);
+		
+		for (SnsType type : mSnsTypes) {
+		    if (isChecked(type)) {
+		        Log.d(TAG, "share addShare :" + type);
+		        mShareService.addShare(this, obj, type);
+		    } else {
+		        Log.d(TAG, "share " + type + " not checked");
+		    }
+		}
 	}
 
 	private void auth(SnsType type) {
-		mAuthService.auth(type, getApplicationContext(), this);
+	    if (mAuthService.isAuthed(type)) {
+	        // 已经授权，取消选中，表示不发送到相关平台
+	        if (isChecked(type)) {
+	            setIconState(type, false);
+	        } else {
+	            setIconState(type, true);
+	        }
+	    } else {
+	        mAuthService.auth(type, this);
+	    }
 	}
 
 	@Override
@@ -316,7 +386,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-
+	
 	@Override
 	public void onAuthFinished(SnsType snsType, AuthRet ret) {
 		Log.d(TAG, "onAuthFinished snsType: " + snsType + " AuthRet: " + ret.state);
@@ -348,6 +418,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			mWeibo.setImageResource(enable ? R.drawable.ic_weibo_normal : R.drawable.ic_weibo_unable);
 			break;
 		}
+		setChecked(type, enable);
 	}
 
 	@Override
@@ -387,19 +458,18 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 
 	@Override
 	public void onReceiveLocation(final Location location) {
-		if(location == null){
-			return; 
+		if(location != null){
+		    Log.d(TAG, "onReceiveLocation latitude: " + location.latitude + " longitude：" + location.longitude
+	                + " detail: " + location.detail);
+	        mLocation = location;
 		}
-		Log.d(TAG, "onReceiveLocation latitude: " + location.latitude + " longitude：" + location.longitude
-				+ " detail: " + location.detail);
-		mLocation = location;
+		
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				mLocateView.setText(location.detail);
+				mLocateView.setText(location == null ? "获取失败" : location.detail);
 			}
 		});
 	}
-
 }

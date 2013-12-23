@@ -3,6 +3,7 @@ package com.imtech.imshare.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Process;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,7 +25,6 @@ import com.imtech.imshare.utils.Log;
 public class MainActivity extends Activity implements OnClickListener{
     final static String TAG = "Share#MainActivity";
     private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
-//    IAuthService mAuthService;
     WeiboShare mShare = new WeiboShare();
     
     @Override
@@ -33,11 +33,6 @@ public class MainActivity extends Activity implements OnClickListener{
         setContentView(R.layout.fragment_guide);
         Button btn = (Button)findViewById(R.id.share);
         btn.setOnClickListener(this);
-        
-//        mAuthService = AuthService.getInstance();
-//        mAuthService.loadCachedTokens(this);
-//        mAuthService.addAuthListener(new AuthListener());
-//        mShare.setListener(new ShareListener());
     }
     
     class AuthListener implements IAuthListener {
@@ -91,5 +86,11 @@ public class MainActivity extends Activity implements OnClickListener{
 //    	mAuthService.checkActivityResult(requestCode, resultCode, data);
     	String path = data != null ? data.getDataString() : null;
     	Log.d(TAG, "onActivityResult path: " + path);
+    }
+    
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Process.killProcess(Process.myPid());
     }
 }

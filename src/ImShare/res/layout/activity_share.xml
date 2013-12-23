@@ -168,7 +168,7 @@
                 android:gravity="center"
                 android:singleLine="true"
                 android:text="显示所在城市"
-                android:textColor="#212121"
+                android:textColor="#a2a2a2"
                 android:textSize="16sp" />
         </FrameLayout>
         <!--

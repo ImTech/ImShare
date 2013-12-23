@@ -87,10 +87,10 @@ public class AuthService implements IAuthService{
     }
 
     @Override
-    public void auth(SnsType snsType, Context appCtx, Activity activity) {
+    public void auth(SnsType snsType, Activity activity) {
         Log.d(TAG, "auth type:" + snsType);
-        mAppCtx = appCtx;
-        AuthCache cache = mCacheManager.get(appCtx, snsType);
+        mAppCtx = activity.getApplicationContext();
+        AuthCache cache = mCacheManager.get(mAppCtx, snsType);
         if (cache != null && cache.token != null) {
             Log.d(TAG, "AccessToken cached!");
             AuthRet ret = new AuthRet(AuthRetState.SUCESS);
@@ -108,7 +108,7 @@ public class AuthService implements IAuthService{
         }
         auth.setListener(new AuthListener());
         mCurrentAuth = auth;
-        auth.auth(appCtx, activity);
+        auth.auth(mAppCtx, activity);
     }
 
     @Override
@@ -152,6 +152,11 @@ public class AuthService implements IAuthService{
             mCurrentAuth.setListener(null);
             mCurrentAuth = null;
         }
+    }
+
+    @Override
+    public boolean isAuthed(SnsType type) {
+        return mTokens.get(type) != null;
     }
     
 }

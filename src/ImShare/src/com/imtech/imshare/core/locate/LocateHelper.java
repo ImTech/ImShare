@@ -64,6 +64,7 @@ public class LocateHelper implements BDLocationListener{
 
 	@Override
 	public void onReceiveLocation(BDLocation location) {
+	    Log.d(TAG, "onReceiveLocation:" + location);
 		StringBuffer sb = new StringBuffer(256);
 		sb.append("time : ");
 		sb.append(location.getTime());
@@ -111,5 +112,6 @@ public class LocateHelper implements BDLocationListener{
 
 	@Override
 	public void onReceivePoi(BDLocation location) {
+	    Log.d(TAG, "onReceivePoi:" + location);
 	}
 }

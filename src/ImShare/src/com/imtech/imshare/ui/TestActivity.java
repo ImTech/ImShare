@@ -97,7 +97,7 @@ public class TestActivity extends Activity implements OnClickListener {
             if (mAuthService.getAccessToken(SnsType.WEIBO) == null) {
                 Toast.makeText(TestActivity.this, "先授权", Toast.LENGTH_SHORT)
                         .show();
-                mAuthService.auth(SnsType.WEIBO, getApplicationContext(),
+                mAuthService.auth(SnsType.WEIBO, 
                         TestActivity.this);
                 return;
             }
@@ -133,7 +133,7 @@ public class TestActivity extends Activity implements OnClickListener {
             ShareObject obj = new ShareObject();
             obj.text = "分享测试";
             obj.images.add(new Image(ShareIDGen.nextImageId(), "", path));
-            mShareSeivce.addShare(getApplicationContext(), TestActivity.this, obj,
+            mShareSeivce.addShare(TestActivity.this, obj,
                     SnsType.WEIBO);
             return;
         }
