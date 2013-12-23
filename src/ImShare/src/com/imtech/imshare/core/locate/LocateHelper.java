@@ -16,7 +16,14 @@ import com.baidu.location.LocationClientOption;
  */
 public class LocateHelper implements BDLocationListener{
 	private static final String TAG = "LocateHelper";
-	private static final String APP_KEY = "nsVxKrlhPyG00CdRyp79rnkl";
+//	/**
+//	 * release key
+//	 */
+//	private static final String APP_KEY = "pgC19CHTK3613GGDMbA5FaxN";
+	/**
+	 * debug key
+	 */
+	private static final String APP_KEY = "tXjykD4eacTNO9eeqhul01bq";
 	
 	private static LocateHelper mInstance;
 	private LocationClient mLocationClient;
