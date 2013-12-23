@@ -66,8 +66,6 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private Bitmap mBitmap;
 	private TextView mLocateView;
 	private Location mLocation;
-	private boolean mIsWbAuthed;
-	private boolean mIsQQAuthed;
 	private SnsType[] mSnsTypes = new SnsType[] {SnsType.WEIBO, SnsType.TENCENT_WEIBO};
 	private HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
 
