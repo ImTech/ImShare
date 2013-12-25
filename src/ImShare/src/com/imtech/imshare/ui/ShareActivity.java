@@ -68,6 +68,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private Location mLocation;
 	private SnsType[] mSnsTypes = new SnsType[] {SnsType.WEIBO, SnsType.TENCENT_WEIBO};
 	private HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
+	private boolean mIsLocatedSucess;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -195,6 +196,10 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private void setLocateIcon(boolean needLocate) {
 		int resId = needLocate ? R.drawable.ic_location : R.drawable.ic_location_unable;
 		mLocateView.setCompoundDrawablesWithIntrinsicBounds(resId, 0, 0, 0);
+		
+		if (!needLocate && !mIsLocatedSucess) {
+			mLocateView.setText("点击获取位置信息");
+		}
 	}
 
 	private void addImageFinish(Intent data) {
@@ -284,6 +289,13 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		boolean newValue = !CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true);
 		CommonPreference.setBoolean(this, CommonPreference.TYPE_LOCATE, newValue);
 		setLocateIcon(newValue);
+		
+		
+		
+		if (newValue && !mIsLocatedSucess) {
+			// 定位失败，重新定位
+			locateBegtin();
+		}
 	}
 
 	private void showImagePreview() {
@@ -460,13 +472,15 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		    Log.d(TAG, "onReceiveLocation latitude: " + location.latitude + " longitude：" + location.longitude
 	                + " detail: " + location.detail);
 	        mLocation = location;
-		}
+		} 
+		
+		mIsLocatedSucess = location != null && location.detail != null;
 		
 		runOnUiThread(new Runnable() {
 
 			@Override
 			public void run() {
-				mLocateView.setText(location == null ? "获取失败" : location.detail);
+				mLocateView.setText((location == null  || location.detail == null )? "获取位置信息失败" : location.detail);
 			}
 		});
 	}

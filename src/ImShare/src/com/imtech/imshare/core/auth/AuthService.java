@@ -99,9 +99,6 @@ public class AuthService implements IAuthService{
             notifyAuthFinished(snsType, ret);
             return;
         }
-        if (mCurrentAuth != null) {
-            throw new IllegalStateException("authing for SnsType:" + snsType);
-        }
         IAuth auth = mAuths.get(snsType);
         if (auth == null) {
             throw new UnsupportedOperationException("unknow SnsType:" + snsType);
