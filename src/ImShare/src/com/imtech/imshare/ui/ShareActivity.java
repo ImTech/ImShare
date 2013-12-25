@@ -15,10 +15,13 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -69,6 +72,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private SnsType[] mSnsTypes = new SnsType[] {SnsType.WEIBO, SnsType.TENCENT_WEIBO};
 	private HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
 	private boolean mIsLocatedSucess;
+	private Button mBtnMyShare;
+	private Button mBtnShare;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -151,15 +156,15 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mWeibo = (ImageView) findViewById(R.id.icon_weibo);
 		mTxWeibo = (ImageView) findViewById(R.id.icon_tx_weibo);
 		mLocateView = (TextView) findViewById(R.id.locate);
-		Button shareBtn = (Button) findViewById(R.id.share_out);
-		Button sshareBtn = (Button) findViewById(R.id.share);
+		mBtnShare = (Button) findViewById(R.id.share_out);
+		mBtnMyShare = (Button) findViewById(R.id.btnMyShare);
 		View weiboItem = findViewById(R.id.weibo);
 		View txWeiboItem = findViewById(R.id.tx_weibo);
 		// View qzoneItem = findViewById(R.id.qzone);
 
 		// qzoneItem.setOnClickListener(this);
-		shareBtn.setOnClickListener(this);
-		sshareBtn.setOnClickListener(this);
+		mBtnShare.setOnClickListener(this);
+		mBtnMyShare.setOnClickListener(this);
 		weiboItem.setOnClickListener(this);
 		txWeiboItem.setOnClickListener(this);
 		mAddImage.setOnClickListener(this);
@@ -223,14 +228,27 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			mAddImage.setVisibility(View.GONE);
 		}
 	}
+	
+	private void gotoMyShare() {
+		
+	}
+	
+	private void beginFlyAnim() {
+		float xdelta = mBtnMyShare.getX() - mBtnShare.getX();
+		float ydelta = mBtnMyShare.getY() - mBtnShare.getY();
+		Log.d(TAG, "beginFlyAnim xd:" + xdelta + " yd:" + ydelta);
+		TranslateAnimation anim = new TranslateAnimation(0, xdelta, 0, ydelta);
+		anim.setDuration(500);
+	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.share:
-			// LocateHelper.getInstance(getApplicationContext()).locate();
-			// break;
+		case R.id.btnMyShare:
+			gotoMyShare();
+			break;
 		case R.id.share_out:
+			beginFlyAnim();
 			share();
 			break;
 		case R.id.weibo:
@@ -349,14 +367,19 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 
 	private void share() {
 		ShareObject obj = new ShareObject();
-		obj.text = mContentText.getText().toString();
+		obj.text = mContentText.getText().toString().trim();
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
 			obj.images.add(new Image(0, null, mShareImagePath));
 		}
 		
+		if (mShareImagePath == null && obj.text.equals("")) {
+			Toast.makeText(this, "亲，想分享什么呢?", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		
 		if(CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true)
-				&& mLocation != null){
+				&& mLocation != null && mLocation.detail != null){
 			obj.lat = String.valueOf(mLocation.latitude);
 			obj.lng = String.valueOf(mLocation.longitude);
 		}
@@ -385,7 +408,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	        mAuthService.auth(type, this);
 	    }
 	}
-
+	
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
