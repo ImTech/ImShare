@@ -33,9 +33,18 @@ public class ShareObject {
             this.filePath = path;
             this.id = id;
         }
+        
+        public Image(int id, String name, String path, String thumbPath) {
+            this.name = name;
+            this.filePath = path;
+            this.id = id;
+            this.thumbPath = thumbPath;
+        }
+        
         public int id;
         public String name;
         public String filePath;
+        public String thumbPath;
     }
     
     @Override

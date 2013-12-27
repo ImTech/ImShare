@@ -48,6 +48,7 @@ import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
+import com.imtech.imshare.ui.myshare.MyShareActivity;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
@@ -230,7 +231,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	}
 	
 	private void gotoMyShare() {
-		
+		startActivity(new Intent(this, MyShareActivity.class));
 	}
 	
 	private void beginFlyAnim() {
@@ -389,11 +390,13 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		for (SnsType type : mSnsTypes) {
 		    if (isChecked(type)) {
 		        Log.d(TAG, "share addShare :" + type);
-		        mShareService.addShare(this, obj, type);
+//		        mShareService.addShare(this, obj, type);
 		    } else {
 		        Log.d(TAG, "share " + type + " not checked");
 		    }
 		}
+		
+		
 	}
 
 	private void auth(SnsType type) {
