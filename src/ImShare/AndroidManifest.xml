@@ -60,6 +60,8 @@
             android:process=":remote" >
         </service>
         <activity android:name=".ui.myshare.MyShareActivity"></activity>
+        <activity android:name=".ui.preview.PreviewActivity"></activity>
+        <activity android:name=".ui.preview.TextPreviewActivity"></activity>
     </application>
 
 </manifest>

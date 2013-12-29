@@ -8,14 +8,13 @@ package com.imtech.imshare.ui.myshare;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.app.Activity;
+import android.os.Bundle;
+import android.widget.ListView;
+
 import com.imtech.imshare.R;
 import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.core.store.StoreManager;
-
-import android.app.Activity;
-import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.ListView;
 
 /**
  * 我的分享
@@ -26,7 +25,7 @@ public class MyShareActivity extends Activity{
 
 	ListView mListView;
 	List<ShareItem> mItems = new ArrayList<ShareItem>();
-	ArrayAdapter<ShareItem> mAdapter;
+	ShareAdapter mAdapter;
 	StoreManager mStroeMgr = StoreManager.sharedInstance();
 
 	@Override
@@ -34,7 +33,7 @@ public class MyShareActivity extends Activity{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_share);
 		mListView = (ListView) findViewById(R.id.listMyShare); 
-		mAdapter = new ArrayAdapter<ShareItem>(this, android.R.layout.simple_list_item_1, mItems);
+		mAdapter = new ShareAdapter(this);
 		mListView.setAdapter(mAdapter);
 		loadData();
 	}
@@ -44,7 +43,7 @@ public class MyShareActivity extends Activity{
 		if (data != null) {
 			mItems.addAll(data);
 		}
-		mAdapter.notifyDataSetChanged();
+		mAdapter.setItems(mItems);
 	}
 	
 }

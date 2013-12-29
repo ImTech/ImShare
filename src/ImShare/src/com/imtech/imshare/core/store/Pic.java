@@ -18,4 +18,11 @@ public class Pic {
      * 真实图片地址
      */
     public String originPath;
+    
+    public Pic() {}
+    
+    public Pic(String thumb, String origin) {
+        this.thumbPath = thumb;
+        this.originPath = origin;
+    }
 }

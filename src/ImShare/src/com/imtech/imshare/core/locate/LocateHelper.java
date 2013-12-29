@@ -75,7 +75,7 @@ public class LocateHelper implements BDLocationListener{
 		StringBuffer sb = new StringBuffer(256);
 		sb.append("time : ");
 		sb.append(location.getTime());
-		sb.append("\nerror code : ");
+		sb.append("\nLoc Type : ");
 		sb.append(location.getLocType());
 		sb.append("\nlatitude : ");
 		sb.append(location.getLatitude());
@@ -111,6 +111,7 @@ public class LocateHelper implements BDLocationListener{
 		loc.latitude = location.getLatitude();
 		loc.longitude = location.getLongitude();
 		loc.detail = location.getAddrStr();
+		loc.city = location.getCity();
 		
 		if(mLocationListener != null){
 			mLocationListener.onReceiveLocation(loc);

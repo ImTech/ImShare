@@ -1,7 +1,9 @@
 package com.imtech.imshare.ui;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -35,6 +37,9 @@ import com.imtech.imshare.core.locate.LocationListener;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.share.IShareService;
 import com.imtech.imshare.core.share.ShareService;
+import com.imtech.imshare.core.store.Pic;
+import com.imtech.imshare.core.store.ShareItem;
+import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
@@ -49,6 +54,7 @@ import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
 import com.imtech.imshare.ui.myshare.MyShareActivity;
+import com.imtech.imshare.ui.preview.PreviewFragment;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
@@ -75,6 +81,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private boolean mIsLocatedSucess;
 	private Button mBtnMyShare;
 	private Button mBtnShare;
+	private boolean mLocationChecked;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -172,7 +179,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mImageView0.setOnClickListener(this);
 		mLocateView.setOnClickListener(this);
 
-		setLocateIcon(CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true));
+		
+		mLocationChecked = CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true);
+		setLocateIcon(mLocationChecked);
 	}
 
 	@Override
@@ -230,7 +239,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		}
 	}
 	
-	private void gotoMyShare() {
+	private void showMyShare() {
 		startActivity(new Intent(this, MyShareActivity.class));
 	}
 	
@@ -246,7 +255,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btnMyShare:
-			gotoMyShare();
+			showMyShare();
 			break;
 		case R.id.share_out:
 			beginFlyAnim();
@@ -306,10 +315,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	
 	private void clickLocate(){
 		boolean newValue = !CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true);
+		mLocationChecked = newValue;
 		CommonPreference.setBoolean(this, CommonPreference.TYPE_LOCATE, newValue);
 		setLocateIcon(newValue);
-		
-		
 		
 		if (newValue && !mIsLocatedSucess) {
 			// 定位失败，重新定位
@@ -329,7 +337,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 				delSelectImage();
 			}
 		});
-		trans.add(R.id.dynamic_panel, mPreviewFragment);
+		trans.add(R.id.dynamic_panel, mPreviewFragment, "preivew");
 		trans.commit();
 		mDynamicPanel.setVisibility(View.VISIBLE);
 		mContentPanel.setVisibility(View.GONE);
@@ -379,8 +387,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			return;
 		}
 		
-		if(CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true)
-				&& mLocation != null && mLocation.detail != null){
+		if(mLocationChecked	&& mLocation != null && mLocation.detail != null){
 			obj.lat = String.valueOf(mLocation.latitude);
 			obj.lng = String.valueOf(mLocation.longitude);
 		}
@@ -396,7 +403,22 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		    }
 		}
 		
+		ShareItem item = new ShareItem();
+		item.postTime = new Date();
+		if (mLocationChecked && mLocation != null) {
+		    item.addr = mLocation.detail;
+		    item.city = mLocation.city;
+		}
 		
+		item.content = mContentText.getText().toString();
+		if (mShareImagePath != null) {
+		    List<Pic> pic = new ArrayList<Pic>();
+		    pic.add(new Pic(mShareImagePath, mShareImagePath));
+		    item.setPic(pic);
+		}
+		StoreManager.sharedInstance().saveShareItem(item);
+		
+		showMyShare();
 	}
 
 	private void auth(SnsType type) {

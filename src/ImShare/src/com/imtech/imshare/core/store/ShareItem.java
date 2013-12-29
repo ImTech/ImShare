@@ -6,6 +6,7 @@
 package com.imtech.imshare.core.store;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.activeandroid.Model;
@@ -55,6 +56,13 @@ public class ShareItem extends Model {
 	
 	@Column(name="addr")
 	public String addr;
+	
+	@Column(name="city")
+	public String city;
+	
+	@Column(name="post_time")
+	public Date postTime;
+
 	
 	public List<Pic> getPicPaths() {
 		if (picPaths == null || picPaths.length() == 0) return null;
@@ -116,7 +124,7 @@ public class ShareItem extends Model {
 	
 	@Override
 	public String toString() {
-		return "id:" + getId() + " content:" + content + " path:" + picPaths;
+		return "id:" + getId() + " content:" + content + " path:" + picPaths + " when:" + postTime;
 	}
 
 }

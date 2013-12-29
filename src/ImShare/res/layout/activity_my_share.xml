@@ -40,6 +40,9 @@
     <ListView android:id="@+id/listMyShare" 
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#F9F9F9"
+        android:divider="@null"
+        android:dividerHeight="0dp"
         >
     </ListView>
 

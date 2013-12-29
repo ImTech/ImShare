@@ -3,7 +3,7 @@
  * @author  :huqiming 
  * @date    :2013-12-4
  */
-package com.imtech.imshare.ui;
+package com.imtech.imshare.ui.preview;
 
 import com.imtech.imshare.R;
 import com.imtech.imshare.utils.BitmapUtil;
@@ -30,14 +30,15 @@ public class PreviewFragment extends Fragment implements OnClickListener {
 	private ImageView mImageView;
 	private Bitmap mImageBitmap;
 	private String mImagePath;
+	private Button mBtnDelete;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		Log.d(TAG, "onCreateView");
 		View view = inflater.inflate(R.layout.fragment_preview, null);
-		Button btn = (Button) view.findViewById(R.id.delete);
-		btn.setOnClickListener(this);
+		mBtnDelete = (Button) view.findViewById(R.id.delete);
+		mBtnDelete.setOnClickListener(this);
 		mImageView = (ImageView) view.findViewById(R.id.image);
 		showImage();
 		return view;
@@ -59,6 +60,13 @@ public class PreviewFragment extends Fragment implements OnClickListener {
 	public void setImagePath(String path) {
 		Log.d(TAG, "setImagePath");
 		mImagePath = path;
+		if (isAdded()) {
+		    showImage();
+		}
+	}
+	
+	public void setShowDelete(boolean visible) {
+	    mBtnDelete.setVisibility(visible ? View.VISIBLE : View.GONE);
 	}
 
 	@Override

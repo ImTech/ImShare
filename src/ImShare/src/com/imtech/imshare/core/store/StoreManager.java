@@ -33,7 +33,7 @@ public class StoreManager {
 	public List<ShareItem> loadShareItems() {
 		if (mShares == null) {
 			// not loaded before
-			mShares = new Select().from(ShareItem.class).execute();
+			mShares = new Select().from(ShareItem.class).orderBy("id desc").execute();
 			Log.d(TAG, "loadShareItmes from db, count:" + mShares.size());
 		}
 		
@@ -48,7 +48,7 @@ public class StoreManager {
 		boolean sucess = item.save();
 		if (sucess) {
 			if (mShares != null) {
-				mShares.add(item);
+				mShares.add(0, item);
 			}
 		}
 	}
