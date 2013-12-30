@@ -5,21 +5,19 @@
  */
 package com.imtech.imshare.ui.preview;
 
-import com.imtech.imshare.R;
-import com.imtech.imshare.utils.BitmapUtil;
-
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageView;
+
+import com.imtech.imshare.R;
+import com.imtech.imshare.utils.BitmapUtil;
+import com.polites.android.GestureImageView;
 
 /**
  * 图片预览界面
@@ -27,7 +25,7 @@ import android.widget.ImageView;
 public class PreviewFragment extends Fragment implements OnClickListener {
 	private static final String TAG = "PreviewFragment";
 	private OnDeleteListener mListener;
-	private ImageView mImageView;
+	private GestureImageView mImageView;
 	private Bitmap mImageBitmap;
 	private String mImagePath;
 	private Button mBtnDelete;
@@ -39,7 +37,9 @@ public class PreviewFragment extends Fragment implements OnClickListener {
 		View view = inflater.inflate(R.layout.fragment_preview, null);
 		mBtnDelete = (Button) view.findViewById(R.id.delete);
 		mBtnDelete.setOnClickListener(this);
-		mImageView = (ImageView) view.findViewById(R.id.image);
+		mImageView = (GestureImageView) view.findViewById(R.id.image);
+		mImageView.setStrict(true);
+		mImageView.setRecycle(true);
 		showImage();
 		return view;
 	}

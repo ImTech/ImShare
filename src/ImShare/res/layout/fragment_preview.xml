@@ -4,12 +4,12 @@
     android:layout_height="match_parent" 
     android:background="#000">
 
-    <ImageView
+    <com.polites.android.GestureImageView
         android:id="@+id/image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@null"
-        android:scaleType="fitCenter" />
+        />
 
     <Button
         android:id="@+id/delete"
