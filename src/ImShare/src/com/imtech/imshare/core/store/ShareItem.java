@@ -23,7 +23,7 @@ import com.imtech.imshare.utils.Log;
 public class ShareItem extends Model {
 	
 	private final static String TAG = "ShareItem";
-   
+	
     /**
      * 分享的图片路径 "/path/to/thumb1:/path/to/file1=/path/to/thumb2:/path/to/file2/"
      */

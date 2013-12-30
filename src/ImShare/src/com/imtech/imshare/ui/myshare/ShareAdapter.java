@@ -74,6 +74,7 @@ public class ShareAdapter extends BaseAdapter{
             tag.txtDate = (TextView) v.findViewById(R.id.txtDate);
             tag.txtLocal = (TextView) v.findViewById(R.id.txtLocation);
             tag.txtMonth = (TextView) v.findViewById(R.id.txtMonth);
+            tag.txtFailed = (TextView) v.findViewById(R.id.txtFailed);
             v.setTag(tag);
             tag.imageView.setOnClickListener(mImageClick);
             tag.txtContent.setOnClickListener(mTextClick);
@@ -147,6 +148,9 @@ public class ShareAdapter extends BaseAdapter{
             }
         } 
         
+        // update state
+//        tag.txtFailed.setVisibility(item.state == 1 ? View.GONE : View.VISIBLE);
+        
     }
 
     
@@ -156,6 +160,7 @@ public class ShareAdapter extends BaseAdapter{
         public TextView  txtDate;
         public TextView  txtLocal;
         public TextView  txtMonth;
+        public TextView  txtFailed;
     }
     
     OnClickListener mImageClick = new OnClickListener() {

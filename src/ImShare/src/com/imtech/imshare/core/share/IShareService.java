@@ -5,7 +5,6 @@
 package com.imtech.imshare.core.share;
 
 import android.app.Activity;
-import android.content.Context;
 
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.share.IShareListener;

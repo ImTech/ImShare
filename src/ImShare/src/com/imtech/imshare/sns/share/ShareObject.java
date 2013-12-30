@@ -8,16 +8,18 @@ package com.imtech.imshare.sns.share;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.imtech.imshare.core.store.ShareItem;
+
 /**
  * describe Share resource
  * @author douzifly
  *
  */
-public class ShareObject {
+public class ShareObject{
 
     public String text;
     public List<Image> images = new LinkedList<ShareObject.Image>();
-    public int id;
+    
     /**
      * 纬度
      */
@@ -51,4 +53,6 @@ public class ShareObject {
     public String toString() {
     	return text + " lat:" + lat + " lng:" + lng + " pic count:" + (images.size());
     }
+    
+    
 }

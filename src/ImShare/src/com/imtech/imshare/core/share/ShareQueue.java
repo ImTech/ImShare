@@ -27,9 +27,8 @@ public class ShareQueue implements IShareQueue{
 	public int add(ShareObject obj, SnsType type) {
 	    Log.d(TAG, "add obj:" + obj + " type:" + type);
 	    int id = ShareIDGen.nextId();
-	    obj.id = id;
 	    Log.d(TAG, "newid:" + id);
-	    TaskInfo t = new TaskInfo(obj, type);
+	    TaskInfo t = new TaskInfo(id, obj, type);
 	    if (mRunningTask == null) {
 	        Log.d(TAG, "no running task, run this");
 	        mRunningTask = t;
@@ -38,7 +37,7 @@ public class ShareQueue implements IShareQueue{
 	    } 
 	    Log.d(TAG, "have running task, add to running queue");
 	    mPendingTasks.add(t);
-		return 0;
+		return id;
 	}
 	
 	void notifyTaskAvaiable(TaskInfo task) {
@@ -61,7 +60,7 @@ public class ShareQueue implements IShareQueue{
 
 	@Override
 	public void remove(int id) {
-	    if (mRunningTask.obj.id == id) {
+	    if (mRunningTask != null && mRunningTask.id == id) {
 	        mRunningTask = null;
 	    }
 	    checkNext();
@@ -79,11 +78,13 @@ public class ShareQueue implements IShareQueue{
 	};
 
 	public static class TaskInfo {
-	    public TaskInfo(ShareObject o, SnsType type) {
+	    public TaskInfo(int id, ShareObject o, SnsType type) {
+	        this.id = id;
 	        this.obj = o;
 	        this.type = type;
 	    }
 	    public ShareObject obj;
 	    public SnsType type;
+	    public int id;
 	}
 }

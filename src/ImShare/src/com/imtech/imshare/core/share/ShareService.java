@@ -146,5 +146,5 @@ public class ShareService implements IShareService{
 		    notifyImageUploadChange(info);
 		}
 	}
-
+  
 }

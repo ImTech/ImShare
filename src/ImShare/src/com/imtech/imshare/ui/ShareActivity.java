@@ -17,13 +17,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -347,8 +345,10 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private void delSelectImage() {
 		mImageView0.setImageBitmap(null);
 		mImageView0.setVisibility(View.GONE);
-		mBitmap.recycle();
-		mBitmap = null;
+		if (mBitmap != null) {
+		    mBitmap.recycle();
+		    mBitmap = null;
+		}
 		mShareImagePath = null;
 		mAddImage.setVisibility(View.VISIBLE);
 	}
@@ -373,18 +373,37 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			Toast.makeText(this, "无法选择照片,没有图库应用?", Toast.LENGTH_SHORT).show();
 		}
 	}
+	
+	List<SnsType> getCheckedSns() {
+	    List<SnsType> checked = new ArrayList<SnsType>();
+	    for (SnsType type : mSnsTypes) {
+            if (isChecked(type)) {
+                checked.add(type);
+            } 
+        }
+	    return checked;
+	}
+	
 
 	private void share() {
+	    
+	    String text = mContentText.getText().toString().trim();
+	    if (mShareImagePath == null && text.equals("")) {
+            Toast.makeText(this, "亲，想分享什么呢?", Toast.LENGTH_SHORT).show();
+            return;
+        }
+	    
+	    List<SnsType> checked = getCheckedSns();
+	    if (checked.size() == 0) {
+	        Toast.makeText(this, "亲，先授权哦", Toast.LENGTH_SHORT).show();
+	        return;
+	    }
+	    
 		ShareObject obj = new ShareObject();
-		obj.text = mContentText.getText().toString().trim();
+		obj.text = text;
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
 			obj.images.add(new Image(0, null, mShareImagePath));
-		}
-		
-		if (mShareImagePath == null && obj.text.equals("")) {
-			Toast.makeText(this, "亲，想分享什么呢?", Toast.LENGTH_SHORT).show();
-			return;
 		}
 		
 		if(mLocationChecked	&& mLocation != null && mLocation.detail != null){
@@ -392,17 +411,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			obj.lng = String.valueOf(mLocation.longitude);
 		}
 		
-		mShareService.clear();
 		
-		for (SnsType type : mSnsTypes) {
-		    if (isChecked(type)) {
-		        Log.d(TAG, "share addShare :" + type);
-//		        mShareService.addShare(this, obj, type);
-		    } else {
-		        Log.d(TAG, "share " + type + " not checked");
-		    }
-		}
-		
+		// 一个ShareItem对应多个ShareObj的task
 		ShareItem item = new ShareItem();
 		item.postTime = new Date();
 		if (mLocationChecked && mLocation != null) {
@@ -417,10 +427,21 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		    item.setPic(pic);
 		}
 		StoreManager.sharedInstance().saveShareItem(item);
-		
+		Log.d(TAG, "save id:" + item.getId());
 		showMyShare();
+		clearShareInput();
+		
+		for (SnsType type : checked) {
+            Log.d(TAG, "share addShare :" + type);
+            mShareService.addShare(this, obj, type);
+        }
 	}
-
+	
+	private void clearShareInput() {
+	    delSelectImage();
+	    mContentText.setText("");
+	}
+	
 	private void auth(SnsType type) {
 	    if (mAuthService.isAuthed(type)) {
 	        // 已经授权，取消选中，表示不发送到相关平台
@@ -461,7 +482,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			msg = snsName + "取消授权";
 			setIconState(snsType, false);
 		}
-
+		
 		if (msg != null) {
 			Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
 		}
@@ -497,6 +518,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 				} else if (ret.state == ShareRetState.FAILED) {
 					msg = snsName + "分享失败";
 				}
+				
 				if (msg != null) {
 					Toast.makeText(ShareActivity.this, msg, Toast.LENGTH_SHORT).show();
 				}
