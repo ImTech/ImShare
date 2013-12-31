@@ -7,13 +7,11 @@ dependencies {
 
 android {
     compileSdkVersion 18
-    buildToolsVersion "19.0.0"
-
+    buildToolsVersion '19.0.0'
     defaultConfig {
         minSdkVersion 10
         targetSdkVersion 18
     }
-
     sourceSets {
         main {
             manifest.srcFile 'AndroidManifest.xml'
@@ -36,5 +34,13 @@ android {
         // by a similar customization.
         debug.setRoot('build-types/debug')
         release.setRoot('build-types/release')
+    }
+    signingConfigs {
+        debug {
+            keyPassword 'android'
+            storeFile file('/Users/douzifly/Nutstore/ImTech/imtech_debug.keystore')
+            storePassword 'android'
+            keyAlias 'androiddebugkey'
+        }
     }
 }
