@@ -5,9 +5,6 @@
  */
 package com.imtech.imshare.sns.share;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -20,6 +17,9 @@ import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
 import com.sina.weibo.sdk.openapi.legacy.StatusesAPI;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * @author douzifly

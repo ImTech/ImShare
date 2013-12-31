@@ -1,9 +1,5 @@
 package com.imtech.imshare.core.auth;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.LinkedList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +14,10 @@ import com.imtech.imshare.sns.auth.IAuth;
 import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.auth.QQAuth;
 import com.imtech.imshare.sns.auth.WeiboAuth;
+
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.LinkedList;
 
 /**
  * 提供各平台的认证服务和授权管理

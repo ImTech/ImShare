@@ -5,8 +5,6 @@
  */
 package com.imtech.imshare.core.share;
 
-import java.util.LinkedList;
-
 import android.app.Activity;
 import android.content.Context;
 
@@ -23,6 +21,8 @@ import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.WeiboShare;
 import com.imtech.imshare.utils.Log;
+
+import java.util.LinkedList;
 
 /**
  * @author douzifly

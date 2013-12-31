@@ -17,6 +17,7 @@ package com.activeandroid.query;
  */
 
 import android.text.TextUtils;
+
 import com.activeandroid.Cache;
 import com.activeandroid.Model;
 import com.activeandroid.query.Join.JoinType;

@@ -5,9 +5,6 @@
  */
 package com.imtech.imshare.ui.myshare;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -19,6 +16,9 @@ import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareRet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 我的分享

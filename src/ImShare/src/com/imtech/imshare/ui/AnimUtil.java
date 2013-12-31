@@ -5,12 +5,12 @@
  */
 package com.imtech.imshare.ui;
 
-import com.imtech.imshare.R;
-
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+
+import com.imtech.imshare.R;
 
 /**
  * @author douzifly

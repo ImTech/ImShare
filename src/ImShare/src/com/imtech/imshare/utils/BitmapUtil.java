@@ -5,9 +5,6 @@
  */
 package com.imtech.imshare.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.io.InputStream;
-
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +14,8 @@ import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.provider.MediaStore;
+
+import java.io.ByteArrayOutputStream;
 
 /**
  *

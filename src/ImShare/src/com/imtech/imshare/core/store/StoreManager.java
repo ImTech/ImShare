@@ -5,11 +5,11 @@
  */
 package com.imtech.imshare.core.store;
 
-import java.util.List;
-
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.imtech.imshare.utils.Log;
+
+import java.util.List;
 
 /**
  * @author douzifly

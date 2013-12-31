@@ -1,10 +1,5 @@
 package com.imtech.imshare.ui;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -55,6 +50,11 @@ import com.imtech.imshare.ui.myshare.MyShareActivity;
 import com.imtech.imshare.ui.preview.PreviewFragment;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
 		IShareListener, OnGuideFinishListener, LocationListener {

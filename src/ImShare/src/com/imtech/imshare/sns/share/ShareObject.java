@@ -8,8 +8,6 @@ package com.imtech.imshare.sns.share;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.imtech.imshare.core.store.ShareItem;
-
 /**
  * describe Share resource
  * @author douzifly

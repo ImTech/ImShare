@@ -22,15 +22,15 @@ package com.imtech.imshare.widget;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint.Align;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**

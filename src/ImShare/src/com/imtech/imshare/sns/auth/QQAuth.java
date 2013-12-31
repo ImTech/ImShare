@@ -4,9 +4,6 @@
  */
 package com.imtech.imshare.sns.auth;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +15,9 @@ import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.tencent.tauth.IUiListener;
 import com.tencent.tauth.Tencent;
 import com.tencent.tauth.UiError;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * QQ 授权

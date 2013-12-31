@@ -5,15 +5,15 @@
  */
 package com.imtech.imshare.core.store;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.utils.Log;
+
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author douzifly

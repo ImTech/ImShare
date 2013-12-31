@@ -4,12 +4,12 @@
  */
 package com.imtech.imshare.core.share;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.utils.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /** 
  * 分享队列

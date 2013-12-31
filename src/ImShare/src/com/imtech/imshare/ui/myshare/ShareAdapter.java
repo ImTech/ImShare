@@ -5,8 +5,6 @@
  */
 package com.imtech.imshare.ui.myshare;
 
-import java.util.List;
-
 import android.R.color;
 import android.content.Context;
 import android.graphics.Color;
@@ -24,9 +22,10 @@ import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.ui.preview.PreviewActivity;
 import com.imtech.imshare.ui.preview.TextPreviewActivity;
 import com.imtech.imshare.utils.DateUtil;
-import com.imtech.imshare.widget.TextViewME;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+
+import java.util.List;
 
 /**
  * @author douzifly

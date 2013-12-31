@@ -5,14 +5,6 @@
  */
 package com.imtech.imshare.sns.share;
 
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.SocketTimeoutException;
-
-import org.apache.http.conn.ConnectTimeoutException;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -30,6 +22,14 @@ import com.tencent.open.NetworkUnavailableException;
 import com.tencent.tauth.Constants;
 import com.tencent.tauth.IRequestListener;
 import com.tencent.tauth.Tencent;
+
+import org.apache.http.conn.ConnectTimeoutException;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.SocketTimeoutException;
 
 /**
  * QQ分享
