@@ -27,6 +27,7 @@ public interface IShareService {
 	void addListener(IShareListener listener);
 	void removeListener(IShareListener l);
 	void cancel(int shareId);
+    void setTmpScaledImagePath(String dir);
 	/**
 	 * 清除任务
 	 */

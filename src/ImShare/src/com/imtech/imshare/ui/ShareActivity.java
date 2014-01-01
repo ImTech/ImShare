@@ -28,6 +28,7 @@ import com.imtech.imshare.core.locate.LocateHelper;
 import com.imtech.imshare.core.locate.Location;
 import com.imtech.imshare.core.locate.LocationListener;
 import com.imtech.imshare.core.preference.CommonPreference;
+import com.imtech.imshare.core.setting.AppSetting;
 import com.imtech.imshare.core.share.IShareService;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.core.store.Pic;
@@ -89,13 +90,14 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		initAuthInfo();
 
 		mShareService = ShareService.sharedInstance();
-		mShareService.addListener(this);
+        mShareService.setTmpScaledImagePath (AppSetting.getScaledImageDir());
+        mShareService.addListener(this);
 
 		showGuideView();
-		locateBegtin();
+		locateBegin();
 	}
 	
-	private void locateBegtin() {
+	private void locateBegin() {
 	    LocateHelper.getInstance(this).locate(this);
 	    mLocateView.setText("正在获取位置信息...");
 	}
@@ -132,6 +134,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 
 	private void showGuideView() {
 		boolean firstLaunch = CommonPreference.getBoolean(this, CommonPreference.TYPE_APP_FIRST_LAUNCH, true);
+        firstLaunch = true;
 		if (firstLaunch) {
 			mGuideFragment = new GuideFragment();
 			mGuideFragment.setOnGuideFinishListenr(this);
@@ -319,7 +322,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		
 		if (newValue && !mIsLocatedSucess) {
 			// 定位失败，重新定位
-			locateBegtin();
+			locateBegin();
 		}
 	}
 
@@ -403,7 +406,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		obj.text = text;
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
-			obj.images.add(new Image(0, null, mShareImagePath));
+			obj.images.add(new Image(0, mShareImagePath));
 		}
 		
 		if(mLocationChecked	&& mLocation != null && mLocation.detail != null){

@@ -16,6 +16,10 @@ import android.net.Uri;
 import android.provider.MediaStore;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 /**
  *
@@ -66,4 +70,26 @@ public class BitmapUtil {
 		cursor.close();
 		return path;
 	}
+
+    public static void scaleAndSave(Bitmap source, int width, String savePath) throws IOException {
+        final int oldW = source.getWidth();
+        final int oldH = source.getHeight();
+        Bitmap scaled = null;
+        if (width == oldW) {
+            scaled = source;
+        } else {
+            float scale = (float)width / (float)oldW;
+            int h = (int) (oldH * scale);
+            Log.d(TAG, "scaleAndSave form w:" + oldW + " h:" + oldH + " to w:" + width + " h:" + h);
+            scaled = Bitmap.createScaledBitmap(source, width, h, false);
+        }
+        File f = new File(savePath);
+        if (!f.getParentFile().exists()) {
+            f.getParentFile().mkdirs();
+        }
+        FileOutputStream fos = new FileOutputStream(savePath);
+        scaled.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        fos.flush();
+        fos.close();
+    }
 }

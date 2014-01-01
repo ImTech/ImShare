@@ -26,25 +26,21 @@ public class ShareObject{
      * 经度
      */
     public String lng = "0.0";
+
+    /**
+     * 上传图片的最大宽度, 等比压缩，如果需要的话
+     */
+    public int maxPicWidth = 720;
     
     public static class Image {
-        public Image(int id, String name, String path) {
-            this.name = name;
+        public Image(int id, String path) {
             this.filePath = path;
             this.id = id;
-        }
-        
-        public Image(int id, String name, String path, String thumbPath) {
-            this.name = name;
-            this.filePath = path;
-            this.id = id;
-            this.thumbPath = thumbPath;
         }
         
         public int id;
-        public String name;
         public String filePath;
-        public String thumbPath;
+        public String scaledPath;
     }
     
     @Override

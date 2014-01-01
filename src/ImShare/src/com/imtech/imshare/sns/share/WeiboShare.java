@@ -13,6 +13,7 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.utils.Log;
+import com.imtech.imshare.utils.StringUtils;
 import com.sina.weibo.sdk.auth.Oauth2AccessToken;
 import com.sina.weibo.sdk.exception.WeiboException;
 import com.sina.weibo.sdk.net.RequestListener;
@@ -48,12 +49,20 @@ public class WeiboShare extends ShareBase {
     	Log.d(TAG, "share:" + obj);
         init(token);
         String picPath = obj.images.size() > 0 ? obj.images.get(0).filePath : null;
-        Log.d(TAG, "pic:" + picPath);
-        if (picPath == null) {
+        String scaledPath = obj.images.size() > 0 ? obj.images.get(0).scaledPath : null;
+        String sendImgPath = scaledPath;
+        if (sendImgPath == null) {
+            sendImgPath = picPath;
+        }
+        Log.d(TAG, "send pic:" + sendImgPath);
+        if (sendImgPath == null) {
             mApi.update(obj.text, obj.lat, obj.lng, new ShareListener(obj));
         } else {
 //            mApi.uploadPic(obj.text, picPath, new ShareListener(obj));
-            mApi.upload(obj.text, picPath, obj.lat, obj.lng, new ShareListener(obj));
+            if (StringUtils.isEmpty(obj.text)) {
+                obj.text = "分享图片";
+            }
+            mApi.upload(obj.text, sendImgPath, obj.lat, obj.lng, new ShareListener(obj));
         }
     }
 

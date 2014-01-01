@@ -17,5 +17,5 @@ public abstract class ShareBase implements IShare{
     public void setListener(IShareListener listener) {
         mListener = listener;
     }
-    
+
 }

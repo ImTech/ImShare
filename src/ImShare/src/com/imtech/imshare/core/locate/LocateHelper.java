@@ -19,11 +19,11 @@ public class LocateHelper implements BDLocationListener{
 //	/**
 //	 * release key
 //	 */
-//	private static final String APP_KEY = "pgC19CHTK3613GGDMbA5FaxN";
+//	private static final String APP_KEY = "7SiM5b3lTPVLaeTh8VP2Oanb";
 	/**
 	 * debug key
 	 */
-	private static final String APP_KEY = "tXjykD4eacTNO9eeqhul01bq";
+	private static final String APP_KEY = "wnEjbrMZBgO1QLiYkVuucfOi";
 	
 	private static LocateHelper mInstance;
 	private LocationClient mLocationClient;
@@ -63,15 +63,19 @@ public class LocateHelper implements BDLocationListener{
 		mLocationClient.unRegisterLocationListener(this);
 	}
 	
-	public void locate(LocationListener l){
+	public boolean locate(LocationListener l){
 		mLocationListener = l;
+        if (!mLocationClient.isStarted()) {
+            Log.e(TAG, "location service not started");
+            return false;
+        }
 		int res = mLocationClient.requestLocation();
 		Log.d(TAG, "locate requestLocation res: " + res);
+        return res == 0;
 	}
 
 	@Override
 	public void onReceiveLocation(BDLocation location) {
-	    Log.d(TAG, "onReceiveLocation:" + location);
 		StringBuffer sb = new StringBuffer(256);
 		sb.append("time : ");
 		sb.append(location.getTime());
@@ -88,16 +92,24 @@ public class LocateHelper implements BDLocationListener{
 			sb.append(location.getSpeed());
 			sb.append("\nsatellite : ");
 			sb.append(location.getSatelliteNumber());
+            sb.append("\naddr : ");
+            sb.append("\n省：");
+            sb.append(location.getProvince());
+            sb.append("\n市：");
+            sb.append(location.getCity());
+            sb.append("\n区/县：");
+            sb.append(location.getDistrict());
+            sb.append(location.getAddrStr());
 		} else if (location.getLocType() == BDLocation.TypeNetWorkLocation){
 			/**
 			 * 格式化显示地址信息
 			 */
-//			sb.append("\n省：");
-//			sb.append(location.getProvince());
-//			sb.append("\n市：");
-//			sb.append(location.getCity());
-//			sb.append("\n区/县：");
-//			sb.append(location.getDistrict());
+			sb.append("\n省：");
+			sb.append(location.getProvince());
+			sb.append("\n市：");
+			sb.append(location.getCity());
+			sb.append("\n区/县：");
+			sb.append(location.getDistrict());
 			sb.append("\naddr : ");
 			sb.append(location.getAddrStr());
 		}

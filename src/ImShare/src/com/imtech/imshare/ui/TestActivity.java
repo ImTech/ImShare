@@ -132,7 +132,7 @@ public class TestActivity extends Activity implements OnClickListener {
             Log.d(TAG, "path:" + path);
             ShareObject obj = new ShareObject();
             obj.text = "分享测试";
-            obj.images.add(new Image(ShareIDGen.nextImageId(), "", path));
+            obj.images.add(new Image(ShareIDGen.nextImageId(), path));
             mShareSeivce.addShare(TestActivity.this, obj,
                     SnsType.WEIBO);
             return;

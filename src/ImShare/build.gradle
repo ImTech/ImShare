@@ -1,8 +1,8 @@
 apply plugin: 'android'
 
 dependencies {
-    compile fileTree(dir: 'libs', include: '*.jar')
     compile project(':deps:WeiboSDK')
+    compile fileTree(dir:'libs', include:'*.jar')
 }
 
 android {

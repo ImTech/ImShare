@@ -7,6 +7,8 @@ package com.imtech.imshare.core.share;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.share.IShareQueue.IShareQueueListener;
@@ -20,8 +22,14 @@ import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.WeiboShare;
+import com.imtech.imshare.utils.BitmapUtil;
+import com.imtech.imshare.utils.FileUtil;
 import com.imtech.imshare.utils.Log;
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.sina.weibo.sdk.utils.MD5;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 
 /**
@@ -38,8 +46,13 @@ public class ShareService implements IShareService{
 	private IShareQueue mShareQueue;
 	private Context mAppContext;
 	private Activity mActivity;
-	
 	private static ShareService sSharedInstance;
+
+    private String mTmpScaleImageDir;
+
+    public void setTmpScaledImagePath (String dir) {
+        mTmpScaleImageDir = dir;
+    }
 	
 	public synchronized static ShareService sharedInstance() {
 	    if (sSharedInstance == null) {
@@ -52,7 +65,7 @@ public class ShareService implements IShareService{
 		mShareQueue = new ShareQueue();
 		mShareQueue.setListener(new QueueListener());
 	}
-	
+
 	private IShare getShare(SnsType type) {
 		 if (type == SnsType.WEIBO) {
 			 return new WeiboShare();
@@ -65,6 +78,59 @@ public class ShareService implements IShareService{
 	private AccessToken getToken(SnsType type) {
 		return AuthService.getInstance().getAccessToken(type);
 	}
+
+    /**
+     * 检查是否需要压缩图片
+     * @param filePath 原始图片路径
+     * @param scaleWidth 压缩后的大小
+     * @return 如果压缩了返回true， 否则返回false
+     */
+    public boolean checkCompressImage(String filePath, int scaleWidth, String savePath) throws IOException {
+        Bitmap bmp = BitmapFactory.decodeFile(filePath);
+        if (bmp.getWidth() <= scaleWidth) {
+            return false;
+        }
+        BitmapUtil.scaleAndSave(bmp, scaleWidth, savePath);
+        return true;
+    }
+
+    public void checkCompressImage(ShareObject obj) {
+        Log.d(TAG, "checkCompressImage");
+        if (obj.images == null || obj.images.size() == 0) {
+            Log.d(TAG, "checkCompressImage, no image");
+            return;
+        }
+        for (ShareObject.Image image : obj.images) {
+            if (image.filePath != null)  {
+                String fileName = null;
+                try {
+                    fileName = FileUtil.getFileName(image.filePath);
+                } catch(Exception e) {
+                    fileName = "scaled.png";
+                }
+                String savePath = mTmpScaleImageDir+ fileName;
+                Log.d(TAG, "savePath:" + savePath);
+                File f = new File(savePath);
+                if (f.exists()) { // test code
+                    f.delete();
+                } else if (f.exists() && f.length() > 0) {
+                    Log.d(TAG, "sacled image exists:" + savePath);
+                    continue;
+                }
+
+                try {
+                   boolean compressed = checkCompressImage(image.filePath, obj.maxPicWidth, savePath);
+                    Log.d(TAG, "compressed:" + compressed + " savePath:" + savePath);
+                    if (compressed) {
+                        image.scaledPath = savePath;
+                    }
+                } catch (IOException e) {
+                    Log.e(TAG, "exp:" + e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
 
 	@Override
 	public int addShare(Activity activity, ShareObject obj, SnsType snsType) {
@@ -116,6 +182,8 @@ public class ShareService implements IShareService{
 				return;
 			}
 			share.setListener(new ShareListener());
+            // check compress
+            checkCompressImage(obj);
 			share.share(mAppContext, mActivity, token, obj);
 		}
 		
