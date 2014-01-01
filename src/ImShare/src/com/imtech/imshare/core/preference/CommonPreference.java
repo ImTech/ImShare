@@ -32,6 +32,8 @@ public class CommonPreference {
 	private static final String KEY_APP_FIRST_LAUNCH = "app_first_launch";
 	private static final String KEY_LOCATE = "locate";
 
+
+    public static final String KEY_COVER = "cover";
 	private static SharedPreferences preferences;
 
 	public static void beginTransaction(Context context) {
@@ -63,6 +65,17 @@ public class CommonPreference {
 		SharedPreferences sp = getPreference(context);
 		return sp.edit().putString(key, value).commit();
 	}
+
+    public static boolean setString(Context context, String key, String value) {
+        if (context == null) {
+            return false;
+        }
+        if (key == null) {
+            return false;
+        }
+        SharedPreferences sp = getPreference(context);
+        return sp.edit().putString(key, value).commit();
+    }
 
 	public static boolean setInt(Context context, int type, int value) {
 		if (context == null) {
@@ -159,6 +172,17 @@ public class CommonPreference {
 		SharedPreferences sp = getPreference(context);
 		return sp.getString(key, def);
 	}
+
+    public static String getString(Context context, String key, String def) {
+        if (context == null) {
+            return def;
+        }
+        if (key == null) {
+            return def;
+        }
+        SharedPreferences sp = getPreference(context);
+        return sp.getString(key, def);
+    }
 
 	public static boolean getBoolean(Context context, int type, boolean defaultValue) {
 		if (context == null) {

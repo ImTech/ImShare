@@ -91,8 +91,10 @@ public class ShareService implements IShareService{
      * @return 如果压缩了返回true， 否则返回false
      */
     public boolean checkCompressImage(String filePath, int scaleWidth, String savePath) throws IOException {
+        Log.d(TAG, "checkCompressImage path:" + filePath);
         Bitmap bmp = BitmapFactory.decodeFile(filePath);
         if (bmp.getWidth() <= scaleWidth) {
+            Log.d(TAG, "checkCompressImage size:" + bmp.getWidth() + " scaleWidth:" + scaleWidth + " no need scale");
             return false;
         }
         BitmapUtil.scaleAndSave(bmp, scaleWidth, savePath);
@@ -193,6 +195,7 @@ public class ShareService implements IShareService{
                 @Override
                 public void run() {
                     checkCompressImage(obj);
+                    Log.d(TAG, "begin share");
 			        share.share(mAppContext, mActivity, token, obj);
                 }
             });

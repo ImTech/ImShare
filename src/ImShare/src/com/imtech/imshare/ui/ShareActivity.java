@@ -47,6 +47,7 @@ import com.imtech.imshare.sns.share.ShareRet;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
+import com.imtech.imshare.ui.myshare.ChoosePic;
 import com.imtech.imshare.ui.myshare.MyShareActivity;
 import com.imtech.imshare.ui.preview.PreviewFragment;
 import com.imtech.imshare.utils.BitmapUtil;
@@ -60,7 +61,11 @@ import java.util.List;
 public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
 		IShareListener, OnGuideFinishListener, LocationListener {
 	private static final String TAG = "ShareActivity";
-	private static final int PHOTO_REQUEST_GALLERY = 12;// 从相册中选择
+
+    public final static String EXTRA_FILE_PATH = "file_path";
+    final static int REQ_SEL_PIC = 1;
+    final static int REQ_TAKE_PIC = 2;
+
 	private View mContentPanel;
 	private ImageView mImageView0;
 	private ImageView mAddImage;
@@ -89,13 +94,37 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		findView();
 		initAuthInfo();
 
+        handleIntent(getIntent());
 		mShareService = ShareService.sharedInstance();
         mShareService.setTmpScaledImagePath (AppSetting.getScaledImageDir());
         mShareService.addListener(this);
 
-//		showGuideView();
 		locateBegin();
 	}
+
+    void setImage(String path) {
+        if (path == null) {
+            finish();
+            return;
+        }
+        Log.d(TAG, "set image path: " + path);
+        mShareImagePath = path;
+        Bitmap bitmap;
+        int size = getResources().getDimensionPixelSize(R.dimen.image_size);
+        bitmap = BitmapUtil.decodeFile(path, size);
+        if (bitmap != null) {
+            mImageView0.setVisibility(View.VISIBLE);
+            mImageView0.setImageBitmap(bitmap);
+            mBitmap = bitmap;
+            mShareImagePath = path;
+            mAddImage.setVisibility(View.GONE);
+        }
+    }
+
+    void handleIntent(Intent intent) {
+        String path = intent.getStringExtra(EXTRA_FILE_PATH);
+        setImage(path);
+    }
 	
 	private void locateBegin() {
 	    LocateHelper.getInstance(this).locate(this);
@@ -174,6 +203,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		// qzoneItem.setOnClickListener(this);
 		mBtnShare.setOnClickListener(this);
 		mBtnMyShare.setOnClickListener(this);
+        mBtnMyShare.setVisibility(View.GONE);
 		weiboItem.setOnClickListener(this);
 		txWeiboItem.setOnClickListener(this);
 		mAddImage.setOnClickListener(this);
@@ -201,12 +231,22 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(TAG, "onActivityResult requestCode: " + requestCode + " resultCode: " + resultCode);
-		if (requestCode == PHOTO_REQUEST_GALLERY) {
-			addImageFinish(data);
-		} else {
-			mAuthService.checkActivityResult(requestCode, resultCode, data);
-		}
+        if (requestCode == REQ_SEL_PIC) {
+            handleSelPic(data);
+        } else {
+	    	mAuthService.checkActivityResult(requestCode, resultCode, data);
+        }
 	}
+
+    public void handleSelPic(Intent data) {
+        if (data == null) {
+            return;
+        }
+        Uri uri = data.getData();
+        Log.d(TAG, "uri: " + uri.toString());
+        String path = BitmapUtil.getImagePathByUri(this, uri);
+        setImage(path);
+    }
 
 	private void setLocateIcon(boolean needLocate) {
 		int resId = needLocate ? R.drawable.ic_location : R.drawable.ic_location_unable;
@@ -217,48 +257,14 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		}
 	}
 
-	private void addImageFinish(Intent data) {
-		// String path = data != null ? data.getDataString() : null;
-		// Log.d(TAG, "addImageFinish path: " + path);
-		if (data == null) {
-			return;
-		}
-		Uri uri = data.getData();
-		Log.d(TAG, "uri: " + uri.toString());
-		String path = BitmapUtil.getImagePathByUri(this, uri);
-		Log.d(TAG, "path: " + path);
-		Bitmap bitmap;
-		int size = getResources().getDimensionPixelSize(R.dimen.image_size);
-		bitmap = BitmapUtil.decodeFile(path, size);
-		if (bitmap != null) {
-			mImageView0.setVisibility(View.VISIBLE);
-			mImageView0.setImageBitmap(bitmap);
-			mBitmap = bitmap;
-			mShareImagePath = path;
-			mAddImage.setVisibility(View.GONE);
-		}
-	}
-	
 	private void showMyShare() {
 		startActivity(new Intent(this, MyShareActivity.class));
-	}
-	
-	private void beginFlyAnim() {
-		float xdelta = mBtnMyShare.getX() - mBtnShare.getX();
-		float ydelta = mBtnMyShare.getY() - mBtnShare.getY();
-		Log.d(TAG, "beginFlyAnim xd:" + xdelta + " yd:" + ydelta);
-		TranslateAnimation anim = new TranslateAnimation(0, xdelta, 0, ydelta);
-		anim.setDuration(500);
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.btnMyShare:
-			showMyShare();
-			break;
 		case R.id.share_out:
-			beginFlyAnim();
 			share();
 			break;
 		case R.id.weibo:
@@ -301,8 +307,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		// auth(SnsType.QQ);
 		// break;
 		case R.id.add_image:
-		    AnimUtil.fadeOut(v, null);
-			addImage();
+            ChoosePic c = new ChoosePic();
+            c.choose(this, REQ_SEL_PIC);
 			break;
 		case R.id.image0:
 			showImagePreview();
@@ -365,17 +371,6 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mContentPanel.setVisibility(View.VISIBLE);
 	}
 
-	private void addImage() {
-		Intent intent = new Intent(Intent.ACTION_PICK, null);
-		intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-		try {
-			startActivityForResult(intent, PHOTO_REQUEST_GALLERY);
-		} catch (Exception e) {
-			e.printStackTrace();
-			Toast.makeText(this, "无法选择照片,没有图库应用?", Toast.LENGTH_SHORT).show();
-		}
-	}
-	
 	List<SnsType> getCheckedSns() {
 	    List<SnsType> checked = new ArrayList<SnsType>();
 	    for (SnsType type : mSnsTypes) {
@@ -385,7 +380,6 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
         }
 	    return checked;
 	}
-	
 
 	private void share() {
 	    

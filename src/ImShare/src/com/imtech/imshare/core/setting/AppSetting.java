@@ -9,6 +9,7 @@ import android.os.Environment;
 public class AppSetting {
 
     static String scaledImageDir;
+    static String takePicDir;
     static String appDir;
 
     public static String getAppDir() {
@@ -22,4 +23,13 @@ public class AppSetting {
         }
         return scaledImageDir;
     }
+
+    public static String getTakePicDir() {
+        if (takePicDir == null) {
+            takePicDir = getAppDir() + "/photo/";
+        }
+        return takePicDir;
+    }
+
+
 }

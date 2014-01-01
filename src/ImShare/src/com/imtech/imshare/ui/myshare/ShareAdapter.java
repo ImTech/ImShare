@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author douzifly
  */
-public class ShareAdapter extends BaseAdapter implements OnClickListener {
+public class ShareAdapter extends BaseAdapter implements OnClickListener, View.OnLongClickListener {
 
     final static int VIEW_TYPE_COVER = 0;
     final static int VIEW_TYPE_ITEM = 1;
@@ -47,6 +47,17 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
     int mViewTypeCount = 3;
     // active SnsTypes
     Hashtable<SnsType, Boolean> mActiveSnsType = new Hashtable<SnsType, Boolean>();
+    String mCoverPath;
+
+    public void setCoverPath(String filePath) {
+        if (filePath == null || filePath.equals("")) {
+            mCoverPath = null;
+            notifyDataSetChanged();
+            return;
+        }
+        mCoverPath = "file:///" + filePath;
+        notifyDataSetChanged();;
+    }
 
     public ShareAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
@@ -60,12 +71,12 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
 
     @Override
     public int getCount() {
-        return mItems == null ? 0 : mItems.size();
+        return mItems == null ? 2 : mItems.size() + 2;
     }
 
     @Override
     public ShareItem getItem(int position) {
-        return mItems.get(position);
+        return mItems.get(position - 2);
     }
 
     @Override
@@ -85,6 +96,13 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
         return VIEW_TYPE_ITEM;
     }
 
+    DisplayImageOptions coverOpt = new DisplayImageOptions.Builder()
+            .cacheInMemory(true)
+            .cacheOnDisc(false)
+            .showImageForEmptyUri(R.drawable.bg_cover_def)
+            .showImageOnFail(R.drawable.bg_cover_def)
+            .showImageOnLoading(R.drawable.bg_cover_def).build();
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -97,6 +115,8 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
                 v.setBackgroundColor(Color.BLACK);
                 v.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                         mContext.getResources().getDimensionPixelSize(R.dimen.cover_height)));
+                v.setOnClickListener(this);
+                v.setOnLongClickListener(this);
             } else if (viewType == VIEW_TYPE_ACTION) {
                 v = mInflater.inflate(R.layout.share_action_item, null);
                 v.findViewById(R.id.btnShare).setOnClickListener(this);
@@ -129,6 +149,12 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
         } else if (viewType == VIEW_TYPE_ACTION) {
             ActionHolder holder = (ActionHolder) v.getTag();
             updateAction(holder);
+        } else if (viewType == VIEW_TYPE_COVER) {
+            if (mCoverPath != null) {
+                ImageLoader.getInstance().displayImage(mCoverPath, (ImageView)v, coverOpt);
+            } else {
+                ((ImageView)v).setImageResource(R.drawable.bg_cover_def);
+            }
         }
         return v;
     }
@@ -209,6 +235,12 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
                 : R.drawable.ic_tx_weibo_unable);
         holder.weibo.setImageResource(wBActive != null && wBActive ? R.drawable.ic_weibo_normal
                 : R.drawable.ic_weibo_unable);
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        onCoverLongPressed();
+        return true;
     }
 
     public static class ActionHolder {
@@ -313,6 +345,14 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener {
      * @param type
      */
     public void onPlatformClicked(SnsType type) {
+
+    }
+
+    public void onCoverLongPressed() {
+
+    }
+
+    public void onCoverPressed() {
 
     }
 }

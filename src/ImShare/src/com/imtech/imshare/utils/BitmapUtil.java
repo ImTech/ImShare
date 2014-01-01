@@ -12,6 +12,11 @@ import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -71,6 +76,18 @@ public class BitmapUtil {
 		return path;
 	}
 
+    public static Bitmap createScaledBitmap(Bitmap src, int dstWidth, int dstHeight,
+                                            boolean filter) {
+        Matrix m = new Matrix();
+        final int width = src.getWidth();
+        final int height = src.getHeight();
+        final float sx = dstWidth  / (float)width;
+        final float sy = dstHeight / (float)height;
+        m.setScale(sx, sy);
+        Bitmap b = Bitmap.createBitmap(src, 0, 0, width, height, m, filter);
+        return b;
+    }
+
     public static void scaleAndSave(Bitmap source, int width, String savePath) throws IOException {
         final int oldW = source.getWidth();
         final int oldH = source.getHeight();
@@ -81,14 +98,14 @@ public class BitmapUtil {
             float scale = (float)width / (float)oldW;
             int h = (int) (oldH * scale);
             Log.d(TAG, "scaleAndSave form w:" + oldW + " h:" + oldH + " to w:" + width + " h:" + h);
-            scaled = Bitmap.createScaledBitmap(source, width, h, false);
+            scaled = createScaledBitmap(source, width, h, false);
         }
         File f = new File(savePath);
         if (!f.getParentFile().exists()) {
             f.getParentFile().mkdirs();
         }
         FileOutputStream fos = new FileOutputStream(savePath);
-        scaled.compress(Bitmap.CompressFormat.PNG, 100, fos);
+        scaled.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         fos.flush();
         fos.close();
     }
