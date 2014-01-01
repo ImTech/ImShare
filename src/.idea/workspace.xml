@@ -68,20 +68,12 @@
       </layout>
     </layouts>
   </component>
+  <component name="AndroidLogFilters">
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="MyShareActivity" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="72fa11f9-c3e4-4f36-ba74-833c5086d65a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ChoosePic.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ChooseTakePic.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/IChoose.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/preference/CommonPreference.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/preference/CommonPreference.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/layout/activity_share.xml" afterPath="$PROJECT_DIR$/ImShare/res/layout/activity_share.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="src.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -195,10 +187,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShareAdapter.java" pinned="false" current="true" current-in-tab="true">
+      <file leaf-file-name="ShareAdapter.java" pinned="false" current="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="185" column="0" selection-start="6637" selection-end="6637" vertical-scroll-proportion="0.25444838" vertical-offset="3289" max-vertical-offset="7194">
+            <state line="189" column="37" selection-start="6814" selection-end="6814" vertical-scroll-proportion="0.0" vertical-offset="3289" max-vertical-offset="7194">
               <folding>
                 <element signature="e#1496#1514#0" expanded="true" />
                 <element signature="e#2414#2415#0" expanded="true" />
@@ -250,10 +242,10 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MyShareActivity.java" pinned="false" current="false" current-in-tab="false">
+      <file leaf-file-name="MyShareActivity.java" pinned="false" current="true" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="77" column="4" selection-start="2237" selection-end="2237" vertical-scroll-proportion="0.0" vertical-offset="1353" max-vertical-offset="5676">
+            <state line="98" column="26" selection-start="2933" selection-end="2933" vertical-scroll-proportion="0.7633452" vertical-offset="1639" max-vertical-offset="5676">
               <folding>
                 <element signature="imports" expanded="true" />
                 <element signature="e#1460#1471#0" expanded="true" />
@@ -1469,8 +1461,8 @@
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" />
-        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" />
       </list>
     </option>
   </component>
@@ -2961,24 +2953,24 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="77" column="4" selection-start="2237" selection-end="2237" vertical-scroll-proportion="0.0" vertical-offset="1353" max-vertical-offset="5676">
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1460#1471#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="185" column="0" selection-start="6637" selection-end="6637" vertical-scroll-proportion="0.25444838" vertical-offset="3289" max-vertical-offset="7194">
+        <state line="189" column="37" selection-start="6814" selection-end="6814" vertical-scroll-proportion="0.0" vertical-offset="3289" max-vertical-offset="7194">
           <folding>
             <element signature="e#1496#1514#0" expanded="true" />
             <element signature="e#2414#2415#0" expanded="true" />
             <element signature="e#2451#2452#0" expanded="true" />
             <element signature="e#3586#3653#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="98" column="26" selection-start="2933" selection-end="2933" vertical-scroll-proportion="0.7633452" vertical-offset="1639" max-vertical-offset="5676">
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1460#1471#0" expanded="true" />
           </folding>
         </state>
       </provider>

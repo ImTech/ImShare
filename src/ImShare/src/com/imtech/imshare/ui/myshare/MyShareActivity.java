@@ -96,7 +96,7 @@ public class MyShareActivity extends Activity implements IShareListener{
                 handleTakePic(data);
             }
         }else if (requestCode == REQ_SEL_PIC_COVER) {
-            if (requestCode == RESULT_OK) {
+            if (resultCode == RESULT_OK) {
                 handelSelCover(data);
             }
         } else {
