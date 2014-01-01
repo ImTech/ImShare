@@ -5,14 +5,6 @@
       <filter>
         <option name="logLevel" value="verbose" />
         <option name="logMessagePattern" value="" />
-        <option name="logTagPattern" value="ShareService" />
-        <option name="name" value="ShareService" />
-        <option name="packageNamePattern" value="" />
-        <option name="pid" value="" />
-      </filter>
-      <filter>
-        <option name="logLevel" value="verbose" />
-        <option name="logMessagePattern" value="" />
         <option name="logTagPattern" value="BitmapUtil" />
         <option name="name" value="BitmapUtil" />
         <option name="packageNamePattern" value="" />
@@ -34,6 +26,22 @@
         <option name="packageNamePattern" value="" />
         <option name="pid" value="" />
       </filter>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="MyShareActivity" />
+        <option name="name" value="MyShareActivity" />
+        <option name="packageNamePattern" value="" />
+        <option name="pid" value="" />
+      </filter>
+      <filter>
+        <option name="logLevel" value="verbose" />
+        <option name="logMessagePattern" value="" />
+        <option name="logTagPattern" value="ShareActivity" />
+        <option name="name" value="ShareActivity" />
+        <option name="packageNamePattern" value="" />
+        <option name="pid" value="" />
+      </filter>
     </filters>
   </component>
   <component name="AndroidLayoutPreviewToolWindow">
@@ -45,27 +53,45 @@
     <shared>
       <config />
     </shared>
+    <layouts>
+      <layout url="file://$PROJECT_DIR$/ImShare/res/layout/share_action_item.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@android:style/Theme.DeviceDefault.Light</theme>
+        </config>
+      </layout>
+      <layout url="file://$PROJECT_DIR$/ImShare/res/layout/share_item.xml">
+        <config>
+          <device>Nexus 4</device>
+          <theme>@android:style/Theme.DeviceDefault.Light</theme>
+        </config>
+      </layout>
+    </layouts>
   </component>
   <component name="AndroidLogFilters">
-    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="SNS" />
+    <option name="TOOL_WINDOW_CONFIGURED_FILTER" value="ShareActivity" />
   </component>
   <component name="ChangeListManager">
     <list default="true" id="72fa11f9-c3e4-4f36-ba74-833c5086d65a" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/FileUtil.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/MD5.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/IShareService.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/IShareService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/locate/LocateHelper.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/locate/LocateHelper.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/bg_cover_def.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_add_share_normal.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_add_share_pressed.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/res/drawable/ic_add_share.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/ImShare/res/layout/share_action_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_normal.png" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_normal.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_unable.png" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_unable.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_normal.png" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_normal.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_unable.png" afterPath="$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_unable.png" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/AndroidManifest.xml" afterPath="$PROJECT_DIR$/ImShare/AndroidManifest.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/AnimUtil.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/AnimUtil.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareBase.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareBase.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareObject.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareObject.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/TestActivity.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/TestActivity.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/WeiboShare.java" afterPath="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/WeiboShare.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/build.gradle" afterPath="$PROJECT_DIR$/ImShare/build.gradle" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/misc.xml" afterPath="$PROJECT_DIR$/.idea/misc.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/layout/activity_my_share.xml" afterPath="$PROJECT_DIR$/ImShare/res/layout/activity_my_share.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/values/dimens.xml" afterPath="$PROJECT_DIR$/ImShare/res/values/dimens.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/ImShare/res/layout/share_item.xml" afterPath="$PROJECT_DIR$/ImShare/res/layout/share_item.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="src.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -126,7 +152,7 @@
     </breakpoint_any>
     <ui_properties default_suspend_policy="SuspendAll" default_condition_enabled="true" />
     <line_breakpoints>
-      <breakpoint url="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" line="121" class="com.imtech.imshare.core.share.ShareService" package="com.imtech.imshare.core.share">
+      <breakpoint url="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" line="126" class="com.imtech.imshare.core.share.ShareService" package="com.imtech.imshare.core.share">
         <option name="ENABLED" value="true" />
         <option name="LOG_ENABLED" value="false" />
         <option name="LOG_EXPRESSION_ENABLED" value="false" />
@@ -151,25 +177,109 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="ShareService.java" pinned="false" current="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java">
+      <file leaf-file-name="ShareActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="99" column="45" selection-start="2945" selection-end="2945" vertical-scroll-proportion="0.0" vertical-offset="1089" max-vertical-offset="4290">
+            <state line="96" column="21" selection-start="3763" selection-end="3763" vertical-scroll-proportion="0.0" vertical-offset="1562" max-vertical-offset="10890">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ShareAdapter.java" pinned="false" current="true" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="55" column="16" selection-start="1637" selection-end="1637" vertical-scroll-proportion="0.33274022" vertical-offset="385" max-vertical-offset="6314">
               <folding>
-                <element signature="e#1630#1631#0" expanded="true" />
-                <element signature="e#1669#1670#0" expanded="true" />
+                <element signature="e#1470#1488#0" expanded="true" />
+                <element signature="e#2073#2074#0" expanded="true" />
+                <element signature="e#2110#2111#0" expanded="true" />
+                <element signature="e#2931#2998#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="AppSetting.java" pinned="false" current="true" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java">
+      <file leaf-file-name="AnimUtil.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/AnimUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state line="12" column="0" selection-start="235" selection-end="235" vertical-scroll-proportion="0.46975088" vertical-offset="0" max-vertical-offset="682">
+            <state line="27" column="0" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0" vertical-offset="242" max-vertical-offset="858">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="R.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/build/source/r/debug/com/imtech/imshare/R.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="126" column="32" selection-start="7332" selection-end="7332" vertical-scroll-proportion="-8.8" vertical-offset="2442" max-vertical-offset="3366">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="share_action_item.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/res/layout/share_action_item.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="14" column="31" selection-start="489" selection-end="489" vertical-scroll-proportion="14.666667" vertical-offset="704" max-vertical-offset="1364">
+              <folding>
+                <element signature="e#894#913#0" expanded="true" />
+                <element signature="e#948#967#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ic_launcher.png" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_launcher.png">
+          <provider selected="true" editor-type-id="images">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ic_add_share.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/res/drawable/ic_add_share.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="5" column="10" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="242">
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="share_item.xml" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/res/layout/share_item.xml">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="17" column="16" selection-start="585" selection-end="585" vertical-scroll-proportion="-7.3333335" vertical-offset="176" max-vertical-offset="2112">
+              <folding>
+                <element signature="e#1809#1828#0" expanded="true" />
+                <element signature="e#1859#1878#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+          <provider editor-type-id="android-designer">
+            <state />
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MyShareActivity.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="73" column="22" selection-start="2005" selection-end="2005" vertical-scroll-proportion="0.0" vertical-offset="1177" max-vertical-offset="2376">
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="StoreManager.java" pinned="false" current="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/store/StoreManager.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state line="25" column="0" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="1364">
+              <folding />
             </state>
           </provider>
         </entry>
@@ -1338,9 +1448,18 @@
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/FileUtil.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/BitmapUtil.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java" />
-        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" />
-        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" />
         <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/WeiboShare.java" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java" />
+        <option value="$PROJECT_DIR$/ImShare/AndroidManifest.xml" />
+        <option value="$PROJECT_DIR$/ImShare/res/values/dimens.xml" />
+        <option value="$PROJECT_DIR$/ImShare/res/layout/activity_my_share.xml" />
+        <option value="$PROJECT_DIR$/ImShare/res/drawable/ic_add_share.xml" />
+        <option value="$PROJECT_DIR$/ImShare/res/layout/share_action_item.xml" />
+        <option value="$PROJECT_DIR$/ImShare/res/layout/share_item.xml" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/AnimUtil.java" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java" />
+        <option value="$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java" />
       </list>
     </option>
   </component>
@@ -1670,7 +1789,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="utils" />
+              <option name="myItemId" value="ui" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1703,98 +1822,8 @@
               <option name="myItemId" value="ui" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
-          </PATH>
-          <PATH>
             <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImShare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imshare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sns" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImShare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imshare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sns" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="share" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="ImShare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="imshare" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="core" />
+              <option name="myItemId" value="myshare" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1828,7 +1857,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="share" />
+              <option name="myItemId" value="store" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1859,10 +1888,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="core" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="setting" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1881,6 +1906,28 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImShare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="values" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -1920,6 +1967,50 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable-hdpi" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImShare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="drawable" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="ImShare" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
               <option name="myItemId" value="build" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
@@ -1959,10 +2050,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="com" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sdk" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2077,70 +2164,6 @@
             </PATH_ELEMENT>
             <PATH_ELEMENT>
               <option name="myItemId" value="sdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="deps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WeiboSDK" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="openapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-          </PATH>
-          <PATH>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="deps" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="WeiboSDK" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="src" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="sdk" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="openapi" />
-              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
-            </PATH_ELEMENT>
-            <PATH_ELEMENT>
-              <option name="myItemId" value="legacy" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -2304,7 +2327,7 @@
     <property name="GoToFile.includeJavaFiles" value="false" />
     <property name="GoToClass.toSaveIncludeLibraries" value="false" />
     <property name="options.splitter.main.proportions" value="0.3" />
-    <property name="options.lastSelected" value="preferences.keymap" />
+    <property name="options.lastSelected" value="preferences.pluginManager" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="MemberChooser.showClasses" value="true" />
     <property name="GoToClass.includeLibraries" value="false" />
@@ -2320,6 +2343,15 @@
     <property name="ExportedApkPath" value="$USER_HOME$/Desktop/im.apk" />
     <property name="AndroidRunProguardForReleaseBuild" value="false" />
     <property name="FullScreen" value="false" />
+    <property name="LayoutCode.rearrangeEntriesXML" value="false" />
+    <property name="LayoutCode.rearrangeEntriesJava" value="false" />
+    <property name="OverrideImplement.combined" value="true" />
+    <property name="OverrideImplement.overriding.sorted" value="false" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/ImShare/res/drawable-hdpi" />
+    </key>
   </component>
   <component name="RunManager" selected="Android Application.ImShare">
     <configuration default="false" name="All Tests" type="AndroidTestRunConfigurationType" factoryName="Android Tests" temporary="true" nameIsGenerated="true">
@@ -2539,6 +2571,7 @@
       <window_info id="Palette&#9;" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Changes" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995495" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32959402" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995495" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995495" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2549,7 +2582,7 @@
       <window_info id="Build Variants" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="3" side_tool="true" content_ui="tabs" />
       <window_info id="Gradle Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="8" side_tool="true" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.3277027" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Android" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3355856" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
+      <window_info id="Android" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" weight="0.3355856" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Gradle" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32995495" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.19263607" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -2562,7 +2595,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.32977587" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -2583,130 +2615,6 @@
     <breakpoint-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/gradlew">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3740" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="10" column="0" selection-start="171" selection-end="171" vertical-scroll-proportion="0.0" vertical-offset="220" max-vertical-offset="1254">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="176" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="101" selection-end="101" vertical-scroll-proportion="0.0" vertical-offset="44" max-vertical-offset="176">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradlew">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3740" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="5" column="52" selection-start="133" selection-end="133" vertical-scroll-proportion="0.0" vertical-offset="110" max-vertical-offset="1254">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="374" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/settings.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="176" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="101" selection-end="101" vertical-scroll-proportion="0.0" vertical-offset="44" max-vertical-offset="176">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradlew">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3740" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/activeandroid/Configuration.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="22" selection-start="730" selection-end="730" vertical-scroll-proportion="-1.4770318" vertical-offset="1320" max-vertical-offset="6314" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradlew">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="3740" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/gradlew.bat">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="6" column="0" selection-start="240" selection-end="240" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="2112" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/build.gradle">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="114" selection-end="114" vertical-scroll-proportion="0.07857143" vertical-offset="0" max-vertical-offset="560">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/polites/android/Animation.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="21" column="17" selection-start="687" selection-end="687" vertical-scroll-proportion="0.26324788" vertical-offset="0" max-vertical-offset="585" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ImShareApp.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="18" column="25" selection-start="376" selection-end="376" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="528">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/activeandroid/app/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="22" column="16" selection-start="759" selection-end="759" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="836" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../android/android-sdk-macosx/sources/android-18/android/app/Application.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="94" column="6" selection-start="3993" selection-end="3993" vertical-scroll-proportion="0.0" vertical-offset="1301" max-vertical-offset="5896" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../../../android/android-sdk-macosx/sources/android-18/android/content/ComponentCallbacks.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="33" column="58" selection-start="1394" selection-end="1394" vertical-scroll-proportion="0.71452993" vertical-offset="0" max-vertical-offset="1012" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/build/source/r/debug/com/sina/weibo/sdk/R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="8" column="19" selection-start="229" selection-end="229" vertical-scroll-proportion="0.0" vertical-offset="176" max-vertical-offset="1386">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/local.properties">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="877" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="0" column="0" selection-start="0" selection-end="0" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="41690" />
@@ -2719,7 +2627,9 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/settings.gradle">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="2" column="0" selection-start="44" selection-end="44" vertical-scroll-proportion="0.0" vertical-offset="44" max-vertical-offset="176" />
+        <state line="2" column="0" selection-start="44" selection-end="44" vertical-scroll-proportion="0.0" vertical-offset="44" max-vertical-offset="176">
+          <folding />
+        </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/locate/LocateHelper.java">
@@ -2736,20 +2646,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/AndroidManifest.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="36" column="42" selection-start="1716" selection-end="1716" vertical-scroll-proportion="0.0" vertical-offset="528" max-vertical-offset="1584">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/build/source/r/debug/com/imtech/imshare/R.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="117" column="28" selection-start="6796" selection-end="6796" vertical-scroll-proportion="-6.28" vertical-offset="2307" max-vertical-offset="3212">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/GuideFragment.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="30" column="52" selection-start="820" selection-end="820" vertical-scroll-proportion="0.0" vertical-offset="132" max-vertical-offset="1034">
@@ -2760,16 +2656,6 @@
     <entry file="file://$PROJECT_DIR$/ImShare/res/layout/fragment_guide.xml">
       <provider selected="true" editor-type-id="text-editor">
         <state line="13" column="19" selection-start="519" selection-end="519" vertical-scroll-proportion="0.0" vertical-offset="286" max-vertical-offset="1188">
-          <folding />
-        </state>
-      </provider>
-      <provider editor-type-id="android-designer">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/res/layout/activity_share.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="162" column="49" selection-start="6220" selection-end="6220" vertical-scroll-proportion="0.0" vertical-offset="3564" max-vertical-offset="7304">
           <folding />
         </state>
       </provider>
@@ -2826,13 +2712,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareObject.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="34" column="24" selection-start="578" selection-end="578" vertical-scroll-proportion="0.0" vertical-offset="604" max-vertical-offset="1166">
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/utils/StringUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="10" column="13" selection-start="128" selection-end="128" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="418">
@@ -2846,7 +2725,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state line="26" column="18" selection-start="842" selection-end="842" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="880">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2868,28 +2747,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="91" column="32" selection-start="3584" selection-end="3584" vertical-scroll-proportion="0.0" vertical-offset="396" max-vertical-offset="10978">
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state line="99" column="45" selection-start="2945" selection-end="2945" vertical-scroll-proportion="0.0" vertical-offset="1089" max-vertical-offset="4290">
-          <folding>
-            <element signature="e#1630#1631#0" expanded="true" />
-            <element signature="e#1669#1670#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/WeiboShare.java">
       <provider selected="true" editor-type-id="text-editor">
         <state line="7" column="0" selection-start="118" selection-end="118" vertical-scroll-proportion="0.11743772" vertical-offset="0" max-vertical-offset="2596">
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -2924,9 +2786,227 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/setting/AppSetting.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state line="12" column="0" selection-start="235" selection-end="235" vertical-scroll-proportion="0.46975088" vertical-offset="0" max-vertical-offset="682">
+        <state line="14" column="55" selection-start="330" selection-end="330" vertical-scroll-proportion="0.5480427" vertical-offset="0" max-vertical-offset="682">
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ImageUploadInfo.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="13" column="13" selection-start="200" selection-end="200" vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="638">
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/IShare.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="19" column="17" selection-start="366" selection-end="366" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="506">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/MainActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="24" column="13" selection-start="812" selection-end="812" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="1804">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/sns/share/ShareObject.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="34" column="24" selection-start="578" selection-end="578" vertical-scroll-proportion="0.0" vertical-offset="604" max-vertical-offset="1166">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ImShareApp.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="18" column="25" selection-start="376" selection-end="376" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="528">
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../../../android/android-sdk-macosx/sources/android-18/java/util/concurrent/Executor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="110" column="9" selection-start="3574" selection-end="3574" vertical-scroll-proportion="0.0" vertical-offset="1946" max-vertical-offset="2508">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/share/ShareService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="194" column="26" selection-start="5948" selection-end="5948" vertical-scroll-proportion="0.0" vertical-offset="3190" max-vertical-offset="4444">
+          <folding>
+            <element signature="e#5843#6058#0" expanded="true" />
+            <element signature="e#6043#6044#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/AndroidManifest.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="57" column="26" selection-start="2589" selection-end="2589" vertical-scroll-proportion="0.0" vertical-offset="846" max-vertical-offset="1628">
+          <folding>
+            <element signature="e#1151#1169#0" expanded="true" />
+            <element signature="e#2543#2561#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/values/dimens.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="6" column="32" selection-start="273" selection-end="273" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="308">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/layout/activity_share.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="297" column="27" selection-start="11366" selection-end="11366" vertical-scroll-proportion="-10.592592" vertical-offset="6248" max-vertical-offset="7304">
+          <folding />
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_unable.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_unable.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weixin.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/layout/activity_my_share.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="21" column="20" selection-start="780" selection-end="780" vertical-scroll-proportion="-7.3333335" vertical-offset="264" max-vertical-offset="1188">
+          <folding>
+            <element signature="e#701#719#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_weibo_normal.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_tx_weibo_normal.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/bg_cover_def.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_add_share_normal.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable-hdpi/ic_launcher.png">
+      <provider selected="true" editor-type-id="images">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/drawable/ic_add_share.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="5" column="10" selection-start="279" selection-end="279" vertical-scroll-proportion="0.0" vertical-offset="0" max-vertical-offset="242">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/layout/share_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="17" column="16" selection-start="585" selection-end="585" vertical-scroll-proportion="-7.3333335" vertical-offset="176" max-vertical-offset="2112">
+          <folding>
+            <element signature="e#1809#1828#0" expanded="true" />
+            <element signature="e#1859#1878#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/build/source/r/debug/com/imtech/imshare/R.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="126" column="32" selection-start="7332" selection-end="7332" vertical-scroll-proportion="-8.8" vertical-offset="2442" max-vertical-offset="3366">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/res/layout/share_action_item.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="14" column="31" selection-start="489" selection-end="489" vertical-scroll-proportion="14.666667" vertical-offset="704" max-vertical-offset="1364">
+          <folding>
+            <element signature="e#894#913#0" expanded="true" />
+            <element signature="e#948#967#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+      <provider editor-type-id="android-designer">
+        <state />
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/AnimUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="27" column="0" selection-start="630" selection-end="630" vertical-scroll-proportion="0.0" vertical-offset="242" max-vertical-offset="858">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/core/store/StoreManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="25" column="0" selection-start="485" selection-end="485" vertical-scroll-proportion="0.0" vertical-offset="198" max-vertical-offset="1364">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/ShareActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="96" column="21" selection-start="3763" selection-end="3763" vertical-scroll-proportion="0.0" vertical-offset="1562" max-vertical-offset="10890">
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="73" column="22" selection-start="2005" selection-end="2005" vertical-scroll-proportion="0.0" vertical-offset="1177" max-vertical-offset="2376">
           <folding>
             <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/ImShare/src/com/imtech/imshare/ui/myshare/ShareAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state line="55" column="16" selection-start="1637" selection-end="1637" vertical-scroll-proportion="0.33274022" vertical-offset="385" max-vertical-offset="6314">
+          <folding>
+            <element signature="e#1470#1488#0" expanded="true" />
+            <element signature="e#2073#2074#0" expanded="true" />
+            <element signature="e#2110#2111#0" expanded="true" />
+            <element signature="e#2931#2998#0" expanded="true" />
           </folding>
         </state>
       </provider>

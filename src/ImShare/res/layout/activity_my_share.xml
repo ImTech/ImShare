@@ -17,7 +17,7 @@
             android:layout_centerInParent="true"
             android:background="@null"
             android:gravity="center"
-            android:text="我的分享"
+            android:text="@string/app_name"
             android:textColor="#ffffff"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -37,7 +37,7 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <ListView android:id="@+id/listMyShare" 
+    <ListView android:id="@+id/listMyShare"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#F9F9F9"

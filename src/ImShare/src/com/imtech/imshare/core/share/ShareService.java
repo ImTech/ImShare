@@ -31,6 +31,8 @@ import com.sina.weibo.sdk.utils.MD5;
 import java.io.File;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @author douzifly
@@ -50,6 +52,8 @@ public class ShareService implements IShareService{
 
     private String mTmpScaleImageDir;
 
+    private ExecutorService mExecutorService;
+
     public void setTmpScaledImagePath (String dir) {
         mTmpScaleImageDir = dir;
     }
@@ -64,7 +68,8 @@ public class ShareService implements IShareService{
 	public ShareService() {
 		mShareQueue = new ShareQueue();
 		mShareQueue.setListener(new QueueListener());
-	}
+        mExecutorService = Executors.newFixedThreadPool(2);
+    }
 
 	private IShare getShare(SnsType type) {
 		 if (type == SnsType.WEIBO) {
@@ -163,9 +168,9 @@ public class ShareService implements IShareService{
 	class QueueListener implements IShareQueueListener {
 
 		@Override
-		public void onNextShare(ShareObject obj, SnsType type) {
+		public void onNextShare(final ShareObject obj, final SnsType type) {
 			Log.d(TAG, "onNextShare:" + obj + " type:" + type);
-			IShare share = getShare(type);
+	        final IShare share = getShare(type);
 			if (share == null) {
 				Log.e(TAG, "unknown share type:" + type);
 				ShareRet ret = new ShareRet(ShareRetState.FAILED, obj, type);
@@ -173,7 +178,7 @@ public class ShareService implements IShareService{
 				mShareQueue.checkNext();
 				return;
 			}
-			AccessToken token = getToken(type);
+			final AccessToken token = getToken(type);
 			if (token == null) {
 				Log.e(TAG, "no token:" + type);
 				ShareRet ret = new ShareRet(ShareRetState.TOKEN_EXPIRED, obj, type);
@@ -182,9 +187,15 @@ public class ShareService implements IShareService{
 				return;
 			}
 			share.setListener(new ShareListener());
+
             // check compress
-            checkCompressImage(obj);
-			share.share(mAppContext, mActivity, token, obj);
+            mExecutorService.submit(new Runnable() {
+                @Override
+                public void run() {
+                    checkCompressImage(obj);
+			        share.share(mAppContext, mActivity, token, obj);
+                }
+            });
 		}
 		
 	}

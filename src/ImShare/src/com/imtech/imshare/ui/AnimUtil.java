@@ -21,12 +21,12 @@ public class AnimUtil {
     static Animation sFadeout;
     static Animation sScaleBig;
     
-    public static void fadeOut(View v) {
+    public static void fadeOut(View v, AnimationListener l) {
         if (sFadeout == null) {
             sFadeout = AnimationUtils.loadAnimation(v.getContext(), R.anim.fade_out);
         }
-        
         sFadeout.reset();
+        sFadeout.setAnimationListener(l);
         v.startAnimation(sFadeout);
     }
     

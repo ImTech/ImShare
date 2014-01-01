@@ -93,7 +93,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
         mShareService.setTmpScaledImagePath (AppSetting.getScaledImageDir());
         mShareService.addListener(this);
 
-		showGuideView();
+//		showGuideView();
 		locateBegin();
 	}
 	
@@ -191,7 +191,6 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mAuthService.removeAuthListener(this);
 		mShareService.removeListener(this);
 		LocateHelper.release();
-		Process.killProcess(Process.myPid());
 	}
 
 	@Override
@@ -302,7 +301,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		// auth(SnsType.QQ);
 		// break;
 		case R.id.add_image:
-		    AnimUtil.fadeOut(v);
+		    AnimUtil.fadeOut(v, null);
 			addImage();
 			break;
 		case R.id.image0:
@@ -413,8 +412,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 			obj.lat = String.valueOf(mLocation.latitude);
 			obj.lng = String.valueOf(mLocation.longitude);
 		}
-		
-		
+
 		// 一个ShareItem对应多个ShareObj的task
 		ShareItem item = new ShareItem();
 		item.postTime = new Date();
@@ -431,13 +429,11 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		}
 		StoreManager.sharedInstance().saveShareItem(item);
 		Log.d(TAG, "save id:" + item.getId());
-		showMyShare();
-		clearShareInput();
-		
 		for (SnsType type : checked) {
             Log.d(TAG, "share addShare :" + type);
             mShareService.addShare(this, obj, type);
         }
+        finish();
 	}
 	
 	private void clearShareInput() {

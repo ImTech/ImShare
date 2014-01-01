@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:paddingTop="20dp"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="80dp"
+        android:layout_height="wrap_content"
+        android:text="今天"
+        android:gravity="right|center"
+        android:paddingRight="8dp"
+        android:textColor="#000"
+        android:textSize="26sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+
+        <ImageButton
+            android:id="@+id/btnShare"
+            android:background="@null"
+            android:src="@drawable/ic_add_share"
+            android:scaleType="fitXY"
+            android:layout_width="@dimen/image_size"
+            android:layout_height="@dimen/image_size" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/icon_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:src="@drawable/ic_weibo_unable" />
+
+            <ImageView
+                android:id="@+id/icon_tx_weibo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:background="@null"
+                android:layout_marginLeft="10dp"
+                android:src="@drawable/ic_tx_weibo_unable" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
