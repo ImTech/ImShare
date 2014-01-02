@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="locSDK_4.0">
-    <CLASSES>
-      <root url="jar://$PROJECT_DIR$/ImShare/libs/locSDK_4.0.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

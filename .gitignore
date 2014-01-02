@@ -11,3 +11,5 @@ bin/
 #mac
 .DS_*
 build/
+#idea
+.idea/
