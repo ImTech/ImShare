@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.imtech.imshare"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="2"
+    android:versionName="1.1" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -48,8 +48,6 @@
                 <data android:scheme="tencent100568940" />
                 <!-- 100380359 100381104 222222 -->
             </intent-filter>
-        </activity>
-        <activity android:name="com.tencent.weibo.sdk.android.component.Authorize" >
         </activity>
         <!-- 百度定位服务 -->
         <service

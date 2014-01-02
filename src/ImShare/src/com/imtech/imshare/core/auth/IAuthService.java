@@ -57,4 +57,6 @@ public interface IAuthService {
     boolean isAuthed(SnsType type);
     
     void setAuthExpired(Activity context, SnsType type);
+    
+    boolean haveListener(IAuthListener l);
 }

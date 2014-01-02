@@ -127,6 +127,7 @@ public class AuthService implements IAuthService{
     
     @Override
     public void checkActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mCurrentAuth == null) return;
         mCurrentAuth.checkActivityResult(requestCode, resultCode, data);
     }
 
@@ -168,6 +169,14 @@ public class AuthService implements IAuthService{
                 auth.logout(context.getApplicationContext(), context);
             }
         }
+    }
+
+    @Override
+    public boolean haveListener(IAuthListener l) {
+        for (IAuthListener ll : mAuthListeners) {
+            if (ll == l) return true;
+        }
+        return false;
     }
     
 }

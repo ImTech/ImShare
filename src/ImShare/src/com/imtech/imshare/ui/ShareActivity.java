@@ -1,11 +1,14 @@
 package com.imtech.imshare.ui;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Process;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -14,7 +17,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
-import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -36,7 +38,6 @@ import com.imtech.imshare.core.store.Pic;
 import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.SnsType;
-import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.sns.auth.IAuthListener;
@@ -55,13 +56,7 @@ import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 import com.imtech.imshare.utils.StringUtils;
 import com.imtech.imshare.utils.UmUtil;
-import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.umeng.analytics.MobclickAgent;
-
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
 
 public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
 		IShareListener, OnGuideFinishListener, LocationListener {
@@ -220,13 +215,17 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	@Override
 	protected void onResume() {
 		super.onResume();
-		mAuthService.addAuthListener(this);
+		if (!mAuthService.haveListener(this)) {
+	            Log.d(TAG, "onResume add auth l");
+	            mAuthService.addAuthListener(this);
+	    }
 		MobclickAgent.onResume(this);
 	}
 	
 	@Override
 	protected void onPause() {
 	    super.onPause();
+	    Log.d(TAG, "onPause remove auth l");
 	    mAuthService.removeAuthListener(this);
 	    MobclickAgent.onPause(this);
 	}
@@ -237,6 +236,11 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
         if (requestCode == REQ_SEL_PIC) {
             handleSelPic(data);
         } else {
+            Log.d(TAG, "auth service checkActivity Result, req:" + requestCode + "result:" + requestCode + "data:" + data);
+            if (!mAuthService.haveListener(this)) {
+                Log.d(TAG, "onResume add auth l");
+                mAuthService.addAuthListener(this);
+            }
 	    	mAuthService.checkActivityResult(requestCode, resultCode, data);
         }
 	}

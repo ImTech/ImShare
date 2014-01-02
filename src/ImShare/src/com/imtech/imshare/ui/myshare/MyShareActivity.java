@@ -147,6 +147,12 @@ public class MyShareActivity extends Activity implements IShareListener
             // 可能取消了授权
             Log.d(TAG, "back from setting");
             initAuthInfo();
+        } else {
+            Log.d(TAG, "auth service checkActivity Result, req:" + requestCode + "result:" + requestCode + "data:" + data);
+            if (!mAuthService.haveListener(this)) {
+                mAuthService.addAuthListener(this);
+            }
+            mAuthService.checkActivityResult(requestCode, resultCode, data);
         }
     }
     
@@ -352,13 +358,17 @@ public class MyShareActivity extends Activity implements IShareListener
     @Override
     protected void onResume() {
         super.onResume();
-        mAuthService.addAuthListener(this);
+       
+        if (!mAuthService.haveListener(this)) {
+            mAuthService.addAuthListener(this);
+        }
         MobclickAgent.onResume(this);
     }
     
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "onPause remove auth l");
         mAuthService.removeAuthListener(this);
         MobclickAgent.onPause(this);
     }
