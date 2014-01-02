@@ -38,13 +38,13 @@ android {
     signingConfigs {
 debug {
     keyPassword 'android'
-    storeFile file('/Users/douzifly/Nutstore/ImTech/imtech_debug.keystore')
+    storeFile file('/home/douzifly/Nutstore/ImTech/imtech_debug.keystore')
     storePassword 'android'
     keyAlias 'androiddebugkey'
 }
         release {
             keyPassword 'imtech'
-            storeFile file('/Users/douzifly/Nutstore/ImTech/imtech_release.keystore')
+            storeFile file('/home/douzifly/Nutstore/ImTech/imtech_release.keystore')
             storePassword 'imtech'
             keyAlias 'imtech'
         }

@@ -308,7 +308,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		// break;
 		case R.id.add_image:
             ChoosePic c = new ChoosePic();
-            c.choose(this, REQ_SEL_PIC);
+            c.choose(this, REQ_SEL_PIC, null);
 			break;
 		case R.id.image0:
 			showImagePreview();

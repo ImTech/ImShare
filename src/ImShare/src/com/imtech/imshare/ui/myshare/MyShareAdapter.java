@@ -35,7 +35,7 @@ import java.util.List;
 /**
  * @author douzifly
  */
-public class ShareAdapter extends BaseAdapter implements OnClickListener, View.OnLongClickListener {
+public class MyShareAdapter extends BaseAdapter implements OnClickListener, View.OnLongClickListener {
 
     final static int VIEW_TYPE_COVER = 0;
     final static int VIEW_TYPE_ITEM = 1;
@@ -59,7 +59,7 @@ public class ShareAdapter extends BaseAdapter implements OnClickListener, View.O
         notifyDataSetChanged();;
     }
 
-    public ShareAdapter(Context context) {
+    public MyShareAdapter(Context context) {
         mInflater = LayoutInflater.from(context);
         mContext = context;
     }

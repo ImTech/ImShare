@@ -17,6 +17,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
 
@@ -76,29 +77,30 @@ public class BitmapUtil {
 		return path;
 	}
 
-    public static Bitmap createScaledBitmap(Bitmap src, int dstWidth, int dstHeight,
-                                            boolean filter) {
-        Matrix m = new Matrix();
-        final int width = src.getWidth();
-        final int height = src.getHeight();
-        final float sx = dstWidth  / (float)width;
-        final float sy = dstHeight / (float)height;
-        m.setScale(sx, sy);
-        Bitmap b = Bitmap.createBitmap(src, 0, 0, width, height, m, filter);
-        return b;
+
+    public static Bitmap createScaledBitmap(Bitmap src, int dstWidth, int dstHeight, Config config) {
+        Bitmap bitmap = Bitmap.createBitmap(dstWidth, dstHeight, config);
+        Canvas canvas = new Canvas(bitmap);
+        Paint p = new Paint();
+        p.setAntiAlias(true);
+        final Rect rect = new Rect(0, 0, src.getWidth(), src.getHeight());
+        final RectF rectF = new RectF(0, 0, dstWidth, dstHeight);
+        canvas.drawBitmap(bitmap, rect, rectF, p);
+        return bitmap;
     }
 
-    public static void scaleAndSave(Bitmap source, int width, String savePath) throws IOException {
+    public static void scaleAndSave(Bitmap source, int maxWidth, String savePath) throws IOException {
         final int oldW = source.getWidth();
         final int oldH = source.getHeight();
         Bitmap scaled = null;
-        if (width == oldW) {
+        if (maxWidth >= oldW) {
             scaled = source;
+            Log.d(TAG, "no need scale, w:" + oldW);
         } else {
-            float scale = (float)width / (float)oldW;
+            float scale = (float)maxWidth / (float)oldW;
             int h = (int) (oldH * scale);
-            Log.d(TAG, "scaleAndSave form w:" + oldW + " h:" + oldH + " to w:" + width + " h:" + h);
-            scaled = createScaledBitmap(source, width, h, false);
+            Log.d(TAG, "scaleAndSave form w:" + oldW + " h:" + oldH + " to w:" + maxWidth + " h:" + h);
+            scaled = createScaledBitmap(source, maxWidth, h, Config.ARGB_8888);
         }
         File f = new File(savePath);
         if (!f.getParentFile().exists()) {
@@ -108,5 +110,35 @@ public class BitmapUtil {
         scaled.compress(Bitmap.CompressFormat.JPEG, 100, fos);
         fos.flush();
         fos.close();
+    }
+
+    public int getImageOrientation(String path) {
+         File imageFile = new File(path);
+        ExifInterface exif = null;
+        try {
+            exif = new ExifInterface(
+                    imageFile.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return 0;
+        }
+        int orientation = exif.getAttributeInt(
+                ExifInterface.TAG_ORIENTATION,
+                ExifInterface.ORIENTATION_NORMAL);
+        int rotate = 0;
+        switch (orientation) {
+            case ExifInterface.ORIENTATION_ROTATE_270:
+                rotate = 270;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_180:
+                rotate = 180;
+                break;
+            case ExifInterface.ORIENTATION_ROTATE_90:
+                rotate = 90;
+                break;
+        }
+
+        Log.d(TAG, "Exif orientation: " + orientation + " rotate:" + rotate);
+        return rotate;
     }
 }

@@ -8,10 +8,11 @@ package com.imtech.imshare.ui.myshare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.media.ExifInterface;
 import android.net.Uri;
-import android.os.*;
+import android.os.Bundle;
 import android.os.Process;
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
@@ -30,6 +31,7 @@ import com.imtech.imshare.ui.ShareActivity;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,9 +51,10 @@ public class MyShareActivity extends Activity implements IShareListener{
 
 	ListView mListView;
 	List<ShareItem> mItems = new ArrayList<ShareItem>();
-	ShareAdapter mAdapter;
+	com.imtech.imshare.ui.myshare.MyShareAdapter mAdapter;
 	StoreManager mStroeMgr = StoreManager.sharedInstance();
     MenuMode mMenuMode;
+    String mTakePicPath;
 
     enum MenuMode {
         Share,
@@ -132,7 +135,7 @@ public class MyShareActivity extends Activity implements IShareListener{
     void checkShareResult(ShareRet ret) {
     }
 
-    class MyShareAdapter extends  ShareAdapter {
+    class MyShareAdapter extends com.imtech.imshare.ui.myshare.MyShareAdapter {
 
         public MyShareAdapter(Context context) {
             super(context);
@@ -201,17 +204,20 @@ public class MyShareActivity extends Activity implements IShareListener{
 
     public void selectPic() {
         ChoosePic choosePic = new ChoosePic();
-        choosePic.choose(this, REQ_SEL_PIC);
+        choosePic.choose(this, REQ_SEL_PIC, null);
     }
 
     public void takePic() {
         ChooseTakePic c = new ChooseTakePic();
-        c.choose(this, REQ_TAKE_PIC);
+        mTakePicPath = AppSetting.getTakePicDir() + System.currentTimeMillis() + ".jpg";
+        Bundle b = new Bundle();
+        b.putParcelable(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mTakePicPath)));
+        c.choose(this, REQ_TAKE_PIC, b);
     }
 
     public void changeCover() {
         ChoosePic c = new ChoosePic();
-        c.choose(this, REQ_SEL_PIC_COVER);
+        c.choose(this, REQ_SEL_PIC_COVER, null);
     }
 
     public void resetCover() {
@@ -236,17 +242,17 @@ public class MyShareActivity extends Activity implements IShareListener{
     }
 
     public void handleTakePic(Intent data) {
-        Bundle bundle = data.getExtras();
-        Bitmap bitmap = (Bitmap) bundle.get("data");
-        String savePath = AppSetting.getTakePicDir() + System.currentTimeMillis() + ".jpg";
-        Log.d(TAG, "handleTakePic:" + savePath + " bmp:" + bitmap);
-        try {
-            BitmapUtil.scaleAndSave(bitmap, 720, savePath);
+//        Bundle bundle = data.getExtras();
+//        Bitmap bitmap = (Bitmap) bundle.get("data");
+        String savePath = mTakePicPath;
+        Log.d(TAG, "handleTakePic:" + savePath); // + " bmp:" + bitmap);
+//        try {
+//            BitmapUtil.scaleAndSave(bitmap, 720, savePath);
             goToShare(savePath);
-        } catch (IOException e) {
-            Log.e(TAG, "handleTakePic exp:" + e.getMessage());
-            e.printStackTrace();
-        }
+//        } catch (IOException e) {
+//            Log.e(TAG, "handleTakePic exp:" + e.getMessage());
+//            e.printStackTrace();
+//        }
     }
 
     public void handelSelCover(Intent data) {
@@ -258,5 +264,7 @@ public class MyShareActivity extends Activity implements IShareListener{
         String path = BitmapUtil.getImagePathByUri(this, uri);
         mAdapter.setCoverPath(path);
         CommonPreference.setString(this, CommonPreference.KEY_COVER, path);
+
+
     }
 }

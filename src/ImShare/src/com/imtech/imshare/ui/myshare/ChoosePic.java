@@ -3,6 +3,7 @@ package com.imtech.imshare.ui.myshare;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.widget.Toast;
 
@@ -12,9 +13,10 @@ import android.widget.Toast;
 public class ChoosePic implements IChoose {
 
     @Override
-    public void choose(Activity context, int reqCode) {
+    public void choose(Activity context, int reqCode, Bundle extra) {
         Intent intent = new Intent(Intent.ACTION_PICK, null);
         intent.setDataAndType(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
         try {
             context.startActivityForResult(intent, reqCode);
         } catch (Exception e) {
