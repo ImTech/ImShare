@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.widget.AbsListView;
@@ -35,7 +36,8 @@ import java.util.List;
 /**
  * @author douzifly
  */
-public class MyShareAdapter extends BaseAdapter implements OnClickListener, View.OnLongClickListener {
+public class MyShareAdapter extends BaseAdapter implements OnClickListener, 
+    View.OnLongClickListener {
 
     final static int VIEW_TYPE_COVER = 0;
     final static int VIEW_TYPE_ITEM = 1;
@@ -103,6 +105,8 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
             .showImageOnFail(R.drawable.bg_cover_def)
             .showImageOnLoading(R.drawable.bg_cover_def).build();
 
+    
+    private View coverView;
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
@@ -110,6 +114,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
         if (v == null) {
             if (viewType == VIEW_TYPE_COVER) {
                 v = new ImageView(mContext);
+                coverView = v;
                 ((ImageView) v).setImageResource(R.drawable.bg_cover_def);
                 ((ImageView) v).setScaleType(ImageView.ScaleType.CENTER_CROP);
                 v.setBackgroundColor(Color.BLACK);
@@ -120,6 +125,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
             } else if (viewType == VIEW_TYPE_ACTION) {
                 v = mInflater.inflate(R.layout.share_action_item, null);
                 v.findViewById(R.id.btnShare).setOnClickListener(this);
+                v.findViewById(R.id.btnShare).setOnLongClickListener(mAddButtonLongClick);
                 ImageView wb = (ImageView) v.findViewById(R.id.icon_weibo);
                 wb.setOnClickListener(this);
                 ImageView txWb = (ImageView) v.findViewById(R.id.icon_tx_weibo);
@@ -185,7 +191,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
             tag.txtContent.setBackgroundColor(color.transparent);
         } else {
             tag.imageView.setVisibility(View.GONE);
-            tag.txtContent.setBackgroundColor(Color.LTGRAY);
+            tag.txtContent.setBackgroundColor(0xfff5f5f5);
         }
         String content = item.content;
         if (content == null) content = "";
@@ -261,6 +267,10 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
 
     @Override
     public void onClick(View v) {
+        if (v == coverView) {
+            onCoverPressed();
+            return;
+        }
         final int id = v.getId();
         if (id == R.id.btnShare) {
             onAddButtonClicked();
@@ -273,12 +283,12 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    onPlatformClicked(SnsType.TENCENT_WEIBO);
                 }
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-                    onPlatformClicked(SnsType.TENCENT_WEIBO);
+                   
                 }
             });
 
@@ -291,12 +301,12 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
 
                 @Override
                 public void onAnimationEnd(Animation animation) {
-
+                    onPlatformClicked(SnsType.WEIBO);
                 }
 
                 @Override
                 public void onAnimationRepeat(Animation animation) {
-                    onPlatformClicked(SnsType.WEIBO);
+                   
                 }
             });
         }
@@ -338,6 +348,10 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
     public void onAddButtonClicked() {
 
     }
+    
+    public void onAddButtonLongClicked() {
+        
+    }
 
     /**
      * Called when platform icon clicked
@@ -355,4 +369,13 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener, View
     public void onCoverPressed() {
 
     }
+    
+    OnLongClickListener mAddButtonLongClick = new OnLongClickListener() {
+        
+        @Override
+        public boolean onLongClick(View v) {
+            onAddButtonLongClicked();
+            return true;
+        }
+    };
 }

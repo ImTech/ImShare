@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.imtech.imshare.ImShareApp;
 import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.auth.IAuthService;
@@ -52,6 +53,10 @@ import com.imtech.imshare.ui.myshare.MyShareActivity;
 import com.imtech.imshare.ui.preview.PreviewFragment;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
+import com.imtech.imshare.utils.StringUtils;
+import com.imtech.imshare.utils.UmUtil;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -83,9 +88,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	private SnsType[] mSnsTypes = new SnsType[] {SnsType.WEIBO, SnsType.TENCENT_WEIBO};
 	private HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
 	private boolean mIsLocatedSucess;
-	private Button mBtnMyShare;
 	private Button mBtnShare;
 	private boolean mLocationChecked;
+	private Button mBtnActionBack;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -123,7 +128,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 
     void handleIntent(Intent intent) {
         String path = intent.getStringExtra(EXTRA_FILE_PATH);
-        setImage(path);
+        if (path != null) {
+            setImage(path);
+        }
     }
 	
 	private void locateBegin() {
@@ -133,24 +140,12 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 
 	private void initAuthInfo() {
 		mAuthService = AuthService.getInstance();
-		mAuthService.addAuthListener(this);
-		mAuthService.loadCachedTokens(this);
-
-		AccessToken token = mAuthService.getAccessToken(SnsType.TENCENT_WEIBO);
-		if (token != null) {
-			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_normal);
-			setChecked(SnsType.TENCENT_WEIBO, true);
-		} else {
-			mTxWeibo.setImageResource(R.drawable.ic_tx_weibo_unable);
-		}
-
-		token = mAuthService.getAccessToken(SnsType.WEIBO);
-		if (token != null) {
-			mWeibo.setImageResource(R.drawable.ic_weibo_normal);
-			setChecked(SnsType.WEIBO, true);
-		} else {
-			mWeibo.setImageResource(R.drawable.ic_weibo_unable);
-		}
+		syncState();
+	}
+	
+	void syncState() {
+	    setIconState(SnsType.WEIBO, ((ImShareApp) getApplication()).isChecked(SnsType.WEIBO));
+	    setIconState(SnsType.TENCENT_WEIBO, ((ImShareApp) getApplication()).isChecked(SnsType.TENCENT_WEIBO));
 	}
 	
 	private boolean isChecked(SnsType type) {
@@ -159,6 +154,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	
 	private void setChecked(SnsType type, boolean value) {
 	    mChecked.put(type, value);
+	    ((ImShareApp)getApplication()).setChecked(type, value);
 	}
 
 	private void showGuideView() {
@@ -194,22 +190,20 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		mWeibo = (ImageView) findViewById(R.id.icon_weibo);
 		mTxWeibo = (ImageView) findViewById(R.id.icon_tx_weibo);
 		mLocateView = (TextView) findViewById(R.id.locate);
-		mBtnShare = (Button) findViewById(R.id.share_out);
-		mBtnMyShare = (Button) findViewById(R.id.btnMyShare);
+		mBtnShare = (Button) findViewById(R.id.btnActionShare);
+		mBtnActionBack = (Button) findViewById(R.id.btnActionBack);
 		View weiboItem = findViewById(R.id.weibo);
 		View txWeiboItem = findViewById(R.id.tx_weibo);
 		// View qzoneItem = findViewById(R.id.qzone);
 
 		// qzoneItem.setOnClickListener(this);
 		mBtnShare.setOnClickListener(this);
-		mBtnMyShare.setOnClickListener(this);
-        mBtnMyShare.setVisibility(View.GONE);
 		weiboItem.setOnClickListener(this);
 		txWeiboItem.setOnClickListener(this);
 		mAddImage.setOnClickListener(this);
 		mImageView0.setOnClickListener(this);
 		mLocateView.setOnClickListener(this);
-
+		mBtnActionBack.setOnClickListener(this);
 		
 		mLocationChecked = CommonPreference.getBoolean(this, CommonPreference.TYPE_LOCATE, true);
 		setLocateIcon(mLocationChecked);
@@ -226,6 +220,15 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	@Override
 	protected void onResume() {
 		super.onResume();
+		mAuthService.addAuthListener(this);
+		MobclickAgent.onResume(this);
+	}
+	
+	@Override
+	protected void onPause() {
+	    super.onPause();
+	    mAuthService.removeAuthListener(this);
+	    MobclickAgent.onPause(this);
 	}
 
 	@Override
@@ -264,7 +267,7 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.share_out:
+		case R.id.btnActionShare:
 			share();
 			break;
 		case R.id.weibo:
@@ -316,6 +319,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		case R.id.locate:
 			clickLocate();
 			break;
+		case R.id.btnActionBack:
+		    finish();
+		    break;
 		}
 	}
 	
@@ -397,6 +403,9 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 	    
 		ShareObject obj = new ShareObject();
 		obj.text = text;
+		 if (StringUtils.isEmpty(obj.text)) {
+             obj.text = "分享图片";
+         }
 		if (mShareImagePath != null) {
 			obj.images = new ArrayList<ShareObject.Image>(1);
 			obj.images.add(new Image(0, mShareImagePath));
@@ -428,6 +437,8 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
             mShareService.addShare(this, obj, type);
         }
         finish();
+        
+        MobclickAgent.onEvent(this, UmUtil.EVENT_SHARE);
 	}
 	
 	private void clearShareInput() {

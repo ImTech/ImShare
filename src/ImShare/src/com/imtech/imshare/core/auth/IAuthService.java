@@ -55,4 +55,6 @@ public interface IAuthService {
     void checkActivityResult(int requestCode, int resultCode, Intent data);
     
     boolean isAuthed(SnsType type);
+    
+    void setAuthExpired(Activity context, SnsType type);
 }

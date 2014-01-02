@@ -5,18 +5,27 @@
  */
 package com.imtech.imshare.ui.myshare;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.imtech.imshare.ImShareApp;
 import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.preference.CommonPreference;
@@ -26,30 +35,36 @@ import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AccessToken;
+import com.imtech.imshare.sns.auth.AuthRet;
+import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
+import com.imtech.imshare.sns.auth.IAuthListener;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareRet;
+import com.imtech.imshare.sns.share.SnsHelper;
+import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
+import com.imtech.imshare.ui.SettingActivity;
 import com.imtech.imshare.ui.ShareActivity;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import com.imtech.imshare.utils.UmUtil;
+import com.umeng.analytics.MobclickAgent;
 
 /**
  * 我的分享
  * @author Xiaoyuan
  *
  */
-public class MyShareActivity extends Activity implements IShareListener{
+public class MyShareActivity extends Activity implements IShareListener
+    , OnClickListener, IAuthListener{
 
     final static String TAG = "MyShareActivity";
 
     private static final int REQ_SEL_PIC = 12;// 从相册中选择
     private static final int REQ_TAKE_PIC = 13; //take pic
     private static final int REQ_SEL_PIC_COVER = 14;
+    private static final int REQ_SHARE = 15;// 去分享界面
+    private static final int REQ_SETTING = 16;
 
 	ListView mListView;
 	List<ShareItem> mItems = new ArrayList<ShareItem>();
@@ -57,7 +72,9 @@ public class MyShareActivity extends Activity implements IShareListener{
 	StoreManager mStroeMgr = StoreManager.sharedInstance();
     MenuMode mMenuMode;
     String mTakePicPath;
-    private AuthService mAuthService;
+    AuthService mAuthService;
+    Button mBtnActionSetting;
+    HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
 
     enum MenuMode {
         Share,
@@ -65,14 +82,15 @@ public class MyShareActivity extends Activity implements IShareListener{
     }
 
     private void initAuthInfo() {
-        mAuthService = AuthService.getInstance();
-//        mAuthService.addAuthListener(this);
-        mAuthService.loadCachedTokens(this);
+        if (mAuthService == null) {
+            mAuthService = AuthService.getInstance();
+            mAuthService.loadCachedTokens(this);
+        }
 
         AccessToken token = mAuthService.getAccessToken(SnsType.TENCENT_WEIBO);
-        mAdapter.setActiveSnsType(SnsType.TENCENT_WEIBO, token != null);
+        setIconState(SnsType.TENCENT_WEIBO, token != null);
         token = mAuthService.getAccessToken(SnsType.WEIBO);
-        mAdapter.setActiveSnsType(SnsType.WEIBO, token != null);
+        setIconState(SnsType.WEIBO, token != null);
     }
 
 	@Override
@@ -80,12 +98,16 @@ public class MyShareActivity extends Activity implements IShareListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_my_share);
 		mListView = (ListView) findViewById(R.id.listMyShare); 
+		mBtnActionSetting = (Button) findViewById(R.id.btnActionSetting);
+		mBtnActionSetting.setOnClickListener(this);
+		
 		mAdapter = new MyShareAdapter(this);
 		mListView.setAdapter(mAdapter);
         loadCover();
 		loadData();
 		ShareService.sharedInstance().addListener(this);
         initAuthInfo();
+        MobclickAgent.setDebugMode(false);
 	}
 
     private void loadCover() {
@@ -117,9 +139,20 @@ public class MyShareActivity extends Activity implements IShareListener{
             if (resultCode == RESULT_OK) {
                 handelSelCover(data);
             }
-        } else {
+        } else if (requestCode == REQ_SHARE) {
+            Log.d(TAG, "back from share ui");
             loadData();
+            syncState();
+        } else if (requestCode == REQ_SETTING && resultCode == RESULT_OK) {
+            // 可能取消了授权
+            Log.d(TAG, "back from setting");
+            initAuthInfo();
         }
+    }
+    
+    void syncState() {
+        setIconState(SnsType.WEIBO, ((ImShareApp) getApplication()).isChecked(SnsType.WEIBO));
+        setIconState(SnsType.TENCENT_WEIBO, ((ImShareApp) getApplication()).isChecked(SnsType.TENCENT_WEIBO));
     }
 
     void loadData() {
@@ -148,6 +181,29 @@ public class MyShareActivity extends Activity implements IShareListener{
     }
     
     void checkShareResult(ShareRet ret) {
+        String msg = null;
+        String snsName = SnsHelper.getSnsName(ret.snsType);
+        if (ret.state == ShareRetState.SUCESS) {
+            msg = snsName + "分享成功";
+        } else if (ret.state == ShareRetState.TOKEN_EXPIRED) {
+            msg = snsName + "未授权或授权已过期，请先授权";
+            setIconState(ret.snsType, false);
+            mAuthService.setAuthExpired(this, ret.snsType);
+        } else if (ret.state == ShareRetState.CANCELED) {
+            msg = snsName + "取消分享";
+        } else if (ret.state == ShareRetState.FAILED) {
+            msg = snsName + "分享失败";
+        }
+        
+        if (ret.state == ShareRetState.SUCESS) {
+            MobclickAgent.onEvent(this, UmUtil.EVENT_SHARE_SUCESS);
+        } else {
+            MobclickAgent.onEvent(this, UmUtil.EVENT_SHARE_FAILED);
+        }
+        
+        if (msg != null) {
+            Toast.makeText(MyShareActivity.this, msg, Toast.LENGTH_SHORT).show();
+        }
     }
 
     class MyShareAdapter extends com.imtech.imshare.ui.myshare.MyShareAdapter {
@@ -164,12 +220,19 @@ public class MyShareActivity extends Activity implements IShareListener{
 
         @Override
         public void onPlatformClicked(SnsType type) {
+            authOrToggle(type);
         }
 
         @Override
-        public void onCoverLongPressed() {
+        public void onCoverPressed() {
             mMenuMode = MenuMode.ChangeCover;
             openOptionsMenu();
+        }
+        
+        @Override
+        public void onAddButtonLongClicked() {
+            super.onAddButtonLongClicked();
+            goToShare(null);
         }
     }
 
@@ -242,8 +305,10 @@ public class MyShareActivity extends Activity implements IShareListener{
 
     public void goToShare(String filePath) {
         Intent i = new Intent(MyShareActivity.this, ShareActivity.class);
-        i.putExtra(ShareActivity.EXTRA_FILE_PATH, filePath);
-        startActivityForResult(i, 0);
+        if (filePath != null) {
+            i.putExtra(ShareActivity.EXTRA_FILE_PATH, filePath);
+        }
+        startActivityForResult(i, REQ_SHARE);
     }
 
     public void handleSelPic(Intent data) {
@@ -254,6 +319,7 @@ public class MyShareActivity extends Activity implements IShareListener{
         Log.d(TAG, "uri: " + uri.toString());
         String path = BitmapUtil.getImagePathByUri(this, uri);
         goToShare(path);
+        MobclickAgent.onEvent(this, UmUtil.EVENT_SEL_PIC);
     }
 
     public void handleTakePic(Intent data) {
@@ -261,6 +327,7 @@ public class MyShareActivity extends Activity implements IShareListener{
 //        Bitmap bitmap = (Bitmap) bundle.get("data");
         String savePath = mTakePicPath;
         Log.d(TAG, "handleTakePic:" + savePath); // + " bmp:" + bitmap);
+        MobclickAgent.onEvent(this, UmUtil.EVENT_TAKE_PIC);
 //        try {
 //            BitmapUtil.scaleAndSave(bitmap, 720, savePath);
             goToShare(savePath);
@@ -279,7 +346,83 @@ public class MyShareActivity extends Activity implements IShareListener{
         String path = BitmapUtil.getImagePathByUri(this, uri);
         mAdapter.setCoverPath(path);
         CommonPreference.setString(this, CommonPreference.KEY_COVER, path);
+        MobclickAgent.onEvent(this, UmUtil.EVENT_CHANGE_COVER);
+    }
+    
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mAuthService.addAuthListener(this);
+        MobclickAgent.onResume(this);
+    }
+    
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mAuthService.removeAuthListener(this);
+        MobclickAgent.onPause(this);
+    }
+    
+    private void gotoSetting() {
+        Intent i = new Intent(this, SettingActivity.class);
+        startActivityForResult(i, REQ_SETTING);
+    }
 
+    @Override
+    public void onClick(View v) {
+        if (v.getId() == R.id.btnActionSetting) {
+            gotoSetting();
+        }
+    }
+    
+    private boolean isChecked(SnsType type) {
+        return mChecked.get(type) != null && mChecked.get(type).booleanValue();
+    }
+    
+    public void setIconState(SnsType type, boolean enable) {
+        mAdapter.setActiveSnsType(type, enable);
+        setChecked(type, enable);
+    }
+    
+    private void setChecked(SnsType type, boolean value) {
+        Log.d(TAG, "setChecked type:" + type + " value:" + value);
+        mChecked.put(type, value);
+        ((ImShareApp)getApplication()).setChecked(type, value);
+    }
+    
+    private void authOrToggle(SnsType type) {
+        if (mAuthService.isAuthed(type)) {
+            // 已经授权，取消选中，表示不发送到相关平台
+            if (isChecked(type)) {
+                setIconState(type, false);
+            } else {
+                setIconState(type, true);
+            }
+        } else {
+            mAuthService.auth(type, this);
+            MobclickAgent.onEvent(this, UmUtil.EVENT_AUTH);
+        }
+    }
+    
+    @Override
+    public void onAuthFinished(SnsType snsType, AuthRet ret) {
+        Log.d(TAG, "onAuthFinished snsType: " + snsType + " AuthRet: " + ret.state);
+        String snsName = SnsHelper.getSnsName(snsType);
+        String msg = null;
 
+        if (ret.state == AuthRetState.SUCESS) {
+            msg = snsName + "授权成功";
+            setIconState(snsType, true);
+        } else if (ret.state == AuthRetState.FAILED) {
+            msg = snsName + "授权失败";
+            setIconState(snsType, false);
+        } else if (ret.state == AuthRetState.CANCELED) {
+            msg = snsName + "取消授权";
+            setIconState(snsType, false);
+        }
+        
+        if (msg != null) {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        }
     }
 }

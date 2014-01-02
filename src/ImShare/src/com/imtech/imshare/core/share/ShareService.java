@@ -5,6 +5,12 @@
  */
 package com.imtech.imshare.core.share;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.LinkedList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -25,14 +31,6 @@ import com.imtech.imshare.sns.share.WeiboShare;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.FileUtil;
 import com.imtech.imshare.utils.Log;
-import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
-import com.sina.weibo.sdk.utils.MD5;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.LinkedList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /**
  * @author douzifly
@@ -68,7 +66,7 @@ public class ShareService implements IShareService{
 	public ShareService() {
 		mShareQueue = new ShareQueue();
 		mShareQueue.setListener(new QueueListener());
-        mExecutorService = Executors.newFixedThreadPool(2);
+        mExecutorService = Executors.newFixedThreadPool(1);
     }
 
 	private IShare getShare(SnsType type) {
@@ -118,9 +116,7 @@ public class ShareService implements IShareService{
                 String savePath = mTmpScaleImageDir+ fileName;
                 Log.d(TAG, "savePath:" + savePath);
                 File f = new File(savePath);
-                if (f.exists()) { // test code
-                    f.delete();
-                } else if (f.exists() && f.length() > 0) {
+                if (f.exists() && f.length() > 0) {
                     Log.d(TAG, "sacled image exists:" + savePath);
                     continue;
                 }

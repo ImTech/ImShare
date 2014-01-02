@@ -58,13 +58,16 @@ public class QQShare extends ShareBase {
 			bundle.putString("content", obj.text);
 			bundle.putString("longitude", obj.lng);
 			bundle.putString("latitude", obj.lat);
-			String path = null;
-			Image image = obj.images != null && obj.images.size() > 0 ? obj.images.get(0) : null;
-			if (image != null) {
-				path = image.filePath;
-			}
-			Log.d(TAG, "imag path: " + path);
-			bundle.putByteArray("pic", BitmapUtil.decodeBitmapToByte(path));
+			String picPath = obj.images.size() > 0 ? obj.images.get(0).filePath : null;
+	        String scaledPath = obj.images.size() > 0 ? obj.images.get(0).scaledPath : null;
+	        String sendImgPath = scaledPath;
+	        if (sendImgPath == null) {
+	            sendImgPath = picPath;
+	        }
+	        Log.d(TAG, "send pic:" + sendImgPath);
+	        if (sendImgPath != null) {
+	            bundle.putByteArray("pic", BitmapUtil.decodeBitmapToByte(sendImgPath));
+	        }
 			mTencent.requestAsync(Constants.GRAPH_ADD_PIC_T, bundle, Constants.HTTP_POST, new ShareListener(
 					obj), null);
 		} else {
@@ -100,18 +103,26 @@ public class QQShare extends ShareBase {
 			shareObj = obj;
 		}
 
+//		100013    access token非法。
+//		100014  access token过期。 token过期时间为3个月。如果存储的access token过期，请重新走登录流程，根据使用Authorization_Code获取Access_Token或使用Implicit_Grant方式获取Access_Token获取新的access token值。
+//		100015  access token废除。 token被回收，或者被用户删除。请重新走登录流程，根据使用Authorization_Code获取Access_Token或使用Implicit_Grant方式获取Access_Token获取新的access token值。
+//		100016  access token验证失败。
 		@Override
 		public void onComplete(JSONObject response, Object state) {
 			Log.d(TAG, "onComplete response:" + response + " state:" + state);
 			int ret = -1;
 			try {
 				ret = response.getInt("ret");
+				Log.d(TAG, "ret:" + ret);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 			if (ret == 0) {
 				notifyResult(ShareRetState.SUCESS, shareObj);
-			} else {
+			} else if (ret == 100013 || ret == 100014 || ret == 100015 || ret == 100016
+			        || ret == 100030) {
+			    notifyResult(ShareRetState.TOKEN_EXPIRED, shareObj);
+			}else {
 				notifyResult(ShareRetState.FAILED, shareObj);
 			}
 		}

@@ -59,9 +59,7 @@ public class WeiboShare extends ShareBase {
             mApi.update(obj.text, obj.lat, obj.lng, new ShareListener(obj));
         } else {
 //            mApi.uploadPic(obj.text, picPath, new ShareListener(obj));
-            if (StringUtils.isEmpty(obj.text)) {
-                obj.text = "分享图片";
-            }
+           
             mApi.upload(obj.text, sendImgPath, obj.lat, obj.lng, new ShareListener(obj));
         }
     }
@@ -108,7 +106,13 @@ public class WeiboShare extends ShareBase {
 		public void onError(WeiboException e) {
 			Log.e(TAG, "onError:" + e.getMessage());
 			if (mListener != null) {
-				ShareRet ret = new ShareRet(ShareRetState.FAILED, shareObj, getSnsType());
+			    ShareRet ret;
+			    if (e.getMessage() != null && e.getMessage().contains("21332")) {
+			        Log.e(TAG, "need reauth"); 
+			        ret = new ShareRet(ShareRetState.TOKEN_EXPIRED, shareObj, getSnsType());
+			    } else {
+			        ret = new ShareRet(ShareRetState.FAILED, shareObj, getSnsType());
+			    }
 				mListener.onShareFinished(ret);
 			}
 		}

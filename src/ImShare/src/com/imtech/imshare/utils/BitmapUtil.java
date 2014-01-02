@@ -5,6 +5,11 @@
  */
 package com.imtech.imshare.utils;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,19 +18,12 @@ import android.graphics.Bitmap.Config;
 import android.graphics.BitmapFactory;
 import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.provider.MediaStore;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 /**
  *
@@ -78,16 +76,6 @@ public class BitmapUtil {
 	}
 
 
-    public static Bitmap createScaledBitmap(Bitmap src, int dstWidth, int dstHeight, Config config) {
-        Bitmap bitmap = Bitmap.createBitmap(dstWidth, dstHeight, config);
-        Canvas canvas = new Canvas(bitmap);
-        Paint p = new Paint();
-        p.setAntiAlias(true);
-        final Rect rect = new Rect(0, 0, src.getWidth(), src.getHeight());
-        final RectF rectF = new RectF(0, 0, dstWidth, dstHeight);
-        canvas.drawBitmap(bitmap, rect, rectF, p);
-        return bitmap;
-    }
 
     public static void scaleAndSave(Bitmap source, int maxWidth, String savePath) throws IOException {
         final int oldW = source.getWidth();
@@ -100,7 +88,7 @@ public class BitmapUtil {
             float scale = (float)maxWidth / (float)oldW;
             int h = (int) (oldH * scale);
             Log.d(TAG, "scaleAndSave form w:" + oldW + " h:" + oldH + " to w:" + maxWidth + " h:" + h);
-            scaled = createScaledBitmap(source, maxWidth, h, Config.ARGB_8888);
+            scaled = Bitmap.createScaledBitmap(source, maxWidth, h, false);
         }
         File f = new File(savePath);
         if (!f.getParentFile().exists()) {

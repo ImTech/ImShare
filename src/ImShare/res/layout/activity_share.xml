@@ -40,7 +40,7 @@
             -->
 
             <Button
-                android:id="@+id/btnMyShare"
+                android:id="@+id/btnActionShare"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
@@ -48,9 +48,23 @@
                 android:background="@drawable/btn_blue"
                 android:gravity="center"
                 android:padding="6dp"
-                android:text="我的分享"
+                android:text="分享"
                 android:textColor="#ffffff"
                 android:textSize="16sp" />
+            
+            <Button
+                android:id="@+id/btnActionBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/btn_black"
+                android:gravity="center"
+                android:padding="6dp"
+                android:text="返回"
+                android:textColor="#ffffff"
+                android:textSize="16sp" />
+            
         </RelativeLayout>
 
         <HorizontalScrollView
@@ -120,7 +134,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1sp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="12dp"
             android:layout_weight="0"
             android:background="#cbcbcb" />
 
@@ -134,7 +148,7 @@
             android:gravity="top|left"
             android:hint="这一刻的想法。。。"
             android:padding="10dp"
-            android:textColor="#a2a2a2"
+            android:textColor="#3c3c3c"
             android:textSize="18sp" />
 
         <View
@@ -152,7 +166,7 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="45dp"
             android:layout_weight="0"
             android:background="#ffffff" >
 
@@ -161,7 +175,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_vertical|left"
-                android:layout_marginLeft="20dp"
+                android:layout_marginLeft="15dp"
                 android:background="@null"
                 android:drawableLeft="@drawable/ic_location"
                 android:drawablePadding="6dp"
@@ -209,13 +223,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1sp"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="12dp"
             android:layout_weight="0"
             android:background="#cbcbcb" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="130dp"
+            android:layout_height="wrap_content"
             android:layout_weight="0"
             android:background="#ffffff"
             android:orientation="horizontal"
@@ -269,6 +283,7 @@
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="新浪微博"
                     android:textColor="#a2a2a2"
+                    android:visibility="gone"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -293,6 +308,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|center_horizontal"
                     android:text="腾讯微博"
+                    android:visibility="gone"
                     android:textColor="#a2a2a2"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -315,6 +331,7 @@
             android:gravity="center"
             android:text="分享出去"
             android:textColor="#ffffff"
+            android:visibility="gone"
             android:textSize="20sp" />
     </LinearLayout>
 

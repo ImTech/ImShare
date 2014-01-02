@@ -155,5 +155,19 @@ public class AuthService implements IAuthService{
     public boolean isAuthed(SnsType type) {
         return mTokens.get(type) != null;
     }
+
+    @Override
+    public void setAuthExpired(Activity context, SnsType type) {
+        mCacheManager.remove(context, type);
+        if (mTokens != null) {
+            mTokens.remove(type);
+        }
+        if (mAuths != null) {
+            IAuth auth = mAuths.get(type) ;
+            if (auth != null) {
+                auth.logout(context.getApplicationContext(), context);
+            }
+        }
+    }
     
 }
