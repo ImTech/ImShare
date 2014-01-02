@@ -12,4 +12,5 @@ bin/
 .DS_*
 build/
 #idea
+.gradle/
 .idea/
