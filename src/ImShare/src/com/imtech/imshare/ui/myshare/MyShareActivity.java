@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.imtech.imshare.R;
+import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.setting.AppSetting;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.SnsType;
+import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareRet;
@@ -55,10 +57,22 @@ public class MyShareActivity extends Activity implements IShareListener{
 	StoreManager mStroeMgr = StoreManager.sharedInstance();
     MenuMode mMenuMode;
     String mTakePicPath;
+    private AuthService mAuthService;
 
     enum MenuMode {
         Share,
         ChangeCover
+    }
+
+    private void initAuthInfo() {
+        mAuthService = AuthService.getInstance();
+//        mAuthService.addAuthListener(this);
+        mAuthService.loadCachedTokens(this);
+
+        AccessToken token = mAuthService.getAccessToken(SnsType.TENCENT_WEIBO);
+        mAdapter.setActiveSnsType(SnsType.TENCENT_WEIBO, token != null);
+        token = mAuthService.getAccessToken(SnsType.WEIBO);
+        mAdapter.setActiveSnsType(SnsType.WEIBO, token != null);
     }
 
 	@Override
@@ -71,6 +85,7 @@ public class MyShareActivity extends Activity implements IShareListener{
         loadCover();
 		loadData();
 		ShareService.sharedInstance().addListener(this);
+        initAuthInfo();
 	}
 
     private void loadCover() {
