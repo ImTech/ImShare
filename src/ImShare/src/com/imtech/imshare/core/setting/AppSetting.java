@@ -1,6 +1,5 @@
 package com.imtech.imshare.core.setting;
 
-import android.content.Context;
 import android.os.Environment;
 
 /**

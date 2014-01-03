@@ -43,6 +43,9 @@
         android:background="#F9F9F9"
         android:divider="@null"
         android:dividerHeight="0dp"
+        android:scrollingCache="false"
+        android:cacheColorHint="#0000"
+        android:overScrollMode="never"
         >
     </ListView>
 

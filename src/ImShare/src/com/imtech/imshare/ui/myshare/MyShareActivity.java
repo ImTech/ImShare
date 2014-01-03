@@ -294,6 +294,10 @@ public class MyShareActivity extends Activity implements IShareListener
     public void takePic() {
         ChooseTakePic c = new ChooseTakePic();
         mTakePicPath = AppSetting.getTakePicDir() + System.currentTimeMillis() + ".jpg";
+        File f = new File(mTakePicPath);
+        if (!f.getParentFile().exists()) {
+            f.getParentFile().mkdirs();
+        }
         Bundle b = new Bundle();
         b.putParcelable(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mTakePicPath)));
         c.choose(this, REQ_TAKE_PIC, b);
