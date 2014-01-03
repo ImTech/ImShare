@@ -17,6 +17,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Process;
 import android.provider.MediaStore;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -301,6 +302,15 @@ public class MyShareActivity extends Activity implements IShareListener
         Bundle b = new Bundle();
         b.putParcelable(MediaStore.EXTRA_OUTPUT, Uri.fromFile(new File(mTakePicPath)));
         c.choose(this, REQ_TAKE_PIC, b);
+    }
+    
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_MENU) {
+            // ignore
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     public void changeCover() {
