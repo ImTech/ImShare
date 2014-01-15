@@ -22,6 +22,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -57,7 +59,7 @@ import com.umeng.analytics.MobclickAgent;
  *
  */
 public class MyShareActivity extends Activity implements IShareListener
-    , OnClickListener, IAuthListener{
+    , OnClickListener, IAuthListener, OnScrollListener{
 
     final static String TAG = "MyShareActivity";
 
@@ -76,6 +78,7 @@ public class MyShareActivity extends Activity implements IShareListener
     AuthService mAuthService;
     Button mBtnActionSetting;
     HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
+    boolean mIsAllDataLoaded;
 
     enum MenuMode {
         Share,
@@ -104,6 +107,7 @@ public class MyShareActivity extends Activity implements IShareListener
 		
 		mAdapter = new MyShareAdapter(this);
 		mListView.setAdapter(mAdapter);
+		mListView.setOnScrollListener(this);
         loadCover();
 		loadData();
 		ShareService.sharedInstance().addListener(this);
@@ -189,11 +193,16 @@ public class MyShareActivity extends Activity implements IShareListener
     }
 
     void loadData() {
-        Log.d(TAG,  "loadData");
-		List<ShareItem> data = mStroeMgr.loadShareItems();
+        Log.d(TAG,  "loadData mIsAllDataLoaded:" + mIsAllDataLoaded);
+        if (mIsAllDataLoaded) return;
+		List<ShareItem> data = mStroeMgr.getNextDatas();
+		if (data == null) {
+//			Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show();
+			mIsAllDataLoaded = true;
+		}
 		if (data != null) {
             mItems.clear();
-			mItems.addAll(data);
+			mItems.addAll(mStroeMgr.getLoadedDatas());
 		}
 		mAdapter.setItems(mItems);
 	}
@@ -475,4 +484,19 @@ public class MyShareActivity extends Activity implements IShareListener
             Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
         }
     }
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
+			Log.d(TAG, "scroll idle");
+			if (mAdapter != null && mAdapter.getCount() -1 == view.getLastVisiblePosition()) {
+				loadData();
+			}
+		}
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+	}
 }

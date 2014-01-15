@@ -9,6 +9,7 @@ import com.activeandroid.Model;
 import com.activeandroid.query.Select;
 import com.imtech.imshare.utils.Log;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,9 +19,12 @@ import java.util.List;
 public class StoreManager {
 
 	final static String TAG = "StoreManager";
-	private List<ShareItem> mShares;
+	private List<ShareItem> mDatas = new ArrayList<ShareItem>();
 	
 	private static StoreManager sSharedInstances;
+	private long mCurrentId = -1;
+	private int mPageCount = 20;
+	private boolean mIsFirstLoad = true;
 	
 	public static StoreManager sharedInstance() {
 		if (sSharedInstances == null) {
@@ -29,15 +33,63 @@ public class StoreManager {
 		return sSharedInstances;
 	}
 	
+	public List<ShareItem> loadAllShareItems() {
+		if (mDatas != null) {
+			mDatas.clear();
+		}
+		mDatas = new Select().from(ShareItem.class).orderBy("id desc").execute();
+		Log.d(TAG, "loadShareItmes from db, count:" + mDatas.size());
+		return mDatas;
+	}
 	
-	public List<ShareItem> loadShareItems() {
-		if (mShares == null) {
-			// not loaded before
-			mShares = new Select().from(ShareItem.class).orderBy("id desc").execute();
-			Log.d(TAG, "loadShareItmes from db, count:" + mShares.size());
+	/**
+	 * 获取已经加载到内存中的数据
+	 */
+	public List<ShareItem> getLoadedDatas() {
+		return mDatas;
+	}
+	
+	public void resetPageCursor() {
+		mCurrentId = -1;
+		mIsFirstLoad = true;
+	}
+	
+	public void setPageCount(int count) {
+		mPageCount = count;
+	}
+	
+	// 是否还有更多数据
+	private boolean haveMoreData() {
+		 ShareItem firstItem = new Select().from(ShareItem.class).orderBy("id asc").executeSingle();
+		 Log.d(TAG, "haveMoreData lastItem:" + firstItem + " mCurrentId" + mCurrentId);
+		 if (firstItem == null) return false;
+		 return firstItem.getId() != mCurrentId;
+	}
+	
+	public List<ShareItem> getNextDatas() {
+		if (!haveMoreData()) {
+			return null;
 		}
 		
-		return mShares;
+		if (mCurrentId == -1) {
+			 ShareItem lastItem = new Select().from(ShareItem.class).orderBy("id desc").executeSingle();
+			 Log.d(TAG, "init mCurrentId:" + lastItem.getId());
+			 mCurrentId = lastItem.getId();
+		}
+		// not loaded before
+		String where = mIsFirstLoad ? "id <= " : "id < ";
+		List<ShareItem> datas = new Select().from(ShareItem.class).where(where + mCurrentId)
+				.limit(mPageCount).orderBy("id desc").execute();
+		Log.d(TAG, "getNextDatas from db, count:" + mDatas.size());
+		if (datas != null && datas.size() > 0) {
+			if (mIsFirstLoad) {
+				mIsFirstLoad = false;
+			}
+			mDatas.addAll(datas);
+			mCurrentId = datas.get(datas.size() -1).getId();
+		}
+		Log.d(TAG, "getNextDatas mCurrentId:" + mCurrentId);
+		return datas;
 	}
 	
 	/**
@@ -47,8 +99,8 @@ public class StoreManager {
 	public void saveShareItem(ShareItem item) {
 		boolean sucess = item.save();
 		if (sucess) {
-			if (mShares != null) {
-				mShares.add(0, item);
+			if (mDatas != null) {
+				mDatas.add(0, item);
 			}
 		}
 	}
