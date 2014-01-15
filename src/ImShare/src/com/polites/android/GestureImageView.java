@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.ColorFilter;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
@@ -119,13 +120,13 @@ public class GestureImageView extends ImageView  {
 		setStrict(attrs.getAttributeBooleanValue(LOCAL_NS, "strict", strict));
 		setRecycle(attrs.getAttributeBooleanValue(LOCAL_NS, "recycle", recycle));
 		
-		initImage();
+		initImage(0);
 	}
 
 	public GestureImageView(Context context) {
 		super(context);
 		setScaleType(ScaleType.CENTER_INSIDE);
-		initImage();
+		initImage(0);
 	}
 
 	@Override
@@ -272,7 +273,7 @@ public class GestureImageView extends ImageView  {
 				float wRatio = (float) imageWidth / (float) measuredWidth;
 				float hRatio = (float) imageHeight / (float) measuredHeight;
 
-				if(wRatio > hRatio) {
+				if(wRatio > hRatio && ((int)rotation == 0 || (int)rotation == 270)) {
 					startingScale = fitScaleHorizontal;
 				}
 				else {
@@ -309,13 +310,12 @@ public class GestureImageView extends ImageView  {
 				canvas.save();
 				
 				float adjustedScale = scale * scaleAdjust;
-
 				canvas.translate(x, y);
-
+				
 				if(rotation != 0.0f) {
 					canvas.rotate(rotation);
 				}
-
+				
 				if(adjustedScale != 1.0f) {
 					canvas.scale(adjustedScale, adjustedScale);
 				}
@@ -376,7 +376,7 @@ public class GestureImageView extends ImageView  {
 		super.onDetachedFromWindow();
 	}
 
-	protected void initImage() {
+	protected void initImage(int rotate) {
 		if(this.drawable != null) {
 			this.drawable.setAlpha(alpha);
 			this.drawable.setFilterBitmap(true);
@@ -385,21 +385,23 @@ public class GestureImageView extends ImageView  {
 			}
 		}
 		
+		setRotation(rotate);
+		
 		if(!layout) {
 			requestLayout();
 			redraw();
 		}
 	}
 
-	public void setImageBitmap(Bitmap image) {
+	public void setImageBitmap(Bitmap image, int rotate) {
 		this.drawable = new BitmapDrawable(getResources(), image);
-		initImage();
+		initImage(rotate);
 	}
 
 	@Override
 	public void setImageDrawable(Drawable drawable) {
 		this.drawable = drawable;
-		initImage();
+		initImage(0);
 	}
 
 	public void setImageResource(int id) {
@@ -581,7 +583,7 @@ public class GestureImageView extends ImageView  {
 			}
 		}
 		else {
-			setImageDrawable(Drawable.createFromPath(mUri.toString()));
+			setImageDrawable(Drawable.createFromPath(mUri.getPath()));
 		}
 
 		if (drawable == null) {

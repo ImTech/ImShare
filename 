@@ -1,0 +1,41 @@
+[1mdiff --git a/src/ImShare/project.properties b/src/ImShare/project.properties[m
+[1mindex 9947ecc..aaa0353 100644[m
+[1m--- a/src/ImShare/project.properties[m
+[1m+++ b/src/ImShare/project.properties[m
+[36m@@ -12,4 +12,4 @@[m
+ [m
+ # Project target.[m
+ target=android-17[m
+[31m-android.library.reference.1=../../../weibo_android_sdk/demo-src/WeiboSDK[m
+[32m+[m[32mandroid.library.reference.1=../deps/WeiboSDK[m
+[1mdiff --git a/src/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java b/src/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java[m
+[1mindex 83f5cdd..40cfa65 100644[m
+[1m--- a/src/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java[m
+[1m+++ b/src/ImShare/src/com/imtech/imshare/ui/myshare/MyShareActivity.java[m
+[36m@@ -96,6 +96,7 @@[m [mpublic class MyShareActivity extends Activity implements IShareListener[m
+ 	@Override[m
+ 	protected void onCreate(Bundle savedInstanceState) {[m
+ 		super.onCreate(savedInstanceState);[m
+[32m+[m		[32mLog.d(TAG, "onCreate");[m
+ 		setContentView(R.layout.activity_my_share);[m
+ 		mListView = (ListView) findViewById(R.id.listMyShare); [m
+ 		mBtnActionSetting = (Button) findViewById(R.id.btnActionSetting);[m
+[36m@@ -126,6 +127,7 @@[m [mpublic class MyShareActivity extends Activity implements IShareListener[m
+ [m
+     @Override[m
+     protected void onActivityResult(int requestCode, int resultCode, Intent data) {[m
+[32m+[m[41m    [m	[32mLog.d(TAG, "onActivityResult req:" + requestCode + " ret:" + resultCode + " data:" + data);[m
+         super.onActivityResult(requestCode, resultCode, data);[m
+         if (requestCode == REQ_SEL_PIC) {[m
+             if (resultCode == RESULT_OK) {[m
+[1mdiff --git a/src/deps/WeiboSDK/project.properties b/src/deps/WeiboSDK/project.properties[m
+[1mindex db721fd..484dab0 100644[m
+[1m--- a/src/deps/WeiboSDK/project.properties[m
+[1m+++ b/src/deps/WeiboSDK/project.properties[m
+[36m@@ -11,5 +11,5 @@[m
+ #proguard.config=${sdk.dir}/tools/proguard/proguard-android.txt:proguard-project.txt[m
+ [m
+ # Project target.[m
+[31m-target=android-8[m
+[32m+[m[32mtarget=android-17[m
+ android.library=true[m

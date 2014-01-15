@@ -107,11 +107,14 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
             finish();
             return;
         }
-        Log.d(TAG, "set image path: " + path);
+        
         mShareImagePath = path;
         Bitmap bitmap;
         int size = getResources().getDimensionPixelSize(R.dimen.image_size);
         bitmap = BitmapUtil.decodeFile(path, size);
+        int degree = BitmapUtil.getRotate(path);
+        Log.d(TAG, "set image path: " + path + " degree:" + degree);
+        bitmap = BitmapUtil.rotateBitmap(bitmap, degree);
         if (bitmap != null) {
             mImageView0.setVisibility(View.VISIBLE);
             mImageView0.setImageBitmap(bitmap);

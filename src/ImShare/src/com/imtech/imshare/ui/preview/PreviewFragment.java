@@ -5,7 +5,10 @@
  */
 package com.imtech.imshare.ui.preview;
 
+import java.io.File;
+
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,9 +17,11 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView.ScaleType;
 
 import com.imtech.imshare.R;
 import com.imtech.imshare.utils.BitmapUtil;
+import com.imtech.imshare.utils.StringUtils;
 import com.polites.android.GestureImageView;
 
 /**
@@ -49,12 +54,21 @@ public class PreviewFragment extends Fragment implements OnClickListener {
 	}
 
 	private void showImage(){
+		if (StringUtils.isEmpty(mImagePath)) return;
+		File f = new File(mImagePath);
+		if (!f.exists()) return;
 		int size = getResources().getDisplayMetrics().widthPixels;
 		Bitmap bmp = BitmapUtil.decodeFile(mImagePath, size);
 		if (bmp != null) {
-			mImageView.setImageBitmap(bmp);
+			int degree = BitmapUtil.getRotate(mImagePath);
+//			mImageView.setScaleType(ScaleType.CENTER);
+			mImageView.setImageBitmap(bmp, degree);
 			mImageBitmap = bmp;
 		}
+//		if (StringUtils.isEmpty(mImagePath)) return;
+//		File f = new File(mImagePath);
+//		if (!f.exists()) return;
+//		mImageView.setImageURI(Uri.fromFile(f));
 	}
 	
 	public void setImagePath(String path) {

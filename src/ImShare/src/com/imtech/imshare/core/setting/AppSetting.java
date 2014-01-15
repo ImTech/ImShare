@@ -18,7 +18,7 @@ public class AppSetting {
 
     public static String getScaledImageDir() {
         if (scaledImageDir == null) {
-            scaledImageDir = getAppDir() + "/scaled_img/";
+            scaledImageDir = getAppDir() + "/.scaled_img/";
         }
         return scaledImageDir;
     }

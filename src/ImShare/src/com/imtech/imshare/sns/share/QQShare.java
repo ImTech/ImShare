@@ -66,7 +66,7 @@ public class QQShare extends ShareBase {
 	        }
 	        Log.d(TAG, "send pic:" + sendImgPath);
 	        if (sendImgPath != null) {
-	            bundle.putByteArray("pic", BitmapUtil.decodeBitmapToByte(sendImgPath));
+	            bundle.putByteArray("pic", BitmapUtil.decodeBitmapToByte(sendImgPath, 100));
 	        }
 			mTencent.requestAsync(Constants.GRAPH_ADD_PIC_T, bundle, Constants.HTTP_POST, new ShareListener(
 					obj), null);

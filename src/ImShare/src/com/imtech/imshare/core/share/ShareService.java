@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
 
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.share.IShareQueue.IShareQueueListener;
@@ -79,27 +80,25 @@ public class ShareService implements IShareService{
 	}
 	
 	private AccessToken getToken(SnsType type) {
-		return AuthService.getInstance().getAccessToken(type);
-	}
-
+		return AuthService.getInstance().getAccessToken(type); } 
     /**
      * 检查是否需要压缩图片
      * @param filePath 原始图片路径
      * @param scaleWidth 压缩后的大小
      * @return 如果压缩了返回true， 否则返回false
      */
-    public boolean checkCompressImage(String filePath, int scaleWidth, String savePath) throws IOException {
+    public boolean checkCompressAndRotateImage(String filePath, int scaleWidth, String savePath) throws IOException {
         Log.d(TAG, "checkCompressImage path:" + filePath);
-        Bitmap bmp = BitmapFactory.decodeFile(filePath);
-        if (bmp.getWidth() <= scaleWidth) {
-            Log.d(TAG, "checkCompressImage size:" + bmp.getWidth() + " scaleWidth:" + scaleWidth + " no need scale");
-            return false;
+        Options opt = new Options();
+        BitmapFactory.decodeFile(filePath, opt);
+        if (opt.outWidth <= scaleWidth) {
+            Log.d(TAG, "checkCompressImage size:" + opt.outWidth + " scaleWidth:" + scaleWidth + " no need scale");
+            return BitmapUtil.checkRotateAndSave(filePath, savePath);
         }
-        BitmapUtil.scaleAndSave(bmp, scaleWidth, savePath);
-        return true;
+        return BitmapUtil.scaleAndSave(filePath, opt,  scaleWidth, savePath, true);
     }
 
-    public void checkCompressImage(ShareObject obj) {
+    public void checkCompressAndRotateImage(ShareObject obj) {
         Log.d(TAG, "checkCompressImage");
         if (obj.images == null || obj.images.size() == 0) {
             Log.d(TAG, "checkCompressImage, no image");
@@ -122,7 +121,7 @@ public class ShareService implements IShareService{
                 }
 
                 try {
-                   boolean compressed = checkCompressImage(image.filePath, obj.maxPicWidth, savePath);
+                   boolean compressed = checkCompressAndRotateImage(image.filePath, obj.maxPicWidth, savePath);
                     Log.d(TAG, "compressed:" + compressed + " savePath:" + savePath);
                     if (compressed) {
                         image.scaledPath = savePath;
@@ -190,7 +189,7 @@ public class ShareService implements IShareService{
             mExecutorService.submit(new Runnable() {
                 @Override
                 public void run() {
-                    checkCompressImage(obj);
+                    checkCompressAndRotateImage(obj);
                     Log.d(TAG, "begin share");
 			        share.share(mAppContext, mActivity, token, obj);
                 }

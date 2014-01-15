@@ -109,6 +109,32 @@ public class MyShareActivity extends Activity implements IShareListener
 		ShareService.sharedInstance().addListener(this);
         initAuthInfo();
         MobclickAgent.setDebugMode(false);
+        runCheck();
+	}
+	
+	private void runCheck() {
+		new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				checkNoMedia();
+			}
+		}).start();
+	}
+	
+	public void checkNoMedia() {
+		try {
+			String path = AppSetting.getScaledImageDir() + ".nomedia";
+			File f = new File(path);
+			if (!f.exists()) {
+				if (!f.getParentFile().exists()) {
+					f.getParentFile().mkdirs();
+				}
+				f.createNewFile();
+			} 
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
     private void loadCover() {

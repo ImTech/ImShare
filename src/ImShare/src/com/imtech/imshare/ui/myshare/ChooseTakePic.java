@@ -21,7 +21,6 @@ public class ChooseTakePic implements IChoose {
             Log.d(TAG, "savePath:" + savePath);
             intent.putExtra(MediaStore.EXTRA_OUTPUT, savePath);
         }
-        intent.putExtra(MediaStore.Images.Media.ORIENTATION, 0);
         context.startActivityForResult(intent, reqCode);
     }
 }

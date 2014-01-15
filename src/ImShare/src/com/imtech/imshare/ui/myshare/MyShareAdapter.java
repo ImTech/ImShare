@@ -5,6 +5,9 @@
  */
 package com.imtech.imshare.ui.myshare;
 
+import java.util.Hashtable;
+import java.util.List;
+
 import android.R.color;
 import android.content.Context;
 import android.graphics.Color;
@@ -29,9 +32,6 @@ import com.imtech.imshare.ui.preview.TextPreviewActivity;
 import com.imtech.imshare.utils.DateUtil;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
-
-import java.util.Hashtable;
-import java.util.List;
 
 /**
  * @author douzifly
@@ -103,7 +103,9 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             .cacheOnDisc(false)
             .showImageForEmptyUri(R.drawable.bg_cover_def)
             .showImageOnFail(R.drawable.bg_cover_def)
-            .showImageOnLoading(R.drawable.bg_cover_def).build();
+            .considerExifParams(true)
+            .showImageOnLoading(R.drawable.bg_cover_def).build()
+            ;
 
     
     private View coverView;
@@ -178,6 +180,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
                 .showImageForEmptyUri(R.drawable.ic_pic_def_gray)
                 .showImageOnFail(R.drawable.ic_pic_def_gray)
                 .showImageOnLoading(R.drawable.ic_pic_def_gray)
+                .considerExifParams(true)
                 .build();
     }
 
