@@ -24,8 +24,9 @@ public interface IShareQueue {
 	void clear();
 	/**
 	 * 检查下一个任务
+	 * return true 还有任务 false 没有任务
 	 */
-	void checkNext();
+	boolean checkNext();
 	
 	void setListener(IShareQueueListener l);
 	

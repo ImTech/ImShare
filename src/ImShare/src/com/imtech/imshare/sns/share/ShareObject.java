@@ -5,6 +5,7 @@
  */
 package com.imtech.imshare.sns.share;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,8 +16,10 @@ import java.util.List;
  */
 public class ShareObject{
 
+	public long id;
     public String text;
     public List<Image> images = new LinkedList<ShareObject.Image>();
+    public Date postTime;
     
     /**
      * 纬度
@@ -26,6 +29,8 @@ public class ShareObject{
      * 经度
      */
     public String lng = "0.0";
+    
+    public String city;
 
     /**
      * 上传图片的最大宽度, 等比压缩，如果需要的话

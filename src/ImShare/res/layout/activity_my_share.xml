@@ -33,20 +33,34 @@
             android:padding="6dp"
             android:text="设置"
             android:textColor="#ffffff"
-            android:textSize="16sp"
-            />
+            android:textSize="16sp" />
     </RelativeLayout>
 
-    <ListView android:id="@+id/listMyShare"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#F9F9F9"
-        android:divider="@null"
-        android:dividerHeight="0dp"
-        android:scrollingCache="false"
-        android:cacheColorHint="#0000"
-        android:overScrollMode="never"
-        >
-    </ListView>
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/listMyShare"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#F9F9F9"
+            android:cacheColorHint="#0000"
+            android:divider="#f1f1f1"
+            android:dividerHeight="1dp"
+            android:overScrollMode="never"
+            android:scrollingCache="false" >
+        </ListView>
+
+        <ProgressBar
+            android:id="@+id/progressCover"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|bottom"
+            android:layout_marginBottom="20dp"
+            android:layout_marginLeft="10dp"
+            android:indeterminateDrawable="@drawable/progress_cover"
+            android:indeterminateDuration="2000" />
+    </FrameLayout>
 
 </LinearLayout>

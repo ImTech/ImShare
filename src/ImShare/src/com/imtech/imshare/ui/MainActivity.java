@@ -44,19 +44,6 @@ public class MainActivity extends Activity implements OnClickListener{
         
     }
     
-    class ShareListener implements IShareListener {
-
-        @Override
-        public void onShareFinished(ShareRet ret) {
-        	Toast.makeText(MainActivity.this, "share ret:" + ret.state, Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void onShareImageUpload(ImageUploadInfo info) {
-        }
-        
-    }
-    
     private void shakeView(View v) {
     	TranslateAnimation a = new TranslateAnimation(0, 30, 0, 30);
     	a.setRepeatCount(3);

@@ -13,4 +13,5 @@ public interface IShareListener {
     
     void onShareFinished(ShareRet ret);
     void onShareImageUpload(ImageUploadInfo info);
+ 
 }

@@ -47,7 +47,7 @@ public class ShareQueue implements IShareQueue{
 	}
 	
 	@Override
-	public void checkNext() {
+	public boolean checkNext() {
 	    Log.d(TAG, "checkNext");
 	    mRunningTask = null;
 	    if (mPendingTasks.size() > 0) {
@@ -55,6 +55,9 @@ public class ShareQueue implements IShareQueue{
 	        Log.d(TAG, "have pending task, set running:" + mRunningTask 
 	                + " left count:" + mPendingTasks.size());
 	        notifyTaskAvaiable(mRunningTask);
+	        return true;
+	    } else {
+	    	return false;
 	    }
 	}
 

@@ -33,6 +33,7 @@ import com.imtech.imshare.core.locate.LocationListener;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.setting.AppSetting;
 import com.imtech.imshare.core.share.IShareService;
+import com.imtech.imshare.core.share.IShareService.IShareServiceListener;
 import com.imtech.imshare.core.share.ShareService;
 import com.imtech.imshare.core.store.Pic;
 import com.imtech.imshare.core.store.ShareItem;
@@ -41,7 +42,6 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.sns.auth.IAuthListener;
-import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
 import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareObject.Image;
@@ -50,7 +50,6 @@ import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
 import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.GuideFragment.OnGuideFinishListener;
 import com.imtech.imshare.ui.myshare.ChoosePic;
-import com.imtech.imshare.ui.myshare.MyShareActivity;
 import com.imtech.imshare.ui.preview.PreviewFragment;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
@@ -59,7 +58,7 @@ import com.imtech.imshare.utils.UmUtil;
 import com.umeng.analytics.MobclickAgent;
 
 public class ShareActivity extends FragmentActivity implements OnClickListener, IAuthListener,
-		IShareListener, OnGuideFinishListener, LocationListener {
+		IShareServiceListener, OnGuideFinishListener, LocationListener {
 	private static final String TAG = "ShareActivity";
 
     public final static String EXTRA_FILE_PATH = "file_path";
@@ -267,10 +266,6 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		}
 	}
 
-	private void showMyShare() {
-		startActivity(new Intent(this, MyShareActivity.class));
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -426,19 +421,24 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 		// 一个ShareItem对应多个ShareObj的task
 		ShareItem item = new ShareItem();
 		item.postTime = new Date();
+		obj.postTime = new Date();
 		if (mLocationChecked && mLocation != null) {
 		    item.addr = mLocation.detail;
 		    item.city = mLocation.city;
+		    obj.city = mLocation.city;
 		}
 		
-		item.content = mContentText.getText().toString();
+		item.content = obj.text; 
 		if (mShareImagePath != null) {
 		    List<Pic> pic = new ArrayList<Pic>();
 		    pic.add(new Pic(mShareImagePath, mShareImagePath));
 		    item.setPic(pic);
 		}
-		StoreManager.sharedInstance().saveShareItem(item);
+		boolean success = StoreManager.saveShareItem(item);
 		Log.d(TAG, "save id:" + item.getId());
+		if (success) {
+			obj.id = item.getId();
+		}
 		for (SnsType type : checked) {
             Log.d(TAG, "share addShare :" + type);
             mShareService.addShare(this, obj, type);
@@ -564,5 +564,17 @@ public class ShareActivity extends FragmentActivity implements OnClickListener, 
 				mLocateView.setText((location == null  || location.detail == null )? "获取位置信息失败" : location.detail);
 			}
 		});
+	}
+
+	@Override
+	public void onShareAdded(ShareObject obj) {
+	}
+
+	@Override
+	public void onShareBegin(ShareObject obj) {
+	}
+
+	@Override
+	public void onShareComplete() {
 	}
 }

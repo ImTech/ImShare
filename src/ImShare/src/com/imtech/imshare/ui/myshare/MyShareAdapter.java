@@ -5,33 +5,32 @@
  */
 package com.imtech.imshare.ui.myshare;
 
+import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 
 import android.R.color;
 import android.content.Context;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
-import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.imtech.imshare.R;
-import com.imtech.imshare.core.store.Pic;
-import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.ui.AnimUtil;
 import com.imtech.imshare.ui.preview.PreviewActivity;
 import com.imtech.imshare.ui.preview.TextPreviewActivity;
 import com.imtech.imshare.utils.DateUtil;
+import com.imtech.imshare.utils.StringUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 
 /**
  * @author douzifly
@@ -42,11 +41,22 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
     final static int VIEW_TYPE_COVER = 0;
     final static int VIEW_TYPE_ITEM = 1;
     final static int VIEW_TYPE_ACTION = 2;
+    
+    static class ShareViewModel {
+    	public String picPath;
+    	public String content;
+    	public String city;
+    	public Date   postTime;
+    	public long   id;
+    	public Object tag;
+    	public boolean isHistory;
+    	public boolean shareFailed;
+    }
 
-    Context mContext;
-    List<ShareItem> mItems;
-    LayoutInflater mInflater;
     int mViewTypeCount = 3;
+    Context mContext;
+    List<ShareViewModel> mItems;
+    LayoutInflater  mInflater;
     // active SnsTypes
     Hashtable<SnsType, Boolean> mActiveSnsType = new Hashtable<SnsType, Boolean>();
     String mCoverPath;
@@ -66,9 +76,24 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
         mContext = context;
     }
 
-    public void setItems(List<ShareItem> items) {
+    public void setItems(List<ShareViewModel> items) {
         mItems = items;
         notifyDataSetChanged();
+    }
+    
+    public void addItems(ShareViewModel model) {
+    	mItems.add(0, model);
+    	notifyDataSetChanged();
+    }
+    
+    public void removeItem(long id) {
+    	for (ShareViewModel m : mItems) {
+    		if (m.id == id) {
+    			mItems.remove(m);
+    			notifyDataSetChanged();
+    			break;
+    		}
+    	}
     }
 
     @Override
@@ -77,7 +102,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
     }
 
     @Override
-    public ShareItem getItem(int position) {
+    public ShareViewModel getItem(int position) {
         return mItems.get(position - 2);
     }
 
@@ -100,30 +125,29 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
 
     DisplayImageOptions coverOpt = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
-            .cacheOnDisc(false)
+            .cacheOnDisc(true)
+            .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
             .showImageForEmptyUri(R.drawable.bg_cover_def)
             .showImageOnFail(R.drawable.bg_cover_def)
             .considerExifParams(true)
             .showImageOnLoading(R.drawable.bg_cover_def).build()
             ;
+    
+ 
 
     
-    private View coverView;
+    private ImageView mCoverView;
+    
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v = convertView;
         int viewType = getItemViewType(position);
         if (v == null) {
             if (viewType == VIEW_TYPE_COVER) {
-                v = new ImageView(mContext);
-                coverView = v;
-                ((ImageView) v).setImageResource(R.drawable.bg_cover_def);
-                ((ImageView) v).setScaleType(ImageView.ScaleType.CENTER_CROP);
-                v.setBackgroundColor(Color.BLACK);
-                v.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                        mContext.getResources().getDimensionPixelSize(R.dimen.cover_height)));
-                v.setOnClickListener(this);
-                v.setOnLongClickListener(this);
+                v = mInflater.inflate(R.layout.myshare_cover, null);
+                mCoverView = (ImageView) v.findViewById(R.id.imgCover);
+                mCoverView.setOnClickListener(this);
+                mCoverView.setOnLongClickListener(this);
             } else if (viewType == VIEW_TYPE_ACTION) {
                 v = mInflater.inflate(R.layout.share_action_item, null);
                 v.findViewById(R.id.btnShare).setOnClickListener(this);
@@ -145,9 +169,11 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
                 tag.txtLocal = (TextView) v.findViewById(R.id.txtLocation);
                 tag.txtMonth = (TextView) v.findViewById(R.id.txtMonth);
                 tag.txtFailed = (TextView) v.findViewById(R.id.txtFailed);
+                tag.txtDelete = (TextView) v.findViewById(R.id.txtDelete);
                 v.setTag(tag);
                 tag.imageView.setOnClickListener(mImageClick);
                 tag.txtContent.setOnClickListener(mTextClick);
+                tag.txtDelete.setOnClickListener(mTextDeleteClick);
             }
         }
 
@@ -159,9 +185,9 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             updateAction(holder);
         } else if (viewType == VIEW_TYPE_COVER) {
             if (mCoverPath != null) {
-                ImageLoader.getInstance().displayImage(mCoverPath, (ImageView)v, coverOpt);
+                ImageLoader.getInstance().displayImage(mCoverPath, mCoverView, coverOpt);
             } else {
-                ((ImageView)v).setImageResource(R.drawable.bg_cover_def);
+            	mCoverView.setImageResource(R.drawable.bg_cover_def);
             }
         }
         return v;
@@ -176,7 +202,9 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
 
     {
         op = new DisplayImageOptions.Builder().cacheOnDisc(false)
+        		.cacheOnDisc(true)
                 .cacheInMemory(true)
+                .imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
                 .showImageForEmptyUri(R.drawable.ic_pic_def_gray)
                 .showImageOnFail(R.drawable.ic_pic_def_gray)
                 .showImageOnLoading(R.drawable.ic_pic_def_gray)
@@ -185,12 +213,11 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
     }
 
     public void updateView(ViewTag tag, int pos) {
-        ShareItem item = getItem(pos);
-        List<Pic> pic = item.getPicPaths();
-        if (pic != null && pic.size() > 0) {
+        ShareViewModel item = getItem(pos);
+        if (!StringUtils.isEmpty(item.picPath)) {
             tag.imageView.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage("file:///" + pic.get(0).originPath, tag.imageView, op);
-            tag.imageView.setTag(pic.get(0).originPath);
+            ImageLoader.getInstance().displayImage("file:///" + item.picPath, tag.imageView, op);
+            tag.imageView.setTag(item.picPath);
             tag.txtContent.setBackgroundColor(color.transparent);
         } else {
             tag.imageView.setVisibility(View.GONE);
@@ -234,7 +261,10 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
         }
 
         // update state
-//        tag.txtFailed.setVisibility(item.state == 1 ? View.GONE : View.VISIBLE);
+        tag.txtFailed.setVisibility(item.shareFailed ? View.VISIBLE
+        		: View.GONE);
+        
+        tag.txtDelete.setTag(item);
     }
 
     public void updateAction(ActionHolder holder) {
@@ -256,7 +286,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
         public ImageView weibo;
         public ImageView txWeibo;
     }
-
+    
     /**
      * Set the platform icon state
      *
@@ -270,7 +300,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
 
     @Override
     public void onClick(View v) {
-        if (v == coverView) {
+        if (v == mCoverView) {
             onCoverPressed();
             return;
         }
@@ -323,6 +353,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
         public TextView txtLocal;
         public TextView txtMonth;
         public TextView txtFailed;
+        public TextView txtDelete;
     }
 
     OnClickListener mImageClick = new OnClickListener() {
@@ -341,6 +372,15 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             String text = ((TextView) v).getText().toString();
             if (text.equals("")) return;
             TextPreviewActivity.showText(mContext, text);
+        }
+    };
+    
+    OnClickListener mTextDeleteClick = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+        	ShareViewModel model = (ShareViewModel) v.getTag();
+        	onDeleteClicked(model);
         }
     };
 
@@ -371,6 +411,10 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
 
     public void onCoverPressed() {
 
+    }
+    
+    public void onDeleteClicked(ShareViewModel model) {
+    	
     }
     
     OnLongClickListener mAddButtonLongClick = new OnLongClickListener() {

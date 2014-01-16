@@ -41,8 +41,8 @@ public class ShareService implements IShareService{
 	
 	final static String TAG = "SNS_ShareService";
 	
-	private LinkedList<IShareListener> mListeners 
-				= new LinkedList<IShareListener>();
+	private LinkedList<IShareServiceListener> mListeners 
+				= new LinkedList<IShareServiceListener>();
 	
 	private IShareQueue mShareQueue;
 	private Context mAppContext;
@@ -139,6 +139,7 @@ public class ShareService implements IShareService{
 		Log.d(TAG, "share obj:" + obj + " type:" + snsType);
 		mAppContext = activity.getApplicationContext();
 		mActivity = activity;
+		notifyShareAddeds(obj);
 		return mShareQueue.add(obj, snsType);
 	}
 	
@@ -153,12 +154,12 @@ public class ShareService implements IShareService{
 	}
 
 	@Override
-	public void addListener(IShareListener listener) {
+	public void addListener(IShareServiceListener listener) {
 		mListeners.add(listener);
 	}
 
 	@Override
-	public void removeListener(IShareListener l) {
+	public void removeListener(IShareServiceListener l) {
 		mListeners.remove(l);
 	}
 	
@@ -184,7 +185,8 @@ public class ShareService implements IShareService{
 				return;
 			}
 			share.setListener(new ShareListener());
-
+			
+			notifyShareBegin(obj);
             // check compress
             mExecutorService.submit(new Runnable() {
                 @Override
@@ -204,6 +206,24 @@ public class ShareService implements IShareService{
 		}
 	}
 	
+	private void notifyShareComplete() {
+		for (IShareServiceListener l : mListeners) {
+			l.onShareComplete();
+		}
+	}
+	
+	private void notifyShareAddeds(ShareObject obj) {
+		for (IShareServiceListener l : mListeners) {
+			l.onShareAdded(obj);
+		}
+	}
+	
+	private void notifyShareBegin(ShareObject obj) {
+		for (IShareServiceListener l : mListeners) {
+			l.onShareBegin(obj);
+		}
+	}
+	
 	private void notifyImageUploadChange(ImageUploadInfo info) {
         for (IShareListener l : mListeners) {
             l.onShareImageUpload(info);
@@ -215,13 +235,17 @@ public class ShareService implements IShareService{
 		@Override
 		public void onShareFinished(ShareRet ret) {
 			notifyShareFinishend(ret);
-			mShareQueue.checkNext();
+			boolean haveTask = mShareQueue.checkNext();
+			if (!haveTask) {
+				notifyShareComplete();
+			}
 		}
 		
 		@Override
 		public void onShareImageUpload(ImageUploadInfo info) {
 		    notifyImageUploadChange(info);
 		}
+
 	}
   
 }

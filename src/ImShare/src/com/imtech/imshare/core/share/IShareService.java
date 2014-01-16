@@ -24,12 +24,28 @@ public interface IShareService {
 	 * @return id for this share call
 	 */
 	int addShare(Activity acticity, ShareObject obj, SnsType snsType);
-	void addListener(IShareListener listener);
-	void removeListener(IShareListener l);
+	void addListener(IShareServiceListener listener);
+	void removeListener(IShareServiceListener l);
 	void cancel(int shareId);
     void setTmpScaledImagePath(String dir);
 	/**
 	 * 清除任务
 	 */
 	void clear();
+	
+	public static interface IShareServiceListener extends IShareListener{
+		   /**
+	     * 分享已经添加到队列 (不一定开始)
+	     */
+	    void onShareAdded(ShareObject obj);
+	    /**
+	     * 分享已经开始
+	     */
+	    void onShareBegin(ShareObject obj);
+	    
+	    /**
+	     * 所有的分享都完成了
+	     */
+	    void onShareComplete();
+	}
 }

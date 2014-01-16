@@ -46,7 +46,7 @@ public class ImShareApp extends Application{
                 .threadPoolSize(5)
                 .denyCacheImageMultipleSizesInMemory()
                 .discCache(new UnlimitedDiscCache(StorageUtils.getCacheDirectory(this)))
-                .memoryCache(new FIFOLimitedMemoryCache(1024))
+//                .memoryCache(new FIFOLimitedMemoryCache(1024 * 1024 * 3))
                 .build();
         ImageLoader.getInstance().init(config);
     }

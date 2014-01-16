@@ -23,7 +23,7 @@ public class StoreManager {
 	
 	private static StoreManager sSharedInstances;
 	private long mCurrentId = -1;
-	private int mPageCount = 20;
+	private int mPageCount = 5;
 	private boolean mIsFirstLoad = true;
 	
 	public static StoreManager sharedInstance() {
@@ -96,20 +96,15 @@ public class StoreManager {
 	 * 保存或者更新分享数据
 	 * @param item
 	 */
-	public void saveShareItem(ShareItem item) {
-		boolean sucess = item.save();
-		if (sucess) {
-			if (mDatas != null) {
-				mDatas.add(0, item);
-			}
-		}
+	public static boolean saveShareItem(ShareItem item) {
+		return item.save();
 	}
 	
 	/**
 	 * 删除分享数据
 	 * @param id
 	 */
-	public void deleteShareItem(int id) {
+	public static void deleteShareItem(long id) {
 		Model.delete(ShareItem.class, id);
 	}
 	

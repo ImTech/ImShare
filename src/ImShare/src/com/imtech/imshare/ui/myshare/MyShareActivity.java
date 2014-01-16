@@ -11,21 +11,30 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Process;
+import android.os.Handler;
 import android.provider.MediaStore;
+import android.support.v4.app.NotificationCompat;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.imtech.imshare.ImShareApp;
@@ -33,7 +42,9 @@ import com.imtech.imshare.R;
 import com.imtech.imshare.core.auth.AuthService;
 import com.imtech.imshare.core.preference.CommonPreference;
 import com.imtech.imshare.core.setting.AppSetting;
+import com.imtech.imshare.core.share.IShareService.IShareServiceListener;
 import com.imtech.imshare.core.share.ShareService;
+import com.imtech.imshare.core.store.Pic;
 import com.imtech.imshare.core.store.ShareItem;
 import com.imtech.imshare.core.store.StoreManager;
 import com.imtech.imshare.sns.SnsType;
@@ -41,13 +52,14 @@ import com.imtech.imshare.sns.auth.AccessToken;
 import com.imtech.imshare.sns.auth.AuthRet;
 import com.imtech.imshare.sns.auth.AuthRet.AuthRetState;
 import com.imtech.imshare.sns.auth.IAuthListener;
-import com.imtech.imshare.sns.share.IShareListener;
 import com.imtech.imshare.sns.share.ImageUploadInfo;
+import com.imtech.imshare.sns.share.ShareObject;
 import com.imtech.imshare.sns.share.ShareRet;
-import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.sns.share.ShareRet.ShareRetState;
+import com.imtech.imshare.sns.share.SnsHelper;
 import com.imtech.imshare.ui.SettingActivity;
 import com.imtech.imshare.ui.ShareActivity;
+import com.imtech.imshare.ui.myshare.MyShareAdapter.ShareViewModel;
 import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.Log;
 import com.imtech.imshare.utils.UmUtil;
@@ -58,11 +70,12 @@ import com.umeng.analytics.MobclickAgent;
  * @author Xiaoyuan
  *
  */
-public class MyShareActivity extends Activity implements IShareListener
+public class MyShareActivity extends Activity implements IShareServiceListener
     , OnClickListener, IAuthListener, OnScrollListener{
 
     final static String TAG = "MyShareActivity";
-
+    final static int NOTI_ID = 1;
+    
     private static final int REQ_SEL_PIC = 12;// 从相册中选择
     private static final int REQ_TAKE_PIC = 13; //take pic
     private static final int REQ_SEL_PIC_COVER = 14;
@@ -70,7 +83,6 @@ public class MyShareActivity extends Activity implements IShareListener
     private static final int REQ_SETTING = 16;
 
 	ListView mListView;
-	List<ShareItem> mItems = new ArrayList<ShareItem>();
 	com.imtech.imshare.ui.myshare.MyShareAdapter mAdapter;
 	StoreManager mStroeMgr = StoreManager.sharedInstance();
     MenuMode mMenuMode;
@@ -79,6 +91,10 @@ public class MyShareActivity extends Activity implements IShareListener
     Button mBtnActionSetting;
     HashMap<SnsType, Boolean> mChecked = new HashMap<SnsType, Boolean>();
     boolean mIsAllDataLoaded;
+    boolean mIsLoading;
+    ProgressBar mProgressBar;
+    Handler mHandler = new Handler();
+    boolean mIsShareing;
 
     enum MenuMode {
         Share,
@@ -103,13 +119,14 @@ public class MyShareActivity extends Activity implements IShareListener
 		setContentView(R.layout.activity_my_share);
 		mListView = (ListView) findViewById(R.id.listMyShare); 
 		mBtnActionSetting = (Button) findViewById(R.id.btnActionSetting);
+		mProgressBar = (ProgressBar) findViewById(R.id.progressCover);
 		mBtnActionSetting.setOnClickListener(this);
 		
 		mAdapter = new MyShareAdapter(this);
 		mListView.setAdapter(mAdapter);
 		mListView.setOnScrollListener(this);
         loadCover();
-		loadData();
+		loadHistoryData();
 		ShareService.sharedInstance().addListener(this);
         initAuthInfo();
         MobclickAgent.setDebugMode(false);
@@ -152,7 +169,6 @@ public class MyShareActivity extends Activity implements IShareListener
 	protected void onDestroy() {
 	    super.onDestroy();
 	    ShareService.sharedInstance().removeListener(this);
-        Process.killProcess(Process.myPid());
 	}
 
     @Override
@@ -172,7 +188,7 @@ public class MyShareActivity extends Activity implements IShareListener
             }
         } else if (requestCode == REQ_SHARE) {
             Log.d(TAG, "back from share ui");
-            loadData();
+            loadHistoryData();
             syncState();
         } else if (requestCode == REQ_SETTING && resultCode == RESULT_OK) {
             // 可能取消了授权
@@ -192,20 +208,60 @@ public class MyShareActivity extends Activity implements IShareListener
         setIconState(SnsType.TENCENT_WEIBO, ((ImShareApp) getApplication()).isChecked(SnsType.TENCENT_WEIBO));
     }
 
-    void loadData() {
+    synchronized void loadHistoryData() {
         Log.d(TAG,  "loadData mIsAllDataLoaded:" + mIsAllDataLoaded);
-        if (mIsAllDataLoaded) return;
-		List<ShareItem> data = mStroeMgr.getNextDatas();
-		if (data == null) {
-//			Toast.makeText(this, "没有数据", Toast.LENGTH_SHORT).show();
-			mIsAllDataLoaded = true;
-		}
-		if (data != null) {
-            mItems.clear();
-			mItems.addAll(mStroeMgr.getLoadedDatas());
-		}
-		mAdapter.setItems(mItems);
+        if (mIsAllDataLoaded || mIsLoading) return;
+        new LoadDataTask().execute();
 	}
+    
+    class LoadDataTask extends AsyncTask<Void, Void, List<ShareItem> > {
+    	
+    	@Override
+    	protected void onPreExecute() {
+    		super.onPreExecute();
+    		if (!mIsShareing) {
+    			showProgress();
+    		}
+    		mIsLoading = true;
+    	}
+    	
+		@Override
+		protected List<ShareItem> doInBackground(Void... params) {
+			List<ShareItem> data = mStroeMgr.getNextDatas();
+			if (data == null) {
+				mIsAllDataLoaded = true;
+			}
+			return data;
+		}
+		
+		@Override
+		protected void onPostExecute(List<ShareItem> data){
+			mAdapter.setItems(convertModel(mStroeMgr.getLoadedDatas()));
+			if (!mIsShareing) {
+				hideProgressDelay();
+			}
+			mIsLoading = false;
+		}
+    }
+    
+    public List<ShareViewModel> convertModel(List<ShareItem> items) {
+    	if (items == null) return null;
+    	List<ShareViewModel> models = new ArrayList<MyShareAdapter.ShareViewModel>(items.size());
+    	for (ShareItem s : items) {
+    		ShareViewModel m = new ShareViewModel();
+    		m.id = s.getId();
+    		m.content = s.content;
+    		m.city = s.city;
+    		List<Pic> pics = s.getPicPaths();
+    		if (pics != null && pics.size() > 0) {
+    			m.picPath = pics.get(0).originPath;
+    		}
+    		m.postTime = s.postTime;
+    		m.isHistory = true;
+    		models.add(m);
+    	}
+    	return models;
+    }
 
     @Override
     public void onShareFinished(final ShareRet ret) {
@@ -276,6 +332,13 @@ public class MyShareActivity extends Activity implements IShareListener
             super.onAddButtonLongClicked();
             goToShare(null);
         }
+        
+        @Override
+        public void onDeleteClicked(ShareViewModel model) {
+        	super.onDeleteClicked(model);
+        	StoreManager.deleteShareItem(model.id);
+        	mAdapter.removeItem(model.id);
+        }
     }
 
     final static int MENU_ID_TAKE_PIC = 0;
@@ -344,10 +407,47 @@ public class MyShareActivity extends Activity implements IShareListener
         if (keyCode == KeyEvent.KEYCODE_MENU) {
             // ignore
             return true;
+        } else if (keyCode == KeyEvent.KEYCODE_BACK) {
+        	boolean ret = moveTaskToBack(true);
+        	Log.d(TAG, "moveTaskToBack ret:" + ret);
+        	if (ret) {
+        		checkAndShowNotificaton();
+        	}
+        	return true;
         }
         return super.onKeyDown(keyCode, event);
     }
-
+    
+    private void checkAndShowNotificaton() {
+    	if (!mIsShareing) {
+    		return;
+    	}
+    	Intent i = new Intent(this, MyShareActivity.class);
+    	i.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+    	PendingIntent pi = PendingIntent.getActivity(this, 0, i, PendingIntent.FLAG_UPDATE_CURRENT);
+    	Notification notification = new NotificationCompat.Builder(this)
+    		.setAutoCancel(true)
+    		.setContentTitle("极享正在为您分享")
+    		.setContentText("触摸可以返回极享")
+    		.setTicker("正在分享")
+    		.setSmallIcon(R.drawable.ic_launcher)
+    		.setLargeIcon(((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap())
+    		.setContentIntent(pi)
+    		.setOngoing(false)
+    		.build();
+    	
+    	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    	nm.notify(NOTI_ID, notification);
+    	
+    }
+    
+    private void cancelNotification() {
+    	NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+    	nm.cancel(NOTI_ID);
+    }
+    
+    
+   
     public void changeCover() {
         ChoosePic c = new ChoosePic();
         c.choose(this, REQ_SEL_PIC_COVER, null);
@@ -378,18 +478,10 @@ public class MyShareActivity extends Activity implements IShareListener
     }
 
     public void handleTakePic(Intent data) {
-//        Bundle bundle = data.getExtras();
-//        Bitmap bitmap = (Bitmap) bundle.get("data");
         String savePath = mTakePicPath;
         Log.d(TAG, "handleTakePic:" + savePath); // + " bmp:" + bitmap);
         MobclickAgent.onEvent(this, UmUtil.EVENT_TAKE_PIC);
-//        try {
-//            BitmapUtil.scaleAndSave(bitmap, 720, savePath);
-            goToShare(savePath);
-//        } catch (IOException e) {
-//            Log.e(TAG, "handleTakePic exp:" + e.getMessage());
-//            e.printStackTrace();
-//        }
+        goToShare(savePath);
     }
 
     public void handelSelCover(Intent data) {
@@ -490,7 +582,7 @@ public class MyShareActivity extends Activity implements IShareListener
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE) {
 			Log.d(TAG, "scroll idle");
 			if (mAdapter != null && mAdapter.getCount() -1 == view.getLastVisiblePosition()) {
-				loadData();
+				loadHistoryData();
 			}
 		}
 	}
@@ -499,4 +591,73 @@ public class MyShareActivity extends Activity implements IShareListener
 	public void onScroll(AbsListView view, int firstVisibleItem,
 			int visibleItemCount, int totalItemCount) {
 	}
-}
+	
+	Animation mBottomIn;
+	Animation mBottomOut;
+	boolean   mIsShowProgress;
+	
+	public void showProgress() {
+		if (mProgressBar == null || mIsShowProgress) return;
+		if (mBottomIn == null) {
+			mBottomIn = AnimationUtils.loadAnimation(this, R.anim.bottom_in);
+		}
+		mProgressBar.setVisibility(View.VISIBLE);
+		mProgressBar.startAnimation(mBottomIn);
+		mIsShowProgress = true;
+	}
+	
+	public void hideProgressDelay() {
+		if (!mIsShowProgress) return;
+		if (mProgressBar == null) return;
+		if (mBottomOut == null) {
+			mBottomOut = AnimationUtils.loadAnimation(this, R.anim.bottom_out);
+		}
+		
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				mProgressBar.startAnimation(mBottomOut);
+				mProgressBar.setVisibility(View.GONE);
+			}
+		}, 500);	
+		mIsShowProgress = false;    		
+	}
+
+	@Override
+	public void onShareAdded(ShareObject obj) {
+		Log.d(TAG, "onShareAdded obj:" + obj);
+		ShareViewModel m = new ShareViewModel();
+		m.city = obj.city;
+		m.content = obj.text;
+		m.id = obj.id;
+		m.isHistory = false;
+		if (obj.images != null && obj.images.size() > 0) {
+			m.picPath = obj.images.get(0).filePath;
+		}
+		m.postTime = obj.postTime;
+		mAdapter.addItems(m);
+		mIsShareing = true;
+		showProgress();
+	}
+
+	@Override
+	public void onShareBegin(ShareObject obj) {
+		Log.d(TAG, "onShareBegin obj:" + obj);
+	}
+
+	@Override
+	public void onShareComplete() {
+		Log.d(TAG, "onShareComplete");
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				hideProgressDelay();
+				mIsShareing = false;
+				cancelNotification();
+			}
+		});
+		
+	}	
+}	
