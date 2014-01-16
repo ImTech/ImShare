@@ -80,6 +80,12 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             notifyDataSetChanged();
             return;
         }
+        try {
+            mCoverDrawable.getBitmap().recycle();
+        } catch(Exception e) {
+            
+        }
+        mCoverDrawable = null;
         mCoverPath = "file:///" + filePath;
         notifyDataSetChanged();;
     }
