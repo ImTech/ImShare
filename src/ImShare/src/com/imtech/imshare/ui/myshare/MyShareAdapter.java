@@ -11,6 +11,9 @@ import java.util.List;
 
 import android.R.color;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory.Options;
+import android.graphics.drawable.BitmapDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -26,17 +29,26 @@ import com.imtech.imshare.sns.SnsType;
 import com.imtech.imshare.ui.AnimUtil;
 import com.imtech.imshare.ui.preview.PreviewActivity;
 import com.imtech.imshare.ui.preview.TextPreviewActivity;
+import com.imtech.imshare.utils.BitmapUtil;
 import com.imtech.imshare.utils.DateUtil;
+import com.imtech.imshare.utils.Log;
 import com.imtech.imshare.utils.StringUtils;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.assist.LoadedFrom;
+import com.nostra13.universalimageloader.core.display.BitmapDisplayer;
+import com.nostra13.universalimageloader.core.imageaware.ImageAware;
 
 /**
  * @author douzifly
  */
 public class MyShareAdapter extends BaseAdapter implements OnClickListener, 
     View.OnLongClickListener {
+    
+    final static String TAG = "MyShareAdapter";
 
     final static int VIEW_TYPE_COVER = 0;
     final static int VIEW_TYPE_ITEM = 1;
@@ -60,6 +72,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
     // active SnsTypes
     Hashtable<SnsType, Boolean> mActiveSnsType = new Hashtable<SnsType, Boolean>();
     String mCoverPath;
+    BitmapDrawable mCoverDrawable;
 
     public void setCoverPath(String filePath) {
         if (filePath == null || filePath.equals("")) {
@@ -122,6 +135,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
         if (position == 1) return VIEW_TYPE_ACTION;
         return VIEW_TYPE_ITEM;
     }
+    
 
     DisplayImageOptions coverOpt = new DisplayImageOptions.Builder()
             .cacheInMemory(true)
@@ -132,6 +146,7 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             .considerExifParams(true)
             .showImageOnLoading(R.drawable.bg_cover_def).build()
             ;
+
     
  
 
@@ -184,8 +199,37 @@ public class MyShareAdapter extends BaseAdapter implements OnClickListener,
             ActionHolder holder = (ActionHolder) v.getTag();
             updateAction(holder);
         } else if (viewType == VIEW_TYPE_COVER) {
-            if (mCoverPath != null) {
-                ImageLoader.getInstance().displayImage(mCoverPath, mCoverView, coverOpt);
+            if (mCoverDrawable != null) {
+                mCoverView.setImageDrawable(mCoverDrawable);
+            } else if (mCoverPath != null) {
+                ImageLoader.getInstance().displayImage(mCoverPath, mCoverView, coverOpt, new ImageLoadingListener() {
+                    
+                    @Override
+                    public void onLoadingStarted(String arg0, View arg1) {
+                    }
+                    
+                    @Override
+                    public void onLoadingFailed(String arg0, View arg1, FailReason arg2) {
+                    }
+                    
+                    @Override
+                    public void onLoadingComplete(String arg0, View arg1, Bitmap arg2) {
+                        Log.d(TAG, "onLoadingComplete width:" + arg2.getWidth() + " height:" + arg2.getHeight());
+                        int screenWith = mContext.getResources().getDisplayMetrics().widthPixels;
+                        if (screenWith < arg2.getWidth()) {
+                            int height = (int) ((float) screenWith / (float)arg2.getWidth() * arg2.getHeight()); 
+                            Bitmap scaled = Bitmap.createScaledBitmap(arg2, screenWith, height, false);
+                            mCoverDrawable = new BitmapDrawable(mContext.getResources(), scaled);
+                            Log.d(TAG, "scaled width:" + scaled.getWidth() + " height:" + scaled.getHeight());
+                        } else {
+                            mCoverDrawable = new BitmapDrawable(mContext.getResources(), arg2);
+                        }
+                    }
+                    
+                    @Override
+                    public void onLoadingCancelled(String arg0, View arg1) {
+                    }
+                });
             } else {
             	mCoverView.setImageResource(R.drawable.bg_cover_def);
             }

@@ -23,7 +23,7 @@ public class StoreManager {
 	
 	private static StoreManager sSharedInstances;
 	private long mCurrentId = -1;
-	private int mPageCount = 5;
+	private int mPageCount = 8;
 	private boolean mIsFirstLoad = true;
 	
 	public static StoreManager sharedInstance() {
